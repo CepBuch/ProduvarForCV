@@ -12,10 +12,6 @@ import android.widget.Toast
 import produvar.interactionwithapi.activities.main.MainActivity
 
 
-fun Context.toast(text: String, duration: Int = Toast.LENGTH_LONG) {
-    Toast.makeText(this, text, duration).show()
-}
-
 fun Activity.changeStatusBarColor(colorResource: Int, shouldSetFlags: Boolean = false) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         if (shouldSetFlags) {

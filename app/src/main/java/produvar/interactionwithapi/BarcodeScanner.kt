@@ -19,7 +19,10 @@ import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import produvar.interactionwithapi.helpers.toast
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
+import org.jetbrains.anko.toast
 
 class BarcodeScanner(private val activity: AppCompatActivity,
                      private val cameraPreview: SurfaceView,
@@ -33,6 +36,17 @@ class BarcodeScanner(private val activity: AppCompatActivity,
     var isCameraShown = false
 
 
+    fun setUpAsync(){
+        async(UI){
+            bg{setUp()}.await()
+        }
+    }
+
+    fun releaseAsync(){
+        async(UI){
+            bg{release()}.await()
+        }
+    }
     fun setUp() {
         if (isCameraShown) return
         barcodeDetector = BarcodeDetector.Builder(this.activity).build()

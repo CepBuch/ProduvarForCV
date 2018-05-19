@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_profile_qr.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
+import org.jetbrains.anko.toast
 import produvar.interactionwithapi.BarcodeScanner
 import produvar.interactionwithapi.R
-import produvar.interactionwithapi.helpers.toast
 
 
 class ProfileQR : Fragment() {
@@ -26,35 +29,24 @@ class ProfileQR : Fragment() {
         } else return
 
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
-            mainActivity.toast("$it was found")
+            mainActivity.toast("$it found")
         })
-        scanner.setUp()
+
+        scanner.setUpAsync()
+
         super.onViewCreated(view, savedInstanceState)
     }
 
 
     override fun onPause() {
         super.onPause()
-        scanner.release()
+        scanner.releaseAsync()
     }
 
     override fun onResume() {
         super.onResume()
-        scanner.setUp()
+        scanner.setUpAsync()
     }
 }
-
-class ProfileLogin : Fragment() {
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_profile_login, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-}
-
-
 
 

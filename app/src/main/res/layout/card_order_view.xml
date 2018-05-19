@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxWidth="300dp"
-            android:text="Information about the order"
+            android:text="Order info"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="18sp"

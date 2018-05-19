@@ -4,7 +4,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
 import produvar.interactionwithapi.*
@@ -13,6 +16,7 @@ import produvar.interactionwithapi.helpers.Constants
 
 
 class MainActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +32,35 @@ class MainActivity : AppCompatActivity() {
         }
 
         // setting up viewpager
-        val mainPagerAdapter = MainPagerAdapter(supportFragmentManager)
-        view_pager.adapter = mainPagerAdapter
-        view_pager.addOnPageChangeListener(HideStatusBarPageListener(this))
+        setUpViewPager()
         view_pager.currentItem = savedInstanceState?.getInt("VIEWPAGER_PAGE", 1) ?: 1
+    }
+
+    private fun setUpViewPager() {
+        view_pager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
+            override fun getItem(position: Int) =
+                    when (position) {
+                        0 -> ScanCameraFragment()
+                        1 -> MainPageFragment()
+                        2 -> ProfileFragment()
+                        else -> MainPageFragment()
+                    }
+
+            override fun getCount() = 3
+        }
+        view_pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                val decorView = window.decorView
+                val uiOptions = if (position == 0) {
+                    View.SYSTEM_UI_FLAG_FULLSCREEN
+                } else {
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                }
+                decorView.systemUiVisibility = uiOptions
+                super.onPageSelected(position)
+            }
+        })
+
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

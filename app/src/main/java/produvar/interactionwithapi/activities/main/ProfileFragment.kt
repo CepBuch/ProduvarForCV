@@ -84,6 +84,7 @@ class ProfileFragment : Fragment() {
         view?.setBackgroundColor(Color.TRANSPARENT)
         topViewsColor(ContextCompat.getColor(mainActivity, R.color.produvarDarkTransparent))
         showFragment(ProfileQR())
+
     }
 
     private fun topViewsColor(color: Int) {

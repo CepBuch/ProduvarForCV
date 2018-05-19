@@ -42,14 +42,14 @@ class ScanCameraFragment : Fragment() {
         super.setUserVisibleHint(isVisibleToUser)
         if (view != null) {
             if (isVisibleToUser) {
-                scanner.setUp()
-            } else scanner.release()
+                scanner.setUpAsync()
+            } else scanner.releaseAsync()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        scanner.release()
+        scanner.releaseAsync()
     }
 
 
