@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    style="@style/CardViewStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/manufacturer_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="300dp"
+            android:text="Information about the manufacturer"
+            android:textAlignment="center"
+            android:textColor="@color/produvarDark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/manufacturer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="15dp"
+            android:maxWidth="300dp"
+            android:text="Evolve Productions B.V"
+            android:textAlignment="center"
+            android:textColor="@color/produvarDark"
+            android:textSize="18sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/manufacturer_website"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="15dp"
+            android:autoLink="web"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_taginfo_website"
+            android:maxWidth="300dp"
+            android:text="https://www.evolveproductions.nl"
+            android:textAlignment="center"
+            android:textColor="@color/produvarDark"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/manufacturer_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+
+            android:autoLink="email"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_taginfo_email"
+            android:maxWidth="300dp"
+            android:text="info@evolveproductions.nl"
+            android:textAlignment="center"
+            android:textColor="@color/produvarDark"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/manufacturer_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:autoLink="phone"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_taginfo_phone"
+            android:text="+79256410156"
+            android:textAlignment="center"
+            android:textColor="@color/produvarDark"
+            android:textSize="16sp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

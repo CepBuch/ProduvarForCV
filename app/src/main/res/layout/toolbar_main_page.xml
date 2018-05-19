@@ -1,0 +1,55 @@
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_page_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/produvarLight"
+    android:minHeight="?android:attr/actionBarSize"
+    app:contentInsetEnd="5dp"
+    app:contentInsetStart="5dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/main_menu_open_camera"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:contentDescription="@string/description_toolbar_camera"
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_toolbar_camera"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/main_menu_open_profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:contentDescription="@string/description_toolbar_profile"
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_toolbar_profile"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="175dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/description_toolbar_produvar_name"
+            android:scaleType="fitCenter"
+            android:src="@drawable/produvar_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/main_menu_open_profile"
+            app:layout_constraintStart_toEndOf="@id/main_menu_open_camera"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.Toolbar>
+
+

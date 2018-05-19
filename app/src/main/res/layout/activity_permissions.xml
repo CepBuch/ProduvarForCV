@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    tools:context=".activities.permissions.PermissionsActivity">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/description_main_logo"
+        android:padding="15dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/produvar_namelogo_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.15" />
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:maxWidth="350dp"
+        android:text="For correct work the application needs some permissions"
+        android:textAlignment="center"
+        android:textColor="@color/produvarLight"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/row_wifi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxWidth="400dp"
+        android:padding="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintStart_toStartOf="@+id/header"
+        app:layout_constraintEnd_toEndOf="@+id/header"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        android:drawableStart="@drawable/ic_perm_wifi"
+        android:drawablePadding="20dp"
+        android:gravity="center"
+        android:textColor="@color/produvarLight"
+        android:textSize="16sp"
+        android:text="In order to transmit\nand receive data"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/row_camera"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxWidth="400dp"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+
+        app:layout_constraintStart_toStartOf="@+id/header"
+        app:layout_constraintEnd_toEndOf="@+id/header"
+        app:layout_constraintTop_toBottomOf="@+id/row_wifi"
+        android:drawableStart="@drawable/ic_perm_camera"
+        android:drawablePadding="20dp"
+        android:gravity="center"
+        android:textColor="@color/produvarLight"
+        android:textSize="16sp"
+        android:text="In order to scan QR\nand bar codes"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/row_nfc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxWidth="400dp"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintStart_toStartOf="@+id/header"
+        app:layout_constraintEnd_toEndOf="@+id/header"
+        app:layout_constraintTop_toBottomOf="@+id/row_camera"
+        android:drawableStart="@drawable/ic_perm_nfc"
+        android:drawablePadding="20dp"
+        android:gravity="center"
+        android:textColor="@color/produvarLight"
+        android:textSize="16sp"
+        android:text="In order to scan\nNFC tags"
+        android:visibility="gone"/>
+
+
+    <Button
+        android:id="@+id/button_grant"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="@+id/header"
+        app:layout_constraintEnd_toEndOf="@+id/header"
+        app:layout_constraintTop_toBottomOf="@+id/row_nfc"
+        android:textColor="@color/produvarLight"
+        android:background="@drawable/stroke_perm_button"
+        android:text="ALLOW"/>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Produvar B.V.</string>
+    <string name="scanner_camera_info">Point the camera at QR code or a Barcode placed on/in an order</string>
+    <string name="main_scanning_info">Approach your device to NFC tag or open camera.\n\nClick \'Help\' to get more information.</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="sign_in_button">SIGN IN FOR 24 HOURS</string>
+
+    <string name="taginfo_title">Scan result</string>
+    <string name="taginfo_error_message">This tag is currently not supported</string>
+
+
+    <string name="profile_tab_account">Account</string>
+    <string name="profile_tab_qr_code">QR code</string>
+    <string name="profile_login_info">Login to your personal account</string>
+    <string name="profile_camera_info">Point the camera at authorization QR code</string>
+
+
+    <string name="description_taginfo_error_logo">Error logo</string>
+    <string name="description_main_logo">Logo of Produvar company</string>
+    <string name="description_main_back">Return to main page</string>
+    <string name="description_toolbar_produvar_name">Produvar name logo</string>
+    <string name="description_toolbar_profile">Open login page</string>
+    <string name="description_toolbar_camera">Open a camera to scan QR code or Bar code</string>
+    <string name="description_main_helper">Opens helper window</string>
+    <string name="description_main_options">Opens settings window</string>
+
+</resources>

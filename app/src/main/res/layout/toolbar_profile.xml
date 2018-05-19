@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/produvarOrange"
+    android:minHeight="?android:attr/actionBarSize"
+    app:contentInsetStart="0dp">
+    <ImageButton
+        android:id="@+id/button_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/description_main_back"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_profile_back"
+        android:tint="@color/produvarLight" />
+</android.support.v7.widget.Toolbar>
+

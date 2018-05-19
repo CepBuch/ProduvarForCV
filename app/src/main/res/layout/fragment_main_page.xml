@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/produvarLight">
+
+
+    <LinearLayout
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/status_bar_main" />
+
+        <include layout="@layout/toolbar_main_page" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/company_logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginStart="80dp"
+        android:contentDescription="@string/description_main_logo"
+        android:scaleType="fitCenter"
+        android:src="@drawable/produvar_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintWidth_max="200dp" />
+
+    <TextView
+        android:id="@+id/textView_scanning_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:text="@string/main_scanning_info"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/company_logo"
+        app:layout_constraintWidth_max="300dp" />
+
+    <ImageButton
+        android:id="@+id/button_help"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="5dp"
+        android:background="@null"
+        android:contentDescription="@string/description_main_helper"
+        android:padding="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_main_help"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button_settings"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="5dp"
+        android:background="@null"
+        android:contentDescription="@string/description_main_options"
+        android:padding="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_main_settings"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
