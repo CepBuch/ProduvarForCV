@@ -22,9 +22,8 @@ class MainPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        if (activity is MainActivity) {
-            mainActivity = activity as MainActivity
-        } else return
+        mainActivity = activity as? MainActivity ?: throw Exception("Fragment is strongly " +
+                "coupled with MainActivity. You can create it in only in MainActivity.")
 
         main_menu_open_camera.setOnClickListener {
             mainActivity.swipeFragment(false)

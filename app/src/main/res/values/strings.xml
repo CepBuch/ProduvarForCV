@@ -9,7 +9,7 @@
     <string name="taginfo_title">Scan result</string>
     <string name="taginfo_error_message">This tag is currently not supported</string>
 
-
+    <string name="action_sign_in_short">Sign in</string>
     <string name="profile_tab_account">Account</string>
     <string name="profile_tab_qr_code">QR code</string>
     <string name="profile_login_info">Login to your personal account</string>

@@ -2,6 +2,7 @@ package produvar.interactionwithapi.activities.main
 
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.TabItem
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
@@ -11,12 +12,14 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.toolbar_profile.*
+import org.jetbrains.anko.alert
 import produvar.interactionwithapi.R
+import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.setUpStatusBar
 
 
 class ProfileFragment : Fragment() {
-    lateinit var mainActivity: MainActivity
+    private lateinit var mainActivity: MainActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -24,21 +27,20 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (activity is MainActivity) {
-            mainActivity = activity as MainActivity
-        } else return
+        mainActivity = activity as? MainActivity ?: throw Exception("Fragment is strongly " +
+                "coupled with MainActivity. You can create it in only in MainActivity.")
 
         button_back.setOnClickListener { mainActivity.swipeFragment(false) }
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             setUpStatusBar(status_bar, Color.TRANSPARENT)
         }
-
         setUpTabLayout()
+
+//        view.post { view.height }
 
         super.onViewCreated(view, savedInstanceState)
     }
-
 
     private fun setUpTabLayout() {
         profile_tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -54,36 +56,39 @@ class ProfileFragment : Fragment() {
                 }
             }
         })
-        showLoginFragment()
+        // post.run() because we have to wait view to lay out.
+        // Otherwise when we show ProfileLogin() fragment for the first time from onViewCreated(),
+        // countTopViewHeight() returns 0. Because views at this moment has height 0
+        view?.post{
+            profile_tab_layout.addTab(profile_tab_layout.newTab().setText(getString(R.string.profile_tab_account)), true)
+            profile_tab_layout.addTab(profile_tab_layout.newTab().setText(getString(R.string.profile_tab_qr_code)))
+        }
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        selectFirstTab()
         super.setUserVisibleHint(isVisibleToUser)
-        selectFirstTab()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        selectFirstTab()
     }
 
     private fun selectFirstTab() {
-        if (view != null && profile_tab_layout.selectedTabPosition != 0) {
+        if (view != null) {
             profile_tab_layout.getTabAt(0)?.select()
         }
     }
 
     private fun showLoginFragment() {
-        val color = ContextCompat.getColor(mainActivity, R.color.produvarOrange)
-        view?.setBackgroundColor(color)
-        topViewsColor(color)
         showFragment(ProfileLogin())
+        val color = ContextCompat.getColor(mainActivity, R.color.produvarOrange)
+        topViewsColor(color)
+        view?.setBackgroundColor(color)
+
+
     }
 
     private fun showQrFragment() {
-        view?.setBackgroundColor(Color.TRANSPARENT)
-        topViewsColor(ContextCompat.getColor(mainActivity, R.color.produvarDarkTransparent))
         showFragment(ProfileQR())
+        topViewsColor(ContextCompat.getColor(mainActivity, R.color.produvarDarkTransparent))
+        view?.setBackgroundColor(Color.TRANSPARENT)
 
     }
 
@@ -95,11 +100,18 @@ class ProfileFragment : Fragment() {
 
 
     private fun showFragment(fragment: Fragment) {
+        val bundle = Bundle()
+        bundle.putInt(Constants.PARAM_TOP_VIEWS_HEIGHT, countTopViewHeight())
+        fragment.arguments = bundle
         val fm = mainActivity.supportFragmentManager
         val ft = fm.beginTransaction()
+        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(R.id.frame_container, fragment)
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         ft.commit()
+    }
+
+    private fun countTopViewHeight(): Int {
+        return status_bar.height + toolbar.height + profile_tab_layout.height
     }
 
 
