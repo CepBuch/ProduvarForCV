@@ -18,7 +18,7 @@ import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.Constants
 
 
-class ProfileQR : Fragment() {
+class ProfileAuthQR : Fragment() {
 
     lateinit var scanner: BarcodeScanner
     lateinit var mainActivity: MainActivity
@@ -42,7 +42,12 @@ class ProfileQR : Fragment() {
 
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
             mainActivity.toast("$it found")
+
         })
+
+//        Snackbar.make(email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+//                .setAction(android.R.string.ok,
+//                        {  })
 
         scanner.setUpAsync()
 

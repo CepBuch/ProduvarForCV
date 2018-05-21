@@ -16,7 +16,6 @@
 
         <activity
             android:name=".activities.main.MainActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">
 
             <intent-filter>

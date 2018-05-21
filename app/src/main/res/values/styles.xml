@@ -9,7 +9,7 @@
     </style>
 
 
-    <style name="TextLabel" parent="TextAppearance.AppCompat">
+    <style name="TextLabel" parent="Widget.Design.TextInputLayout">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/produvarLight</item>
         <item name="android:textSize">16sp</item>
@@ -40,6 +40,10 @@
         <item name="cardCornerRadius">3dp</item>
         <item name="cardBackgroundColor">#fefefe</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AppTheme.WhiteAccent">
+        <item name="colorAccent">@color/produvarLight</item>
     </style>
 
 </resources>

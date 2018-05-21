@@ -2,17 +2,14 @@ package produvar.interactionwithapi.activities.main
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.TabItem
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.toolbar_profile.*
-import org.jetbrains.anko.alert
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.setUpStatusBar
@@ -37,8 +34,6 @@ class ProfileFragment : Fragment() {
         }
         setUpTabLayout()
 
-//        view.post { view.height }
-
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -57,7 +52,7 @@ class ProfileFragment : Fragment() {
             }
         })
         // post.run() because we have to wait view to lay out.
-        // Otherwise when we show ProfileLogin() fragment for the first time from onViewCreated(),
+        // Otherwise when we show ProfileAuthLogin() fragment for the first time from onViewCreated(),
         // countTopViewHeight() returns 0. Because views at this moment has height 0
         view?.post{
             profile_tab_layout.addTab(profile_tab_layout.newTab().setText(getString(R.string.profile_tab_account)), true)
@@ -77,16 +72,14 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showLoginFragment() {
-        showFragment(ProfileLogin())
+        showFragment(ProfileAuthLogin())
         val color = ContextCompat.getColor(mainActivity, R.color.produvarOrange)
         topViewsColor(color)
         view?.setBackgroundColor(color)
-
-
     }
 
     private fun showQrFragment() {
-        showFragment(ProfileQR())
+        showFragment(ProfileAuthQR())
         topViewsColor(ContextCompat.getColor(mainActivity, R.color.produvarDarkTransparent))
         view?.setBackgroundColor(Color.TRANSPARENT)
 
