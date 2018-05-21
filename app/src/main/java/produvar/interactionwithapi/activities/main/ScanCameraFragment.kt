@@ -50,6 +50,4 @@ class ScanCameraFragment : Fragment() {
         super.onPause()
         scanner.releaseAsync()
     }
-
-
 }

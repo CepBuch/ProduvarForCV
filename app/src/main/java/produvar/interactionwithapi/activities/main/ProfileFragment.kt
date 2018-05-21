@@ -10,6 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.toolbar_profile.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.setUpStatusBar
@@ -38,6 +41,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setUpTabLayout() {
+        profile_tab_layout.addTab(profile_tab_layout.newTab().setText(getString(R.string.profile_tab_account)), true)
+        profile_tab_layout.addTab(profile_tab_layout.newTab().setText(getString(R.string.profile_tab_qr_code)))
+
         profile_tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -54,9 +60,8 @@ class ProfileFragment : Fragment() {
         // post.run() because we have to wait view to lay out.
         // Otherwise when we show ProfileAuthLogin() fragment for the first time from onViewCreated(),
         // countTopViewHeight() returns 0. Because views at this moment has height 0
-        view?.post{
-            profile_tab_layout.addTab(profile_tab_layout.newTab().setText(getString(R.string.profile_tab_account)), true)
-            profile_tab_layout.addTab(profile_tab_layout.newTab().setText(getString(R.string.profile_tab_qr_code)))
+        view?.post {
+            showLoginFragment(false)
         }
     }
 
@@ -66,22 +71,33 @@ class ProfileFragment : Fragment() {
     }
 
     private fun selectFirstTab() {
-        if (view != null) {
+        if (view != null && profile_tab_layout.selectedTabPosition != 0) {
             profile_tab_layout.getTabAt(0)?.select()
         }
     }
 
-    private fun showLoginFragment() {
-        showFragment(ProfileAuthLogin())
-        val color = ContextCompat.getColor(mainActivity, R.color.produvarOrange)
-        topViewsColor(color)
-        view?.setBackgroundColor(color)
-    }
 
     private fun showQrFragment() {
-        showFragment(ProfileAuthQR())
-        topViewsColor(ContextCompat.getColor(mainActivity, R.color.produvarDarkTransparent))
-        view?.setBackgroundColor(Color.TRANSPARENT)
+        showFragment(ProfileAuthQR(), true)
+        async(UI) {
+            bg {
+                topViewsColor(ContextCompat.getColor(mainActivity, R.color.produvarDarkTransparent))
+                view?.setBackgroundColor(Color.TRANSPARENT)
+            }.await()
+        }
+
+
+    }
+
+    private fun showLoginFragment(withAnimation: Boolean = true) {
+        showFragment(ProfileAuthLogin(), false, withAnimation)
+        async(UI) {
+            bg {
+                val color = ContextCompat.getColor(mainActivity, R.color.produvarOrange)
+                topViewsColor(color)
+                view?.setBackgroundColor(color)
+            }.await()
+        }
 
     }
 
@@ -92,15 +108,21 @@ class ProfileFragment : Fragment() {
     }
 
 
-    private fun showFragment(fragment: Fragment) {
+    private fun showFragment(fragment: Fragment, swipeForward: Boolean, withAnimation: Boolean = true) {
         val bundle = Bundle()
         bundle.putInt(Constants.PARAM_TOP_VIEWS_HEIGHT, countTopViewHeight())
         fragment.arguments = bundle
-        val fm = mainActivity.supportFragmentManager
-        val ft = fm.beginTransaction()
-        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-        ft.replace(R.id.frame_container, fragment)
-        ft.commit()
+        with(mainActivity.supportFragmentManager.beginTransaction()) {
+            if (withAnimation) {
+                setCustomAnimations(
+                        if (swipeForward) R.anim.enter_from_right else R.anim.enter_from_left,
+                        if (swipeForward) R.anim.exit_to_left else R.anim.exit_to_right)
+            }
+            replace(R.id.frame_container, fragment)
+            commit()
+        }
+
+
     }
 
     private fun countTopViewHeight(): Int {

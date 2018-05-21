@@ -36,17 +36,18 @@ class BarcodeScanner(private val activity: AppCompatActivity,
     var isCameraShown = false
 
 
-    fun setUpAsync(){
-        async(UI){
-            bg{setUp()}.await()
+    fun setUpAsync() {
+        async(UI) {
+            bg { setUp() }.await()
         }
     }
 
-    fun releaseAsync(){
-        async(UI){
-            bg{release()}.await()
+    fun releaseAsync() {
+        async(UI) {
+            bg { release() }.await()
         }
     }
+
     fun setUp() {
         if (isCameraShown) return
         barcodeDetector = BarcodeDetector.Builder(this.activity).build()

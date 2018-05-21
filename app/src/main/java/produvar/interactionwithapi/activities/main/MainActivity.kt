@@ -70,7 +70,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        view_pager.setCurrentItem(1, false)
+        if (view_pager.currentItem == 0) {
+            view_pager.setCurrentItem(1, false)
+        }
     }
 
 

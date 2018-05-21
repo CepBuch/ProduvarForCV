@@ -11,11 +11,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_profile_qr.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.attempt
 import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.toast
 import produvar.interactionwithapi.BarcodeScanner
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.Constants
+import produvar.interactionwithapi.helpers.TagChecker
 
 
 class ProfileAuthQR : Fragment() {
@@ -41,7 +43,15 @@ class ProfileAuthQR : Fragment() {
         } else return
 
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
-            mainActivity.toast("$it found")
+            async(UI) {
+                showProgress(true)
+                bg {
+                    scanner.releaseAsync()
+                    Thread.sleep(5000)
+                    scanner.setUpAsync()
+                }.await()
+                showProgress(false)
+            }
 
         })
 
@@ -54,6 +64,13 @@ class ProfileAuthQR : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    private fun attemptLogin(barcode: String) {
+        if (!TagChecker.isAuthorizationTagValid(barcode)) {
+            return
+        }
+
+    }
+
 
     override fun onPause() {
         super.onPause()
@@ -63,6 +80,13 @@ class ProfileAuthQR : Fragment() {
     override fun onResume() {
         super.onResume()
         scanner.setUpAsync()
+    }
+
+
+    private fun showProgress(show: Boolean) {
+        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+        rectangleView.visibility = if (show) View.INVISIBLE else View.VISIBLE
+        login_progress.visibility = if (show) View.VISIBLE else View.GONE
     }
 }
 
