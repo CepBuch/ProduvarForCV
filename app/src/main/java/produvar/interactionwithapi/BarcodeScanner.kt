@@ -4,10 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.Matrix
-import android.graphics.PorterDuff
-import android.graphics.RectF
+import android.graphics.*
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -81,6 +78,8 @@ class BarcodeScanner(private val activity: AppCompatActivity,
             barcodeDetector.release()
             cameraSource.release()
             isCameraShown = false
+            cameraPreview.holder.setFormat(PixelFormat.TRANSPARENT);
+            cameraPreview.holder.setFormat(PixelFormat.OPAQUE);
         }
     }
 

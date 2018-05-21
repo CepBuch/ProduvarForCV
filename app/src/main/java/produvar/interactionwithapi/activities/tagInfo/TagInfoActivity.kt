@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.toolbar_taginfo.*
 import produvar.interactionwithapi.helpers.DpToPx
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.SpToPx
-import produvar.interactionwithapi.helpers.TagChecker
 import produvar.interactionwithapi.helpers.changeStatusBarColor
 
 class TagInfoActivity : AppCompatActivity() {
@@ -80,7 +79,7 @@ class TagInfoActivity : AppCompatActivity() {
     }
 
     private fun processTag(tagContent: String) {
-        if (TagChecker.isOrderTagValid(tagContent)) {
+        if (isTagContentValid(tagContent)) {
             displayItem(tagContent)
             displayItem(tagContent)
             displayItem(tagContent)
@@ -92,6 +91,11 @@ class TagInfoActivity : AppCompatActivity() {
         } else showScanError()
     }
 
+
+    private fun isTagContentValid(tagContent: String): Boolean {
+        return tagContent.startsWith("https://") || tagContent.startsWith("http://") ||
+                tagContent.all { it.isDigit() }
+    }
 
     private fun showScanError() {
         content_view.visibility = View.GONE
