@@ -43,7 +43,7 @@ fun Fragment.setUpStatusBar(view: View, color: Int) {
     }
 }
 
-fun Int.DpToPx(context: Context): Int {
+fun Int.dpToPx(context: Context): Int {
     val r = context.resources
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
             this.toFloat(), r.displayMetrics).toInt()

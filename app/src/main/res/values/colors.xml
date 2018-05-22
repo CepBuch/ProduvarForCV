@@ -3,10 +3,18 @@
     <color name="colorPrimary">@color/produvarLight</color>
     <color name="colorPrimaryDark">@color/produvarDark</color>
     <color name="colorAccent">@color/produvarOrange</color>
-    <color name="produvarOrange">#FAB31B</color>
+    <!--This is color from produvar logo-->
+    <!--<color name="produvarOrange">#FAB31B</color>-->
+    <!--We decided to use 'material oragne' instead-->
+    <color name="produvarOrange">#f9a825</color>
+    <!--From logo-->
     <color name="produvarLight">#F7F7F7</color>
+    <!--From logo-->
     <color name="produvarDark">#3c3c3e</color>
+    <!--Same, but transparent-->
+    <color name="produvarOrangeTransparent">#f6f9a825</color>
     <color name="produvarDarkTransparent">#d73c3c3e</color>
+    <!--For main activity status bar-->
     <color name="statusbarMain">#cbcbcb</color>
-    <color name="profileNotChangedTab">#e7e7e7</color>
+    <color name="profileTabDisabled">#e7e7e7</color>
 </resources>

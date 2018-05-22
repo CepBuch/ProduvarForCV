@@ -40,13 +40,13 @@ class PermissionsActivity : AppCompatActivity() {
             } else {
                 row_wifi.visibility = if (permissionsToAsk.contains(Manifest.permission.INTERNET)) {
                     View.VISIBLE
-                } else View.GONE
+                } else View.INVISIBLE
                 row_camera.visibility = if (permissionsToAsk.contains(Manifest.permission.CAMERA)) {
                     View.VISIBLE
-                } else View.GONE
+                } else View.INVISIBLE
                 row_nfc.visibility = if (permissionsToAsk.contains(Manifest.permission.NFC)) {
                     View.VISIBLE
-                } else View.GONE
+                } else View.INVISIBLE
 
                 button_grant.setOnClickListener {
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

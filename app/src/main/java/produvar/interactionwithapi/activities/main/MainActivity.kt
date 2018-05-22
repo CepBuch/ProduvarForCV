@@ -1,6 +1,7 @@
 package produvar.interactionwithapi.activities.main
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +11,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_main_page.*
+import org.jetbrains.anko.defaultSharedPreferences
 import produvar.interactionwithapi.*
 import produvar.interactionwithapi.activities.permissions.PermissionsActivity
 import produvar.interactionwithapi.helpers.Constants
@@ -18,9 +21,11 @@ import produvar.interactionwithapi.helpers.Constants
 class MainActivity : AppCompatActivity() {
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         // Checking whether permissions to use camera/internet/nfc were granted
         checkPermissions()
 
@@ -31,10 +36,12 @@ class MainActivity : AppCompatActivity() {
             window?.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
 
+
         // setting up viewpager
         setUpViewPager()
         view_pager.currentItem = savedInstanceState?.getInt("VIEWPAGER_PAGE", 1) ?: 1
     }
+
 
     private fun setUpViewPager() {
         view_pager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
@@ -90,17 +97,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermissions() {
         // Users with SDK < 23 granted the permission during installation
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val permissionsToAsk = ArrayList(Constants.IMPORTANT_PERMISSIONS
-                    .filter { checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED })
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
 
-            if (permissionsToAsk.isNotEmpty()) {
-                val permissionsIntent = Intent(this, PermissionsActivity::class.java)
-                permissionsIntent.putStringArrayListExtra(Constants.PERMISSIONS_TO_ASK, permissionsToAsk)
-                startActivity(permissionsIntent)
-                finish()
-            }
+        val permissionsToAsk = ArrayList(Constants.IMPORTANT_PERMISSIONS
+                .filter { checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED })
+
+        if (permissionsToAsk.isNotEmpty()) {
+            val permissionsIntent = Intent(this, PermissionsActivity::class.java)
+            permissionsIntent.putStringArrayListExtra(Constants.PERMISSIONS_TO_ASK, permissionsToAsk)
+            startActivity(permissionsIntent)
+            finish()
         }
+
     }
 
 

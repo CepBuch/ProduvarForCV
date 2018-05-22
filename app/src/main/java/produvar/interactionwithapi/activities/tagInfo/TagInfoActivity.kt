@@ -12,9 +12,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_tag_info.*
 import kotlinx.android.synthetic.main.card_items_view.*
 import kotlinx.android.synthetic.main.toolbar_taginfo.*
-import produvar.interactionwithapi.helpers.DpToPx
+import produvar.interactionwithapi.helpers.dpToPx
 import produvar.interactionwithapi.R
-import produvar.interactionwithapi.helpers.SpToPx
 import produvar.interactionwithapi.helpers.changeStatusBarColor
 
 class TagInfoActivity : AppCompatActivity() {
@@ -39,9 +38,9 @@ class TagInfoActivity : AppCompatActivity() {
         with(textView) {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             setTextColor(ContextCompat.getColor(this@TagInfoActivity, R.color.produvarDark))
-            setPadding(0, 5.DpToPx(this@TagInfoActivity), 0, 5.DpToPx(this@TagInfoActivity))
+            setPadding(0, 5.dpToPx(this@TagInfoActivity), 0, 5.dpToPx(this@TagInfoActivity))
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_taginfo_items, 0, 0, 0)
-            compoundDrawablePadding = 10.DpToPx(this@TagInfoActivity)
+            compoundDrawablePadding = 10.dpToPx(this@TagInfoActivity)
             // TODO: sp to px
             textSize = 16f
             text = itemName

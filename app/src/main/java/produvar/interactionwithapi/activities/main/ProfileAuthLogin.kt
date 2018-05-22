@@ -2,12 +2,10 @@ package produvar.interactionwithapi.activities.main
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import kotlinx.android.synthetic.main.fragment_profile_login.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -25,9 +23,7 @@ class ProfileAuthLogin : Fragment() {
         if (marginTop != null) {
             val params = view.layoutParams as? ViewGroup.MarginLayoutParams
             params?.setMargins(0, -1 * marginTop, 0, 0)
-
         }
-
         return view
     }
 
@@ -42,7 +38,6 @@ class ProfileAuthLogin : Fragment() {
         }
 
 
-        // When clicks button
         sign_in_button.setOnClickListener { attemptLogin() }
         super.onViewCreated(view, savedInstanceState)
     }
@@ -77,7 +72,6 @@ class ProfileAuthLogin : Fragment() {
     }
 
     private fun showProgress(show: Boolean) {
-        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
         sign_in_button.visibility = if (show) View.INVISIBLE else View.VISIBLE
         login_progress.visibility = if (show) View.VISIBLE else View.GONE
 

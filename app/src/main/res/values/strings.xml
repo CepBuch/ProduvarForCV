@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">Produvar B.V.</string>
+
+    <string name="main_scanning_info">Approach your device to NFC tag or open camera.\n\nClick \'?\' to get more information.</string>
     <string name="scanner_camera_info">Point the camera at QR code or a Barcode placed on/in an order</string>
-    <string name="main_scanning_info">Approach your device to NFC tag or open camera.\n\nClick \'Help\' to get more information.</string>
-    <string name="prompt_username">Username</string>
-    <string name="prompt_password">Password</string>
-    <string name="sign_in_button">SIGN IN FOR 24 HOURS</string>
+
 
     <string name="taginfo_title">Scan result</string>
     <string name="taginfo_error_message">This tag is currently not supported</string>
@@ -12,10 +11,26 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="profile_tab_account">Account</string>
     <string name="profile_tab_qr_code">QR code</string>
-    <string name="profile_login_info">Login to your personal account</string>
     <string name="profile_camera_info">Point the camera at authorization QR code</string>
     <string name="profile_error_field_required">This field is required</string>
     <string name="profile_error_invalid_email">Email is invalid</string>
+    <string name="profile_prompt_username">Username</string>
+    <string name="profile_prompt_password">Password</string>
+    <string name="profile_sign_in_button">SIGN IN FOR 24 HOURS</string>
+
+    <string name="permissions_info">For correct work the application needs the following permission(s):</string>
+    <string name="permissions_internet_info">In order to transmit and receive data</string>
+    <string name="permissions_camera_info">In order to scan QR and bar codes</string>
+    <string name="permissions_nfc_info">In order to scan NFC tags</string>
+    <string name="permissions_button">ALLOW</string>
+
+    <string name="help_swipe_right_info">Swipe to right to open camera and scan a QR code or a barcode</string>
+    <string name="help_swipe_left_info">Swipe to left to open authorization screen. You can probably get more information from a tag, if you are authorized.</string>
+    <string name="help_nfc">You can also approach your device to read a NFC tag. Even when the application is closed.</string>
+    <string name="help_contact_info">if you have any problems</string>
+    <string name="help_contact_button">CONTACT US</string>
+    <string name="help_produvar_url">https://www.produvar.com/contact/</string>
+
 
     <string name="description_taginfo_error_logo">Error logo</string>
     <string name="description_main_logo">Logo of Produvar company</string>
@@ -25,5 +40,11 @@
     <string name="description_toolbar_camera">Open a camera to scan QR code or Bar code</string>
     <string name="description_main_helper">Opens helper window</string>
     <string name="description_main_options">Opens settings window</string>
+    <string name="description_help_swipe_left">Swipe to left icon</string>
+    <string name="description_help_swipe_right">Swipe to right icon</string>
+    <string name="description_permissions_internet">Internet connection</string>
+    <string name="description_permissions_camera">Camera</string>
+    <string name="description_permissions_nfc">NFC</string>
+
 
 </resources>

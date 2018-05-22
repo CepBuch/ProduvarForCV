@@ -32,6 +32,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-vision:$play_services_version"
     implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
     implementation "org.jetbrains.anko:anko-common:$anko_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 }
 kotlin {
     experimental {

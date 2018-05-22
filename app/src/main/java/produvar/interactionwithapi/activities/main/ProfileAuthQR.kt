@@ -38,9 +38,8 @@ class ProfileAuthQR : Fragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (activity is MainActivity) {
-            mainActivity = activity as MainActivity
-        } else return
+        mainActivity = activity as? MainActivity ?: throw Exception("Fragment is strongly " +
+                "coupled with MainActivity. You can create it in only in MainActivity.")
 
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
             async(UI) {
@@ -84,7 +83,6 @@ class ProfileAuthQR : Fragment() {
 
 
     private fun showProgress(show: Boolean) {
-        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
         rectangleView.visibility = if (show) View.INVISIBLE else View.VISIBLE
         login_progress.visibility = if (show) View.VISIBLE else View.GONE
     }
