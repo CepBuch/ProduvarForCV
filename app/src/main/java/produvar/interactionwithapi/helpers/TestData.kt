@@ -17,8 +17,11 @@ class TestData {
                 "2018-05-23 2:46 When opened, probably show ''expanded'' only Manufacturer and Order info and collapse others")
                 .map { OrderProcess(it) }
 
-        private val workFlowSteps = listOf<String>("1st step", "2nd step", "these", "are", "steps", "of execution",
-                "transportation").map { WorkFlowStep(it) }
+        private val workFlowSteps = listOf<String>("1st previous step", "2nd step", "these", "are", "steps", "of execution",
+                "transportation", "Current step").map { WorkFlowStep(it) }
+
+        val futureSteps = listOf<String>("futureStep1", "futureStep2", "futureStep3", "These steps", "should also",
+                "be displayed", "in statusFlowProcess", "if we can distinguish", "previous current and future").map{WorkFlowStep(it)}
 
         val basicOrderView = BasicOrderView("2018004938", manufacturer)
 

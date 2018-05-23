@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     style="@style/CardViewStyle"
-    android:layout_width="match_parent"
+    android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:layout_marginTop="10dp">
@@ -21,7 +21,6 @@
             android:id="@+id/manufacturer_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxWidth="300dp"
             android:text="@string/taginfo_manufacturer_header"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
@@ -35,8 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:maxWidth="300dp"
-            android:visibility="gone"
             android:textIsSelectable="true"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
@@ -45,21 +42,20 @@
 
         <TextView
             android:id="@+id/manufacturer_website"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:textIsSelectable="true"
             android:autoLink="web"
             android:drawablePadding="20dp"
             android:drawableStart="@drawable/ic_taginfo_website"
-            android:maxWidth="300dp"
             android:visibility="gone"
             android:textColor="@color/produvarDark"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/manufacturer_email"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:autoLink="email"
@@ -73,7 +69,7 @@
 
         <TextView
             android:id="@+id/manufacturer_phone"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:autoLink="phone"

@@ -51,6 +51,7 @@
     <string name="description_permissions_internet">Internet connection</string>
     <string name="description_permissions_camera">Camera</string>
     <string name="description_permissions_nfc">NFC</string>
+    <string name="taginfo_update_status_header">Update status</string>
 
 
 </resources>

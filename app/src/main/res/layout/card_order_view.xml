@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/CardViewStyle"
-    android:layout_width="match_parent"
+    android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:layout_marginTop="10dp">
@@ -20,7 +20,6 @@
             android:id="@+id/order_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxWidth="300dp"
             android:text="@string/taginfo_oreder_info_header"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
@@ -35,8 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:maxWidth="300dp"
-            android:text="Worktop X34 for Johnson family"
+            android:visibility="gone"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="18sp"
@@ -44,14 +42,13 @@
 
         <TextView
             android:id="@+id/order_dueDate"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
             android:layout_marginTop="15dp"
             android:drawablePadding="20dp"
             android:drawableStart="@drawable/ic_taginfo_duedate"
-            android:maxWidth="300dp"
-            android:text="2018-07-29T09:12:33.001Z"
+            android:visibility="gone"
             android:textColor="@color/produvarDark"
             android:textSize="16sp" />
     </LinearLayout>

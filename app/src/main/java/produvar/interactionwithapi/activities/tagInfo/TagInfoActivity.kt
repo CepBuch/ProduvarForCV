@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import junit.framework.Test
@@ -17,7 +18,9 @@ import kotlinx.android.synthetic.main.card_manufacturer_view.*
 import kotlinx.android.synthetic.main.card_order_view.*
 import kotlinx.android.synthetic.main.card_process_view.*
 import kotlinx.android.synthetic.main.card_statusflow_view.*
+import kotlinx.android.synthetic.main.card_update_status_view.*
 import kotlinx.android.synthetic.main.toolbar_taginfo.*
+import org.jetbrains.anko.toast
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.TagChecker
 import produvar.interactionwithapi.helpers.TestData
@@ -116,17 +119,23 @@ class TagInfoActivity : AppCompatActivity() {
 
     private fun showOrderInfo(order: Order) {
 
-        card_order.visibility = if (!order.dueDate.isNullOrBlank()) {
-            order_dueDate.text = order.dueDate
-            order_dueDate.visibility = View.VISIBLE
+        card_order.visibility = if (!order.dueDate.isNullOrBlank() || !order.label.isNullOrBlank()) {
+            order_dueDate.visibility = if (!order.dueDate.isNullOrBlank()) {
+                order_dueDate.text = order.dueDate
+                View.VISIBLE
+            } else View.GONE
+
+            order_label.visibility = if (!order.label.isNullOrBlank()) {
+                order_label.text = order.label
+                View.VISIBLE
+            } else View.GONE
+
             View.VISIBLE
         } else View.GONE
 
         showOrderItems(order.items)
         showStatusFlowItems(order.statusFlow)
         showProcessItems(order.process)
-
-        button_update_status.visibility = View.VISIBLE
     }
 
     private fun getBasicOrderInfo(tagContent: String): BasicOrderView? {
@@ -206,6 +215,29 @@ class TagInfoActivity : AppCompatActivity() {
         for ((index, value) in notEmptyItems.withIndex()) {
             displayStatusFlowItem(value.status!!, index == listSize - 2, index == listSize - 1)
         }
+
+        val currentStep = notEmptyItems.last()
+        val futureSteps = TestData.futureSteps
+        showStatusUpdateCard(currentStep, futureSteps)
+    }
+
+    private fun showStatusUpdateCard(currentStep: WorkFlowStep, futureSteps: List<WorkFlowStep>) {
+        card_update_status.visibility = if (futureSteps.isNotEmpty()) {
+            View.VISIBLE
+        } else View.GONE
+
+        val spinnerArray = futureSteps.map { it.status!! }
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        update_spinner_future_steps.adapter = adapter
+
+        update_camera_button.setOnClickListener { update_location.setText("572347384723") }
+
+        button_update_status.setOnClickListener {
+            toast("Status : ${update_spinner_future_steps.selectedItem.toString()}\n" +
+                    "Location: ${update_location.text}")
+        }
+
 
     }
 
