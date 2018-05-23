@@ -17,35 +17,48 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp"
             android:orientation="vertical"
-            android:paddingBottom="30dp">
+            android:paddingBottom="30dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp">
 
-            <include layout="@layout/card_manufacturer_view" />
+            <include
+                android:id="@+id/card_manufacturer"
+                layout="@layout/card_manufacturer_view"
+                android:visibility="gone" />
 
-            <include layout="@layout/card_order_view" />
+            <include
+                android:id="@+id/card_order"
+                layout="@layout/card_order_view"
+                android:visibility="gone" />
 
-            <include  android:id="@+id/card_items"
+            <include
+                android:id="@+id/card_items"
                 layout="@layout/card_items_view"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
-            <include android:id="@+id/card_status_flow"
-                layout="@layout/card_statusflow_view" />
+            <include
+                android:id="@+id/card_status_flow"
+                layout="@layout/card_statusflow_view"
+                android:visibility="gone" />
 
-            <include android:id="@+id/card_process"
-                layout="@layout/card_process_view"/>
+            <include
+                android:id="@+id/card_process"
+                layout="@layout/card_process_view"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/button_update_status"
                 android:layout_width="200dp"
                 android:layout_height="45dp"
+                android:layout_gravity="center"
                 android:background="@drawable/button_stroke_orange"
                 android:text="@string/taginfo_status_update"
+                android:visibility="gone"
                 android:textColor="@color/produvarOrange" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:maxWidth="300dp"
-            android:text="Evolve Productions B.V"
+            android:visibility="gone"
             android:textIsSelectable="true"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
@@ -53,7 +53,7 @@
             android:drawablePadding="20dp"
             android:drawableStart="@drawable/ic_taginfo_website"
             android:maxWidth="300dp"
-            android:text="https://www.evolveproductions.nl"
+            android:visibility="gone"
             android:textColor="@color/produvarDark"
             android:textSize="16sp" />
 
@@ -67,7 +67,7 @@
             android:textIsSelectable="true"
             android:drawableStart="@drawable/ic_taginfo_email"
             android:maxWidth="300dp"
-            android:text="info@evolveproductions.nl"
+            android:visibility="gone"
             android:textColor="@color/produvarDark"
             android:textSize="16sp" />
 
@@ -80,7 +80,7 @@
             android:drawablePadding="20dp"
             android:textIsSelectable="true"
             android:drawableStart="@drawable/ic_taginfo_phone"
-            android:text="+79256410156"
+            android:visibility="gone"
             android:textColor="@color/produvarDark"
             android:textSize="16sp" />
     </LinearLayout>

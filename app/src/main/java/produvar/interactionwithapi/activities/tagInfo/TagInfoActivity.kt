@@ -10,13 +10,19 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import junit.framework.Test
 import kotlinx.android.synthetic.main.activity_tag_info.*
 import kotlinx.android.synthetic.main.card_items_view.*
+import kotlinx.android.synthetic.main.card_manufacturer_view.*
+import kotlinx.android.synthetic.main.card_order_view.*
 import kotlinx.android.synthetic.main.card_process_view.*
 import kotlinx.android.synthetic.main.card_statusflow_view.*
 import kotlinx.android.synthetic.main.toolbar_taginfo.*
 import produvar.interactionwithapi.R
+import produvar.interactionwithapi.helpers.TagChecker
+import produvar.interactionwithapi.helpers.TestData
 import produvar.interactionwithapi.helpers.changeStatusBarColor
+import produvar.interactionwithapi.model.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -65,38 +71,83 @@ class TagInfoActivity : AppCompatActivity() {
     }
 
     private fun processTag(tagContent: String) {
-        if (isTagContentValid(tagContent)) {
-            val testListOrderItems = mutableListOf<String>(tagContent)
-            repeat(2) { testListOrderItems.add("Worktop X34 for Johnson family") }
-            testListOrderItems.addAll(listOf<String>("everything is added dynamically",
-                    "according to server response", "if server doesn't provide data for one or other card it won't be shown",
-                    "btw, not sure if icons in this card are ok"))
-            val testListStatusFlow = listOf<String>("1st step", "2nd step", "these", "are", "steps", "of execution",
-                    "transportation", tagContent)
-            val testListOfProcesses = listOf<String>("2017-03-03 15:33 Pete Manson polished the blade",
-                    "2018-05-23 2:37 if it has date it will be highlighted", "otherwise, just shown as a string",
-                    "i'm also thinking of making every card expandable/collapsable",
-                    "2018-05-23 2:46 When opened, probably show ''expanded'' only Manufacturer and Order info and collapse others",
-                    tagContent)
+        if (TagChecker.isOrderTagValid(tagContent)) {
+            val basicOrderInfo = getBasicOrderInfo(tagContent) ?: return
+            showManufacturerInfo(basicOrderInfo.manufacturer)
 
-
-            showOrderItems(testListOrderItems)
-            showStatusFlowItems(testListStatusFlow)
-            showProcessItems(testListOfProcesses)
+            if (!basicOrderInfo.orderCode.isNullOrBlank()) {
+                val orderInfo = getOrderInfo(basicOrderInfo.orderCode!!) ?: return
+                showOrderInfo(orderInfo)
+            }
 
         } else showScanError()
     }
 
-    private fun showProcessItems(items: List<String>) {
-        card_process.visibility = if (items.isEmpty()) {
+    private fun showManufacturerInfo(manufacturer: BasicManufacturerView) {
+        var atLeastOne = false
+
+        manufacturer_name.visibility = if (!manufacturer.name.isNullOrBlank()) {
+            manufacturer_name.text = manufacturer.name
+            atLeastOne = true
+            View.VISIBLE
+        } else View.GONE
+
+        manufacturer_website.visibility = if (!manufacturer.website.isNullOrBlank()) {
+            manufacturer_website.text = manufacturer.website
+            atLeastOne = true
+            View.VISIBLE
+        } else View.GONE
+
+        manufacturer_email.visibility = if (!manufacturer.email.isNullOrBlank()) {
+            manufacturer_email.text = manufacturer.email
+            atLeastOne = true
+            View.VISIBLE
+        } else View.GONE
+
+        manufacturer_phone.visibility = if (!manufacturer.phoneNumber.isNullOrBlank()) {
+            manufacturer_phone.text = manufacturer.phoneNumber
+            atLeastOne = true
+            View.VISIBLE
+        } else View.GONE
+
+        card_manufacturer.visibility = if (atLeastOne) View.VISIBLE else View.GONE
+    }
+
+
+    private fun showOrderInfo(order: Order) {
+
+        card_order.visibility = if (!order.dueDate.isNullOrBlank()) {
+            order_dueDate.text = order.dueDate
+            order_dueDate.visibility = View.VISIBLE
+            View.VISIBLE
+        } else View.GONE
+
+        showOrderItems(order.items)
+        showStatusFlowItems(order.statusFlow)
+        showProcessItems(order.process)
+
+        button_update_status.visibility = View.VISIBLE
+    }
+
+    private fun getBasicOrderInfo(tagContent: String): BasicOrderView? {
+        return TestData.basicOrderView
+    }
+
+    private fun getOrderInfo(orderCode: String): Order? {
+        return TestData.order
+    }
+
+    private fun showProcessItems(items: List<OrderProcess>) {
+        val listSize = items.size
+        val notEmptyItems = items.filterNot { it.label.isNullOrBlank() }
+
+        card_process.visibility = if (notEmptyItems.isEmpty()) {
             View.GONE
             return
         } else View.VISIBLE
 
-        val listSize = items.size
-
-        for ((index, value) in items.withIndex()) {
-            displayProcess(value, index == listSize - 1)
+        for ((index, value) in notEmptyItems.withIndex()) {
+            displayProcess(value.label!!, index == listSize - 1)
         }
     }
 
@@ -135,26 +186,27 @@ class TagInfoActivity : AppCompatActivity() {
 
         messageTextView.text = message
 
-        if(isLast){
+        if (isLast) {
             line.visibility = View.GONE
         }
-
 
         process_items_container.addView(layout)
 
     }
 
-    private fun showStatusFlowItems(items: List<String>) {
+    private fun showStatusFlowItems(items: List<WorkFlowStep>) {
+        val listSize = items.size
+        val notEmptyItems = items.filterNot { it.status.isNullOrBlank() }
 
-        card_status_flow.visibility = if (items.isEmpty()) {
+        card_status_flow.visibility = if (notEmptyItems.isEmpty()) {
             View.GONE
             return
         } else View.VISIBLE
 
-        val listSize = items.size
-        for ((index, value) in items.withIndex()) {
-            displayStatusFlowItem(value, index == listSize - 2, index == listSize - 1)
+        for ((index, value) in notEmptyItems.withIndex()) {
+            displayStatusFlowItem(value.status!!, index == listSize - 2, index == listSize - 1)
         }
+
     }
 
     private fun displayStatusFlowItem(processName: String, isPenultimate: Boolean, isLast: Boolean) {
@@ -177,13 +229,14 @@ class TagInfoActivity : AppCompatActivity() {
         statusflow_items_container.addView(layout)
     }
 
-    private fun showOrderItems(items: List<String>) {
-        card_items.visibility = if (items.isEmpty()) {
+    private fun showOrderItems(items: List<OrderItem>) {
+        val notEmptyItems = items.filterNot { it.label.isNullOrBlank() }
+        card_items.visibility = if (notEmptyItems.isEmpty()) {
             View.GONE
             return
         } else View.VISIBLE
-        for (i in items) {
-            displayOrderItem(i)
+        for (i in notEmptyItems) {
+            displayOrderItem(i.label!!)
         }
     }
 
@@ -195,11 +248,6 @@ class TagInfoActivity : AppCompatActivity() {
         order_items_container.addView(textView)
     }
 
-
-    private fun isTagContentValid(tagContent: String): Boolean {
-        return tagContent.startsWith("https://") || tagContent.startsWith("http://") ||
-                tagContent.all { it.isDigit() }
-    }
 
     private fun showScanError() {
         content_view.visibility = View.GONE
