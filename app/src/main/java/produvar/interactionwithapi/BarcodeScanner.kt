@@ -25,13 +25,15 @@ class BarcodeScanner(private val activity: AppCompatActivity,
                      private val cameraPreview: SurfaceView,
                      val onScannedListener: (String) -> Unit,
                      private val previewWidth: Int = 640,
-                     private val previewHeight: Int = 480,
-                     private val shouldCrop: Boolean = true) {
+                     private val previewHeight: Int = 480) {
 
     lateinit var cameraSource: CameraSource
     lateinit var barcodeDetector: BarcodeDetector
     var isCameraShown = false
 
+    init {
+        setPreviewSize()
+    }
 
     fun setUpAsync() {
         async(UI) {
@@ -53,9 +55,7 @@ class BarcodeScanner(private val activity: AppCompatActivity,
                 .setRequestedPreviewSize(previewWidth, previewHeight)
                 .build()
 
-        if (shouldCrop) {
-            setPreviewSize()
-        }
+
 
         barcodeDetector.setProcessor(
                 object : Detector.Processor<Barcode> {
@@ -106,9 +106,7 @@ class BarcodeScanner(private val activity: AppCompatActivity,
     }
 
     private fun setPreviewSize() {
-        val displayMetrics = DisplayMetrics()
-        val display = activity.windowManager?.defaultDisplay ?: return
-        display.getMetrics(displayMetrics)
+        val displayMetrics = activity.resources.displayMetrics ?: return
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
         val widthIsMax = width > height

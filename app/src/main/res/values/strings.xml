@@ -13,6 +13,9 @@
     <string name="taginfo_process_header">Messages</string>
     <string name="taginfo_status_update">UPDATE STATUS</string>
     <string name="taginfo_status_flow_header">Status flow</string>
+    <string name="location_scanner_camera_info">Point the camera at QR code or a Barcode describing location</string>
+    <string name="taginfo_update_status_header">Update status</string>
+
 
     <string name="action_sign_in_short">Sign in</string>
     <string name="profile_tab_account">Account</string>
@@ -51,7 +54,5 @@
     <string name="description_permissions_internet">Internet connection</string>
     <string name="description_permissions_camera">Camera</string>
     <string name="description_permissions_nfc">NFC</string>
-    <string name="taginfo_update_status_header">Update status</string>
-
 
 </resources>

@@ -51,12 +51,7 @@ class ProfileAuthQR : Fragment() {
                 }.await()
                 showProgress(false)
             }
-
         })
-
-//        Snackbar.make(email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-//                .setAction(android.R.string.ok,
-//                        {  })
 
         scanner.setUpAsync()
 
@@ -78,7 +73,9 @@ class ProfileAuthQR : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        scanner.setUpAsync()
+        view?.post {
+            scanner.setUpAsync()
+        }
     }
 
 

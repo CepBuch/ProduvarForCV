@@ -36,11 +36,17 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activities.permissions.PermissionsActivity" />
+            android:name=".activities.tagInfo.ScanLocationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+
+        <activity android:name=".activities.permissions.PermissionsActivity" />
+
         <activity
             android:name=".activities.help.HelpActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
+
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -48,6 +54,8 @@
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
+
+
     </application>
 
 </manifest>

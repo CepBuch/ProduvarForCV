@@ -34,6 +34,7 @@ dependencies {
     implementation "org.jetbrains.anko:anko-common:$anko_version"
     implementation "com.android.support.constraint:constraint-layout:$cl_version"
     implementation "com.google.code.gson:gson:$gson_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 }
 kotlin {
     experimental {

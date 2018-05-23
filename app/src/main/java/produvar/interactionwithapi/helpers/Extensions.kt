@@ -5,7 +5,9 @@ import android.content.Context
 import android.os.Build
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
+import android.view.Display
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -48,5 +50,7 @@ fun Int.dpToPx(context: Context): Int {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
             this.toFloat(), r.displayMetrics).toInt()
 }
+
+
 
 
