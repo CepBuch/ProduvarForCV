@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     style="@style/CardViewStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,14 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="25dp">
 
         <TextView
             android:id="@+id/order_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxWidth="300dp"
-            android:text="Order info"
+            android:text="@string/taginfo_oreder_info_header"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="18sp"
@@ -29,6 +31,7 @@
 
         <TextView
             android:id="@+id/order_label"
+            android:textIsSelectable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -43,25 +46,12 @@
             android:id="@+id/order_dueDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textIsSelectable="true"
             android:layout_marginTop="15dp"
-            android:drawablePadding="10dp"
+            android:drawablePadding="20dp"
             android:drawableStart="@drawable/ic_taginfo_duedate"
             android:maxWidth="300dp"
             android:text="2018-07-29T09:12:33.001Z"
-            android:textAlignment="center"
-            android:textColor="@color/produvarDark"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/order_statusFlow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_taginfo_statusflow"
-            android:maxWidth="300dp"
-            android:text="Transport"
-            android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="16sp" />
     </LinearLayout>

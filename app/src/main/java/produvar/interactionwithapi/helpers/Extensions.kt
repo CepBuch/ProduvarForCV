@@ -49,9 +49,4 @@ fun Int.dpToPx(context: Context): Int {
             this.toFloat(), r.displayMetrics).toInt()
 }
 
-fun Int.SpToPx(context: Context): Float {
-    val r = context.resources
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
-            this.toFloat(), r.displayMetrics)
-}
 

@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.status_bar_main.*
 import kotlinx.android.synthetic.main.toolbar_main_page.*
 import produvar.interactionwithapi.R
-import produvar.interactionwithapi.activities.HelpActivity
+import produvar.interactionwithapi.activities.help.HelpActivity
 import produvar.interactionwithapi.helpers.setUpStatusBar
 
 class MainPageFragment : Fragment() {
@@ -47,6 +47,8 @@ class MainPageFragment : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
     }
+
+
 
 
     private fun openHelpActivity() {

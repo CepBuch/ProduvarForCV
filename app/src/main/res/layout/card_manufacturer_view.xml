@@ -12,14 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="25dp">
 
         <TextView
             android:id="@+id/manufacturer_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxWidth="300dp"
-            android:text="Manufacturer"
+            android:text="@string/taginfo_manufacturer_header"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="18sp"
@@ -31,10 +34,10 @@
             android:id="@+id/manufacturer_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_marginTop="15dp"
             android:maxWidth="300dp"
             android:text="Evolve Productions B.V"
+            android:textIsSelectable="true"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="18sp"
@@ -44,14 +47,13 @@
             android:id="@+id/manufacturer_website"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_marginTop="15dp"
+            android:textIsSelectable="true"
             android:autoLink="web"
-            android:drawablePadding="10dp"
+            android:drawablePadding="20dp"
             android:drawableStart="@drawable/ic_taginfo_website"
             android:maxWidth="300dp"
             android:text="https://www.evolveproductions.nl"
-            android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="16sp" />
 
@@ -60,13 +62,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-
             android:autoLink="email"
-            android:drawablePadding="10dp"
+            android:drawablePadding="20dp"
+            android:textIsSelectable="true"
             android:drawableStart="@drawable/ic_taginfo_email"
             android:maxWidth="300dp"
             android:text="info@evolveproductions.nl"
-            android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="16sp" />
 
@@ -76,10 +77,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:autoLink="phone"
-            android:drawablePadding="10dp"
+            android:drawablePadding="20dp"
+            android:textIsSelectable="true"
             android:drawableStart="@drawable/ic_taginfo_phone"
             android:text="+79256410156"
-            android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="16sp" />
     </LinearLayout>

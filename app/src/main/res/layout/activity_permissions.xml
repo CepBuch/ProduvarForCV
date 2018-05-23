@@ -135,7 +135,7 @@
         android:layout_width="200dp"
         android:layout_height="45dp"
         android:layout_marginBottom="40dp"
-        android:background="@drawable/stroke_perm_button"
+        android:background="@drawable/button_stroke_white"
         android:text="@string/permissions_button"
         android:textColor="@color/produvarLight"
         app:layout_constraintBottom_toBottomOf="parent"

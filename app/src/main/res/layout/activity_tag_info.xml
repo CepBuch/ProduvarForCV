@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/produvarLight">
@@ -14,10 +13,6 @@
         android:id="@+id/content_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="15dp"
-        android:layout_marginStart="15dp"
-        android:paddingEnd="3dp"
-        android:paddingStart="3dp"
         android:scrollbarStyle="outsideOverlay"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -26,6 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
             android:orientation="vertical"
             android:paddingBottom="30dp">
 
@@ -33,9 +30,23 @@
 
             <include layout="@layout/card_order_view" />
 
-            <include layout="@layout/card_items_view" />
+            <include  android:id="@+id/card_items"
+                layout="@layout/card_items_view"
+                android:visibility="gone"/>
 
+            <include android:id="@+id/card_status_flow"
+                layout="@layout/card_statusflow_view" />
 
+            <include android:id="@+id/card_process"
+                layout="@layout/card_process_view"/>
+
+            <Button
+                android:id="@+id/button_update_status"
+                android:layout_width="200dp"
+                android:layout_height="45dp"
+                android:background="@drawable/button_stroke_orange"
+                android:text="@string/taginfo_status_update"
+                android:textColor="@color/produvarOrange" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

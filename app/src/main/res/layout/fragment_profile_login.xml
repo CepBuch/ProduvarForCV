@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        android:background="@drawable/stroke_perm_button"
+        android:background="@drawable/button_stroke_white"
         android:padding="15dp"
         android:text="@string/profile_sign_in_button"
         android:textColor="@color/produvarLight"
