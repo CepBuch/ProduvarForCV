@@ -18,14 +18,14 @@
 
 
     <string name="action_sign_in_short">Sign in</string>
-    <string name="profile_tab_account">Account</string>
-    <string name="profile_tab_qr_code">QR code</string>
-    <string name="profile_camera_info">Point the camera at authorization QR code</string>
-    <string name="profile_error_field_required">This field is required</string>
-    <string name="profile_error_invalid_email">Email is invalid</string>
-    <string name="profile_prompt_username">Username</string>
-    <string name="profile_prompt_password">Password</string>
-    <string name="profile_sign_in_button">SIGN IN FOR 24 HOURS</string>
+    <string name="login_tab_account">Account</string>
+    <string name="login_tab_qr_code">QR code</string>
+    <string name="login_camera_info">Point the camera at authorization QR code</string>
+    <string name="login_error_field_required">This field is required</string>
+    <string name="login_error_invalid_email">Email is invalid</string>
+    <string name="login_prompt_username">Username</string>
+    <string name="login_prompt_password">Password</string>
+    <string name="login_sign_in_button">SIGN IN FOR 24 HOURS</string>
 
     <string name="permissions_info">For correct work the application needs the following permission(s):</string>
     <string name="permissions_internet_info">In order to transmit and receive data</string>

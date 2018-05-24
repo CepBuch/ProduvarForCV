@@ -9,6 +9,9 @@ class Constants {
         const val PERMISSIONS_TO_ASK = "PERMISSIONS_TO_ASK"
         const val SCAN_LOCATION = 1
         const val LOCATION_RESULT = "location_result"
+        const val ON_AUTHORIZED_LISTENER = "ON_AUTHORIZED_LISTENER"
+        const val ON_LOG_OUT_LISTENER = "ON_LOG_OUT_LISTENER"
+        const val LOGGED_USER_INFO = "LOGGED_USER_INFO"
         val IMPORTANT_PERMISSIONS = arrayOf(Manifest.permission.INTERNET,
                 Manifest.permission.CAMERA, Manifest.permission.NFC)
     }

@@ -1,4 +1,4 @@
-package produvar.interactionwithapi.activities.main.pages
+package produvar.interactionwithapi.activities.main.pages.pofilePageContent.authTypes
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_profile_qr.*
+import kotlinx.android.synthetic.main.fagment_auth_qr.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
@@ -17,12 +17,12 @@ import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.TagChecker
 
 
-class ProfileAuthQR : Fragment() {
+class AuthQrFragment : Fragment() {
 
     lateinit var scanner: BarcodeScanner
     lateinit var mainActivity: MainActivity
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_profile_qr, container, false)
+        val view = inflater.inflate(R.layout.fagment_auth_qr, container, false)
 
         // centring gravity to the height of mainActivity (not the layout)
         val marginTop = arguments?.getInt(Constants.PARAM_TOP_VIEWS_HEIGHT)

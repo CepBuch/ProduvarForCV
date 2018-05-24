@@ -10,7 +10,7 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_main_page.*
+import kotlinx.android.synthetic.main.fragment_page_main.*
 import kotlinx.android.synthetic.main.status_bar_main.*
 import kotlinx.android.synthetic.main.toolbar_main_page.*
 import produvar.interactionwithapi.R
@@ -20,11 +20,19 @@ import produvar.interactionwithapi.helpers.setUpStatusBar
 
 class MainPageFragment : Fragment() {
 
+//    // TODO()
+//    interface NavigationPage {
+//        void
+//    }
+
+    companion object {
+        fun newInstance() = MainPageFragment()
+    }
+
     private lateinit var mainActivity: MainActivity
-    lateinit var prefs: SharedPreferences
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_main_page, container, false)
+        return inflater.inflate(R.layout.fragment_page_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,8 +56,6 @@ class MainPageFragment : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
     }
-
-
 
 
     private fun openHelpActivity() {

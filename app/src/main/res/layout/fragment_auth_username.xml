@@ -30,7 +30,7 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/profile_prompt_username"
+            android:hint="@string/login_prompt_username"
             android:imeOptions="actionNext"
             android:inputType="textEmailAddress"
             android:maxLines="1"
@@ -52,7 +52,7 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/profile_prompt_password"
+            android:hint="@string/login_prompt_password"
             android:imeActionId="6"
             android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionUnspecified"
@@ -72,7 +72,7 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/button_stroke_white"
         android:padding="15dp"
-        android:text="@string/profile_sign_in_button"
+        android:text="@string/login_sign_in_button"
         android:textColor="@color/produvarLight"
         android:textStyle="bold" />
 

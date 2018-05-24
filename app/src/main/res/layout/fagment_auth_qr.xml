@@ -16,7 +16,7 @@
         android:shadowDx="1.5"
         android:shadowDy="1.3"
         android:shadowRadius="1.6"
-        android:text="@string/profile_camera_info"
+        android:text="@string/login_camera_info"
         android:textColor="@color/produvarLight"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

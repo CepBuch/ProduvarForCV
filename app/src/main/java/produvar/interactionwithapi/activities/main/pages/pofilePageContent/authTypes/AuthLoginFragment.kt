@@ -1,4 +1,4 @@
-package produvar.interactionwithapi.activities.main.pages
+package produvar.interactionwithapi.activities.main.pages.pofilePageContent.authTypes
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -6,17 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import kotlinx.android.synthetic.main.fragment_profile_login.*
+import kotlinx.android.synthetic.main.fragment_auth_username.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.Constants
 
-class ProfileAuthLogin : Fragment() {
+class AuthLoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_profile_login, container, false)
+        val view = inflater.inflate(R.layout.fragment_auth_username, container, false)
 
         // centring gravity to the height of mainActivity (not the layout)
         val marginTop = arguments?.getInt(Constants.PARAM_TOP_VIEWS_HEIGHT)
@@ -53,15 +53,15 @@ class ProfileAuthLogin : Fragment() {
 
 
         if (emailStr.isBlank()) {
-            email.error = getString(R.string.profile_error_field_required)
+            email.error = getString(R.string.login_error_field_required)
             return
         }
         if (!isValidEmail(emailStr)) {
-            email.error = getString(R.string.profile_error_invalid_email)
+            email.error = getString(R.string.login_error_invalid_email)
             return
         }
         if (passwordStr.isBlank()) {
-            password.error = getString(R.string.profile_error_field_required)
+            password.error = getString(R.string.login_error_field_required)
             return
         }
         async(UI) {

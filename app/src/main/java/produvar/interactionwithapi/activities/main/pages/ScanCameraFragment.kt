@@ -3,7 +3,7 @@ package produvar.interactionwithapi.activities.main.pages
 import android.content.Intent
 import android.support.v4.app.Fragment
 import android.os.Bundle
-import kotlinx.android.synthetic.main.fragment_scan_barcode.*
+import kotlinx.android.synthetic.main.fragment_page_camera.*
 import android.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import produvar.interactionwithapi.BarcodeScanner
@@ -17,9 +17,12 @@ class ScanCameraFragment : Fragment() {
     lateinit var scanner: BarcodeScanner
     lateinit var mainActivity: MainActivity
 
+    companion object {
+        fun newInstance() = ScanCameraFragment()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_scan_barcode, container, false)
+        return inflater.inflate(R.layout.fragment_page_camera, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

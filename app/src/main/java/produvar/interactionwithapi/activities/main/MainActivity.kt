@@ -4,16 +4,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
 import produvar.interactionwithapi.*
-import produvar.interactionwithapi.activities.main.pages.MainPageFragment
-import produvar.interactionwithapi.activities.main.pages.ProfilePageFragment
-import produvar.interactionwithapi.activities.main.pages.ScanCameraFragment
 import produvar.interactionwithapi.activities.permissions.PermissionsActivity
 import produvar.interactionwithapi.helpers.Constants
 
@@ -28,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         checkPermissions()
 
         // Making status bar transparent on newer devices
-        // (it will be given a color in MainPageFragment and ProfilePageFragment onCreate))
+        // (it will be given a color in MainPageFragment and AuthPageFragment onCreate))
         // this enables to remove statusbar on camera fragment
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window?.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
@@ -41,17 +37,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setUpViewPager() {
-        view_pager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
-            override fun getItem(position: Int) =
-                    when (position) {
-                        0 -> ScanCameraFragment()
-                        1 -> MainPageFragment()
-                        2 -> ProfilePageFragment()
-                        else -> MainPageFragment()
-                    }
-
-            override fun getCount() = 3
-        }
+        view_pager.adapter = MainPagerAdapter(supportFragmentManager, this)
         view_pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 val decorView = window.decorView

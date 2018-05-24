@@ -1,5 +1,7 @@
 package produvar.interactionwithapi
 
-class ApiProvider{
-    
+import produvar.interactionwithapi.model.UserData
+
+class ApiProvider {
+
 }
