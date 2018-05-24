@@ -1,4 +1,4 @@
-package produvar.interactionwithapi.activities.main
+package produvar.interactionwithapi.activities.main.pages
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

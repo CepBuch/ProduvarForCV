@@ -1,21 +1,18 @@
-package produvar.interactionwithapi.activities.main
+package produvar.interactionwithapi.activities.main.pages
 
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_profile_qr.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.attempt
 import org.jetbrains.anko.coroutines.experimental.bg
-import org.jetbrains.anko.toast
 import produvar.interactionwithapi.BarcodeScanner
 import produvar.interactionwithapi.R
+import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.TagChecker
 

@@ -1,20 +1,19 @@
 package produvar.interactionwithapi.activities.main
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.Display
 import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_main_page.*
-import org.jetbrains.anko.defaultSharedPreferences
 import produvar.interactionwithapi.*
+import produvar.interactionwithapi.activities.main.pages.MainPageFragment
+import produvar.interactionwithapi.activities.main.pages.ProfilePageFragment
+import produvar.interactionwithapi.activities.main.pages.ScanCameraFragment
 import produvar.interactionwithapi.activities.permissions.PermissionsActivity
 import produvar.interactionwithapi.helpers.Constants
 
@@ -29,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         checkPermissions()
 
         // Making status bar transparent on newer devices
-        // (it will be given a color in MainPageFragment and ProfileFragment onCreate))
+        // (it will be given a color in MainPageFragment and ProfilePageFragment onCreate))
         // this enables to remove statusbar on camera fragment
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window?.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                     when (position) {
                         0 -> ScanCameraFragment()
                         1 -> MainPageFragment()
-                        2 -> ProfileFragment()
+                        2 -> ProfilePageFragment()
                         else -> MainPageFragment()
                     }
 

@@ -21,8 +21,6 @@ class ScanLocationActivity : AppCompatActivity() {
 
         // Getting display metrics when they are available (for fullscreen camera purposes)
         scanner = BarcodeScanner(this, location_camera_preview, { codeScannedCallback(it) })
-
-
         button_back.setOnClickListener { onBackPressed() }
     }
 

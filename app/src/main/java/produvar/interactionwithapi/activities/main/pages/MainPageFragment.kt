@@ -1,4 +1,4 @@
-package produvar.interactionwithapi.activities.main
+package produvar.interactionwithapi.activities.main.pages
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.status_bar_main.*
 import kotlinx.android.synthetic.main.toolbar_main_page.*
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.activities.help.HelpActivity
+import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.helpers.setUpStatusBar
 
 class MainPageFragment : Fragment() {

@@ -1,4 +1,4 @@
-package produvar.interactionwithapi.activities.main
+package produvar.interactionwithapi.activities.main.pages
 
 import android.graphics.Color
 import android.os.Bundle
@@ -14,11 +14,12 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 import produvar.interactionwithapi.R
+import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.setUpStatusBar
 
 
-class ProfileFragment : Fragment() {
+class ProfilePageFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

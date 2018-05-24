@@ -1,4 +1,4 @@
-package produvar.interactionwithapi.activities.main
+package produvar.interactionwithapi.activities.main.pages
 
 import android.content.Intent
 import android.support.v4.app.Fragment
@@ -8,6 +8,7 @@ import android.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import produvar.interactionwithapi.BarcodeScanner
 import produvar.interactionwithapi.R
+import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.activities.tagInfo.TagInfoActivity
 
 
