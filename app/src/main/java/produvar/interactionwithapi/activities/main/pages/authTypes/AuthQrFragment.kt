@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_auth_qr.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.AlertBuilder
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.okButton
@@ -20,14 +19,13 @@ import produvar.interactionwithapi.R
 import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.TagChecker
-import produvar.interactionwithapi.model.LoginType
 import produvar.interactionwithapi.model.User
 
 
 class AuthQrFragment : Fragment() {
 
     interface OnQrAuthorizationListener {
-        fun authorizationComplete(authorizedUser: User)
+        fun authWithQRComplete(authorizedUser: User)
     }
 
     private var listener: OnQrAuthorizationListener? = null
@@ -97,7 +95,7 @@ class AuthQrFragment : Fragment() {
             }.await()
 
             if (authorizedUser != null) {
-                listener?.authorizationComplete(authorizedUser)
+                listener?.authWithQRComplete(authorizedUser)
             } else {
                 showLoginError(getString(R.string.login_qr_not_found_title),
                         getString(R.string.login_qr_not_found_message))

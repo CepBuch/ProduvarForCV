@@ -1,5 +1,6 @@
 package produvar.interactionwithapi.activities.main.pages.authTypes
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,18 +10,21 @@ import android.view.inputmethod.EditorInfo
 import kotlinx.android.synthetic.main.fragment_auth_username.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.coroutines.experimental.bg
+import org.jetbrains.anko.okButton
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.Constants
+import produvar.interactionwithapi.model.LoginType
+import produvar.interactionwithapi.model.User
 
 class AuthLoginFragment : Fragment() {
 
-    companion object {
-        fun newInstance(): AuthLoginFragment {
-            val instance = AuthLoginFragment()
-            return instance
-        }
+    interface OnAccountAuthorizationListener {
+        fun authWithPersonalAccountComplete(authorizedUser: User)
     }
+
+    private var listener: OnAccountAuthorizationListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_auth_username, container, false)
@@ -34,6 +38,20 @@ class AuthLoginFragment : Fragment() {
         return view
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (parentFragment is OnAccountAuthorizationListener) {
+            listener = parentFragment as OnAccountAuthorizationListener
+        } else {
+            throw RuntimeException("$context must implement OnAccountAuthorizationListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // When user clicks "Done" after entering passport
         password.setOnEditorActionListener { _, id, _ ->
@@ -44,8 +62,8 @@ class AuthLoginFragment : Fragment() {
             false
         }
 
-
         sign_in_button.setOnClickListener { attemptLogin() }
+
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -73,9 +91,32 @@ class AuthLoginFragment : Fragment() {
         }
         async(UI) {
             showProgress(true)
-            bg { Thread.sleep(5000) }.await()
+            val authorizedUser = bg {
+                //API CALL IMITATION
+                Thread.sleep(1000)
+                if (emailStr == "john_smith@gmail.com" && passwordStr == "test") {
+                    User(LoginType.PersonalAccount, "d,sj(_wu5>vF!.#e",
+                            "john_smith@gmail.com", "John", "Employee")
+                } else null
+            }.await()
+
+            if (authorizedUser != null) {
+                email.setText("")
+                password.setText("")
+                listener?.authWithPersonalAccountComplete(authorizedUser)
+            } else {
+                showLoginError(getString(R.string.login_personal_not_found_title),
+                        getString(R.string.login_personal_not_found_message))
+            }
             showProgress(false)
         }
+    }
+
+    private fun showLoginError(title: String, message: String) {
+        activity!!.alert(message, title) {
+            okButton { }
+        }.show()
+        password.setText("")
     }
 
     private fun showProgress(show: Boolean) {

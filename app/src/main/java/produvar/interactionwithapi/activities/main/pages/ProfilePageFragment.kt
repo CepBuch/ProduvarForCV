@@ -26,14 +26,18 @@ import produvar.interactionwithapi.model.LoginType
 import produvar.interactionwithapi.model.User
 
 
-class ProfilePageFragment : Fragment(), AuthQrFragment.OnQrAuthorizationListener {
+class ProfilePageFragment : Fragment(),
+        AuthQrFragment.OnQrAuthorizationListener,
+        AuthLoginFragment.OnAccountAuthorizationListener {
+
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_page_profile, container, false)
     }
 
-    private lateinit var prefs: SharedPreferences
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         prefs = activity!!.getPreferences(MODE_PRIVATE)
 
@@ -52,7 +56,6 @@ class ProfilePageFragment : Fragment(), AuthQrFragment.OnQrAuthorizationListener
     }
 
 
-
     private fun setUpContent() {
         var flag = false
         val userJson = prefs.getString(Constants.LOGGED_USER_INFO, null)
@@ -63,14 +66,17 @@ class ProfilePageFragment : Fragment(), AuthQrFragment.OnQrAuthorizationListener
                 showInfoAboutUser(parsedUser)
             }
         }
-        if(!flag){
+        if (!flag) {
             showAuthorizationForm()
         }
     }
 
 
-    override fun authorizationComplete(authorizedUser: User) {
-        activity!!.toast("Bearer(dev purposes) : ${authorizedUser.bearer}")
+    override fun authWithQRComplete(authorizedUser: User) {
+        logIn(authorizedUser)
+    }
+
+    override fun authWithPersonalAccountComplete(authorizedUser: User) {
         logIn(authorizedUser)
     }
 
@@ -92,7 +98,7 @@ class ProfilePageFragment : Fragment(), AuthQrFragment.OnQrAuthorizationListener
         }
     }
 
-    private fun showAuthorizationForm(){
+    private fun showAuthorizationForm() {
         content_authorization.visibility = View.VISIBLE
         content_profile_info.visibility = View.GONE
     }
@@ -129,7 +135,7 @@ class ProfilePageFragment : Fragment(), AuthQrFragment.OnQrAuthorizationListener
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        if(view != null && content_authorization.visibility == View.VISIBLE){
+        if (view != null && content_authorization.visibility == View.VISIBLE) {
             selectFirstTab()
         }
         super.setUserVisibleHint(isVisibleToUser)
