@@ -1,5 +1,6 @@
 package produvar.interactionwithapi.activities.main.pages
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -13,51 +14,40 @@ import kotlinx.android.synthetic.main.toolbar_profile.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
-import produvar.interactionwithapi.ApiProvider
 import produvar.interactionwithapi.R
-import produvar.interactionwithapi.activities.main.SwitchFragmentListener
-import produvar.interactionwithapi.activities.main.pages.pofilePageContent.authTypes.AuthLoginFragment
-import produvar.interactionwithapi.activities.main.pages.pofilePageContent.authTypes.AuthQrFragment
 import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.setUpStatusBar
-import produvar.interactionwithapi.model.UserData
 import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import com.google.gson.Gson
+import produvar.interactionwithapi.activities.main.pages.authTypes.AuthLoginFragment
+import produvar.interactionwithapi.activities.main.pages.authTypes.AuthQrFragment
+import produvar.interactionwithapi.model.LoginType
+import produvar.interactionwithapi.model.User
 
 
 class AuthPageFragment : Fragment() {
-
-    companion object {
-        fun newInstance(logInListener: SwitchFragmentListener): AuthPageFragment {
-            val fragment = AuthPageFragment()
-            val bundle = Bundle()
-            bundle.putSerializable(Constants.ON_AUTHORIZED_LISTENER, logInListener)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
-    private lateinit var listener: SwitchFragmentListener
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_page_authorization, container, false)
     }
 
+    lateinit var prefs: SharedPreferences
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        listener = arguments?.getSerializable(Constants.ON_AUTHORIZED_LISTENER) as SwitchFragmentListener
+        prefs = activity!!.getPreferences(MODE_PRIVATE)
 
         button_back.setOnClickListener {
-            //            activity?.onBackPressed()
-            saveCurrentUser(UserData("adasdasd", "CepBuch", "Sergey", "Loh"))
-            listener.onSwithToNextFragment()
+            activity?.onBackPressed()
+            logIn(User(LoginType.PersonalAccount, "123fdasg123", "cep.buch@gmail.com", "Sergey", "Employee"))
         }
+
+        button_logout.setOnClickListener { logOut() }
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             setUpStatusBar(status_bar, Color.TRANSPARENT)
         }
-
         setUpTabLayout()
+        setUpContent()
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -86,12 +76,73 @@ class AuthPageFragment : Fragment() {
         }
     }
 
-    private fun saveCurrentUser(userData: UserData) {
-        val prefs = activity!!.getPreferences(MODE_PRIVATE)
-        val prefsEditor = prefs.edit()
-        val json = Gson().toJson(userData)
-        prefsEditor.putString(Constants.LOGGED_USER_INFO, json)
-        prefsEditor.apply()
+
+    private fun setUpContent() {
+        var flag = false
+        val userJson = prefs.getString(Constants.LOGGED_USER_INFO, null)
+        if (userJson != null) {
+            val parsedUser = Gson().fromJson(userJson, User::class.java)
+            if (parsedUser != null) {
+                flag = true
+                showInfoAboutUser(parsedUser)
+            }
+        }
+        if(!flag){
+            showAuthorizationForm()
+        }
+    }
+
+    private fun logIn(user: User) {
+        saveUserInfoToPrefs(user)
+        showInfoAboutUser(user)
+    }
+
+    private fun logOut() {
+        saveUserInfoToPrefs(null)
+        showAuthorizationForm()
+    }
+
+    private fun saveUserInfoToPrefs(user: User?) {
+        with(prefs.edit()) {
+            val json = Gson().toJson(user)
+            putString(Constants.LOGGED_USER_INFO, json)
+            apply()
+        }
+    }
+
+    private fun showAuthorizationForm(){
+        content_authorization.visibility = View.VISIBLE
+        content_profile_info.visibility = View.GONE
+    }
+
+    private fun showInfoAboutUser(user: User) {
+
+        profile_name.text = if (user.name != null) {
+            String.format(getString(R.string.profile_welcome), user.name)
+        } else String.format(getString(R.string.profile_welcome), getString(R.string.profile_welcome_qr))
+
+        profile_email.visibility = if (user.username != null) {
+            profile_email.text = String.format(getString(R.string.profile_username), user.username)
+            View.VISIBLE
+        } else View.GONE
+
+        profile_role.visibility = if (user.role != null) {
+            profile_role.text = user.role.capitalize()
+            View.VISIBLE
+        } else View.GONE
+
+        profile_login_info.text = if (user.loginType == LoginType.PersonalAccount) {
+            String.format(getString(R.string.profile_logout_info), getString(R.string.profile_login_type_personal))
+        } else {
+            String.format(getString(R.string.profile_logout_info), getString(R.string.profile_login_type_qr))
+        }
+
+        content_authorization.visibility = View.GONE
+        content_profile_info.visibility = View.VISIBLE
+
+//            val sdf = SimpleDateFormat("HH:mm (yyyy-MM-dd)", Locale.ENGLISH)
+        // TODO somehow store date of logging in
+//            profile_logout_date_info.text = sdf.format(user.loginDate)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -106,7 +157,7 @@ class AuthPageFragment : Fragment() {
     }
 
     private fun showQrFragment() {
-        showFragment(AuthQrFragment(), true)
+        showAuthorizationTypeFragment(AuthQrFragment(), true)
         async(UI) {
             bg {
                 topViewsColor(ContextCompat.getColor(activity!!, R.color.produvarDarkTransparent))
@@ -116,7 +167,7 @@ class AuthPageFragment : Fragment() {
     }
 
     private fun showLoginFragment(withAnimation: Boolean = true) {
-        showFragment(AuthLoginFragment(), false, withAnimation)
+        showAuthorizationTypeFragment(AuthLoginFragment(), false, withAnimation)
         async(UI) {
             bg {
                 val color = ContextCompat.getColor(activity!!, R.color.produvarOrange)
@@ -132,11 +183,11 @@ class AuthPageFragment : Fragment() {
         auth_tab_layout.setBackgroundColor(color)
     }
 
-    private fun showFragment(fragment: Fragment, swipeForward: Boolean, withAnimation: Boolean = true) {
+    private fun showAuthorizationTypeFragment(fragment: Fragment, swipeForward: Boolean, withAnimation: Boolean = true) {
         val bundle = Bundle()
         bundle.putInt(Constants.PARAM_TOP_VIEWS_HEIGHT, countTopViewHeight())
         fragment.arguments = bundle
-        with(activity!!.supportFragmentManager.beginTransaction()) {
+        with(childFragmentManager.beginTransaction()) {
             if (withAnimation) {
                 setCustomAnimations(
                         if (swipeForward) produvar.interactionwithapi.R.anim.enter_from_right else produvar.interactionwithapi.R.anim.enter_from_left,

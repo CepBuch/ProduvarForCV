@@ -17,10 +17,6 @@ class ScanCameraFragment : Fragment() {
     lateinit var scanner: BarcodeScanner
     lateinit var mainActivity: MainActivity
 
-    companion object {
-        fun newInstance() = ScanCameraFragment()
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_page_camera, container, false)
     }

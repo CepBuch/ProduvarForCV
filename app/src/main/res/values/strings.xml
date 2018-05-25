@@ -27,6 +27,16 @@
     <string name="login_prompt_password">Password</string>
     <string name="login_sign_in_button">SIGN IN FOR 24 HOURS</string>
 
+
+    <string name="profile_logout_info">You were logged in for 24 hours with %1$s</string>
+    <string name="profile_login_type_personal">your personal account.</string>
+    <string name="profile_login_type_qr">authorization qr code.</string>
+    <string name="profile_welcome">Welcome, %1$s!</string>
+    <string name="profile_welcome_qr">dear customer</string>
+    <string name="profile_username">(%1$s)</string>
+    <string name="profile_button_logout">LOG OUT</string>
+
+
     <string name="permissions_info">For correct work the application needs the following permission(s):</string>
     <string name="permissions_internet_info">In order to transmit and receive data</string>
     <string name="permissions_camera_info">In order to scan QR and bar codes</string>

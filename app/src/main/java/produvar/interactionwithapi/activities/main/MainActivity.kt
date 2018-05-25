@@ -4,12 +4,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
 import produvar.interactionwithapi.*
+import produvar.interactionwithapi.activities.main.pages.AuthPageFragment
+import produvar.interactionwithapi.activities.main.pages.MainPageFragment
+import produvar.interactionwithapi.activities.main.pages.ScanCameraFragment
 import produvar.interactionwithapi.activities.permissions.PermissionsActivity
 import produvar.interactionwithapi.helpers.Constants
 
@@ -29,15 +33,25 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window?.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
-
         // setting up viewpager
         setUpViewPager()
-        view_pager.currentItem = savedInstanceState?.getInt("VIEWPAGER_PAGE", 1) ?: 1
+        view_pager.currentItem = 1
     }
 
 
     private fun setUpViewPager() {
-        view_pager.adapter = MainPagerAdapter(supportFragmentManager, this)
+        view_pager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
+
+            override fun getItem(position: Int) =
+                    when (position) {
+                        0 -> ScanCameraFragment()
+                        1 -> MainPageFragment()
+                        2 -> AuthPageFragment()
+                        else -> MainPageFragment()
+                    }
+
+            override fun getCount() = 3
+        }
         view_pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 val decorView = window.decorView
@@ -50,12 +64,6 @@ class MainActivity : AppCompatActivity() {
                 super.onPageSelected(position)
             }
         })
-
-    }
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putInt("VIEWPAGER_PAGE", view_pager.currentItem)
-        super.onSaveInstanceState(outState)
     }
 
     override fun onResume() {
@@ -64,7 +72,6 @@ class MainActivity : AppCompatActivity() {
             view_pager.setCurrentItem(1, false)
         }
     }
-
 
     override fun onBackPressed() {
         when (view_pager.currentItem) {
@@ -93,7 +100,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
 
 }
 

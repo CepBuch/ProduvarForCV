@@ -1,4 +1,4 @@
-package produvar.interactionwithapi.activities.main.pages.pofilePageContent.authTypes
+package produvar.interactionwithapi.activities.main.pages.authTypes
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -14,6 +14,13 @@ import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.Constants
 
 class AuthLoginFragment : Fragment() {
+
+    companion object {
+        fun newInstance(): AuthLoginFragment {
+            val instance = AuthLoginFragment()
+            return instance
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_auth_username, container, false)

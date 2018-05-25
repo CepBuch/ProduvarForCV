@@ -19,12 +19,6 @@ import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.helpers.setUpStatusBar
 
 class MainPageFragment : Fragment() {
-
-//    // TODO()
-//    interface NavigationPage {
-//        void
-//    }
-
     companion object {
         fun newInstance() = MainPageFragment()
     }
