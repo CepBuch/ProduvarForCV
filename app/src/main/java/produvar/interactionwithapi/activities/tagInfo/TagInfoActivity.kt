@@ -28,6 +28,7 @@ import produvar.interactionwithapi.helpers.TagChecker
 import produvar.interactionwithapi.helpers.TestData
 import produvar.interactionwithapi.helpers.changeStatusBarColor
 import produvar.interactionwithapi.model.*
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -49,7 +50,6 @@ class TagInfoActivity : AppCompatActivity() {
             val barcode = extras.getString("barcode")
             processTag(barcode)
         }
-
 
 
     }
@@ -145,7 +145,13 @@ class TagInfoActivity : AppCompatActivity() {
     private fun showOrderInfo(order: Order) {
         card_order.visibility = if (order.containsUsefulData()) {
             order_dueDate.visibility = if (!order.dueDate.isNullOrBlank()) {
-                order_dueDate.text = order.dueDate
+                val dueDate = order.tryGetParsedDate()
+                order_dueDate.text = if (dueDate != null) {
+                    val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH)
+                    format.format(dueDate)
+                } else {
+                    order.dueDate
+                }
                 View.VISIBLE
             } else View.GONE
 

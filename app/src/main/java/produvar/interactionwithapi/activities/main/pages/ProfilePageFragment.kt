@@ -19,11 +19,15 @@ import produvar.interactionwithapi.helpers.setUpStatusBar
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthLoginFragment
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthQrFragment
 import produvar.interactionwithapi.model.LoginType
 import produvar.interactionwithapi.model.User
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ProfilePageFragment : Fragment(),
@@ -63,7 +67,14 @@ class ProfilePageFragment : Fragment(),
             val parsedUser = Gson().fromJson(userJson, User::class.java)
             if (parsedUser != null) {
                 flag = true
-                showInfoAboutUser(parsedUser)
+                val calendar = Calendar.getInstance()
+                if (parsedUser.logoutDate > calendar.time) {
+                    showInfoAboutUser(parsedUser)
+                } else {
+                    logOut()
+                    activity!!.longToast(getString(R.string.profile_authorization_expired))
+                }
+
             }
         }
         if (!flag) {
@@ -119,19 +130,22 @@ class ProfilePageFragment : Fragment(),
             View.VISIBLE
         } else View.GONE
 
-        profile_login_info.text = if (user.loginType == LoginType.PersonalAccount) {
-            String.format(getString(R.string.profile_logout_info), getString(R.string.profile_login_type_personal))
+
+        val loginType = if (user.loginType == LoginType.PersonalAccount) {
+            getString(R.string.profile_login_type_personal)
         } else {
-            String.format(getString(R.string.profile_logout_info), getString(R.string.profile_login_type_qr))
+            getString(R.string.profile_login_type_qr)
         }
+        val format: DateFormat = SimpleDateFormat("MMM, dd HH:mm", Locale.ENGLISH)
+        val dateStr = format.format(user.logoutDate)
+
+        profile_login_info.text =
+                String.format(getString(R.string.profile_logout_info), dateStr, loginType)
 
         selectFirstTab()
         content_authorization.visibility = View.GONE
         content_profile_info.visibility = View.VISIBLE
 
-//            val sdf = SimpleDateFormat("HH:mm (yyyy-MM-dd)", Locale.ENGLISH)
-        // TODO somehow store date of logging in
-//            profile_logout_date_info.text = sdf.format(user.loginDate)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {

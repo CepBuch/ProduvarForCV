@@ -1,5 +1,9 @@
 package produvar.interactionwithapi.model
 
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+
 data class BasicOrderView(val orderCode: String?, val manufacturer: BasicManufacturerView?)
 
 data class BasicManufacturerView(val name: String?, val website: String?,
@@ -15,6 +19,18 @@ data class Order(val code: String?, val label: String?, val dueDate: String?,
                  val items: List<OrderItem?>?, val process: List<OrderProcess?>?,
                  val statusFlow: List<WorkFlowStep?>?
 ) {
+
+    fun tryGetParsedDate(): Date? {
+        val format = SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+        format.timeZone = TimeZone.getTimeZone("UTC")
+
+        try {
+            return format.parse(dueDate)
+        } catch (ex: Exception) {
+            return null
+        }
+    }
 
     fun containsUsefulData(): Boolean {
         return !label.isNullOrBlank() || !dueDate.isNullOrBlank()
