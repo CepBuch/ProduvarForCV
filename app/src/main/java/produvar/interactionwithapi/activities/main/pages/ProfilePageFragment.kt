@@ -1,6 +1,5 @@
 package produvar.interactionwithapi.activities.main.pages
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -9,7 +8,7 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_page_authorization.*
+import kotlinx.android.synthetic.main.fragment_page_profile.*
 import kotlinx.android.synthetic.main.toolbar_profile.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -20,25 +19,26 @@ import produvar.interactionwithapi.helpers.setUpStatusBar
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import org.jetbrains.anko.toast
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthLoginFragment
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthQrFragment
 import produvar.interactionwithapi.model.LoginType
 import produvar.interactionwithapi.model.User
 
 
-class AuthPageFragment : Fragment() {
+class ProfilePageFragment : Fragment(), AuthQrFragment.OnQrAuthorizationListener {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_page_authorization, container, false)
+        return inflater.inflate(R.layout.fragment_page_profile, container, false)
     }
 
-    lateinit var prefs: SharedPreferences
+    private lateinit var prefs: SharedPreferences
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         prefs = activity!!.getPreferences(MODE_PRIVATE)
 
         button_back.setOnClickListener {
             activity?.onBackPressed()
-            logIn(User(LoginType.PersonalAccount, "123fdasg123", "cep.buch@gmail.com", "Sergey", "Employee"))
         }
 
         button_logout.setOnClickListener { logOut() }
@@ -51,30 +51,6 @@ class AuthPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    private fun setUpTabLayout() {
-        auth_tab_layout.addTab(auth_tab_layout.newTab().setText(getString(R.string.login_tab_account)), true)
-        auth_tab_layout.addTab(auth_tab_layout.newTab().setText(getString(R.string.login_tab_qr_code)))
-
-        auth_tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab != null) {
-                    when (tab.position) {
-                        0 -> showLoginFragment()
-                        1 -> showQrFragment()
-                        else -> showLoginFragment()
-                    }
-                }
-            }
-        })
-        // post.run() because we have to wait view to lay out.
-        // Otherwise when we show AuthLoginFragment() fragment for the first time from onViewCreated(),
-        // countTopViewHeight() returns 0. Because views at this moment has height 0
-        view?.post {
-            showLoginFragment(false)
-        }
-    }
 
 
     private fun setUpContent() {
@@ -90,6 +66,12 @@ class AuthPageFragment : Fragment() {
         if(!flag){
             showAuthorizationForm()
         }
+    }
+
+
+    override fun authorizationComplete(authorizedUser: User) {
+        activity!!.toast("Bearer(dev purposes) : ${authorizedUser.bearer}")
+        logIn(authorizedUser)
     }
 
     private fun logIn(user: User) {
@@ -137,6 +119,7 @@ class AuthPageFragment : Fragment() {
             String.format(getString(R.string.profile_logout_info), getString(R.string.profile_login_type_qr))
         }
 
+        selectFirstTab()
         content_authorization.visibility = View.GONE
         content_profile_info.visibility = View.VISIBLE
 
@@ -146,13 +129,40 @@ class AuthPageFragment : Fragment() {
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        selectFirstTab()
+        if(view != null && content_authorization.visibility == View.VISIBLE){
+            selectFirstTab()
+        }
         super.setUserVisibleHint(isVisibleToUser)
     }
 
     private fun selectFirstTab() {
         if (view != null && auth_tab_layout.selectedTabPosition != 0) {
             auth_tab_layout.getTabAt(0)?.select()
+        }
+    }
+
+    private fun setUpTabLayout() {
+        auth_tab_layout.addTab(auth_tab_layout.newTab().setText(getString(R.string.login_tab_account)), true)
+        auth_tab_layout.addTab(auth_tab_layout.newTab().setText(getString(R.string.login_tab_qr_code)))
+
+        auth_tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab != null) {
+                    when (tab.position) {
+                        0 -> showLoginFragment()
+                        1 -> showQrFragment()
+                        else -> showLoginFragment()
+                    }
+                }
+            }
+        })
+        // post.run() because we have to wait view to lay out.
+        // Otherwise when we show AuthLoginFragment() fragment for the first time from onViewCreated(),
+        // countTopViewHeight() returns 0. Because views at this moment has height 0
+        view?.post {
+            showLoginFragment(false)
         }
     }
 

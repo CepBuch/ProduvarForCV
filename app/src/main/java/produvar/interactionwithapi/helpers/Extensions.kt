@@ -34,6 +34,7 @@ fun Activity.getStatusBarHeight(): Int {
 }
 
 
+
 fun Fragment.setUpStatusBar(view: View, color: Int) {
     val currentActivity = activity
     if (currentActivity is MainActivity) {

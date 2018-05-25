@@ -11,7 +11,7 @@ import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
 import produvar.interactionwithapi.*
-import produvar.interactionwithapi.activities.main.pages.AuthPageFragment
+import produvar.interactionwithapi.activities.main.pages.ProfilePageFragment
 import produvar.interactionwithapi.activities.main.pages.MainPageFragment
 import produvar.interactionwithapi.activities.main.pages.ScanCameraFragment
 import produvar.interactionwithapi.activities.permissions.PermissionsActivity
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         checkPermissions()
 
         // Making status bar transparent on newer devices
-        // (it will be given a color in MainPageFragment and AuthPageFragment onCreate))
+        // (it will be given a color in MainPageFragment and ProfilePageFragment onCreate))
         // this enables to remove statusbar on camera fragment
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window?.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                     when (position) {
                         0 -> ScanCameraFragment()
                         1 -> MainPageFragment()
-                        2 -> AuthPageFragment()
+                        2 -> ProfilePageFragment()
                         else -> MainPageFragment()
                     }
 

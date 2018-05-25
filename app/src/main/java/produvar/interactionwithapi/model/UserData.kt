@@ -10,7 +10,6 @@ enum class LoginType {
     PersonalAccount, QR
 }
 
-data class User(val loginType: LoginType, val bearer: String?, val username: String?, val name: String?, val role: String?) : Serializable {
-//    var loginDate: Date? = Calendar.getInstance().time
-
+data class User(val loginType: LoginType, val bearer: String, val username: String?, val name: String?, val role: String?) {
+    constructor(bearer: String) : this(LoginType.QR, bearer, null, null, null)
 }
