@@ -1,6 +1,6 @@
 package produvar.interactionwithapi.helpers
 
-import produvar.interactionwithapi.model.*
+import produvar.interactionwithapi.models.*
 
 class TestData {
     companion object {

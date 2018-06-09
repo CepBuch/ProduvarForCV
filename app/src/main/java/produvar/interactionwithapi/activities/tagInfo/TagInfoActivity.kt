@@ -8,7 +8,6 @@ import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.Display
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -27,8 +26,7 @@ import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.TagChecker
 import produvar.interactionwithapi.helpers.TestData
 import produvar.interactionwithapi.helpers.changeStatusBarColor
-import produvar.interactionwithapi.model.*
-import java.text.DateFormat
+import produvar.interactionwithapi.models.*
 import java.text.SimpleDateFormat
 import java.util.*
 

@@ -19,7 +19,7 @@ import produvar.interactionwithapi.R
 import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.TagChecker
-import produvar.interactionwithapi.model.User
+import produvar.interactionwithapi.models.User
 
 
 class AuthQrFragment : Fragment() {

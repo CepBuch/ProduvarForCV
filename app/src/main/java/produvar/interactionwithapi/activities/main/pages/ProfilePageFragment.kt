@@ -19,11 +19,10 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.toast
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthLoginFragment
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthQrFragment
-import produvar.interactionwithapi.model.LoginType
-import produvar.interactionwithapi.model.User
+import produvar.interactionwithapi.models.LoginType
+import produvar.interactionwithapi.models.User
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*

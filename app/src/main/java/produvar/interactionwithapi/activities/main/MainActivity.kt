@@ -2,14 +2,12 @@ package produvar.interactionwithapi.activities.main
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
 import produvar.interactionwithapi.*
 import produvar.interactionwithapi.activities.main.pages.ProfilePageFragment
@@ -17,9 +15,8 @@ import produvar.interactionwithapi.activities.main.pages.MainPageFragment
 import produvar.interactionwithapi.activities.main.pages.ScanCameraFragment
 import produvar.interactionwithapi.activities.permissions.PermissionsActivity
 import produvar.interactionwithapi.helpers.Constants
-import android.support.v4.content.ContextCompat
-import produvar.interactionwithapi.model.LoginType
-import produvar.interactionwithapi.model.User
+import produvar.interactionwithapi.models.LoginType
+import produvar.interactionwithapi.models.User
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         setUpViewPager()
         view_pager.currentItem = 1
         val ap = ApiProvider()
+        ap.authenticate("4fn34rqfrefk")
 //        ap.searchByScan("4fn34rqfrefk", ApiProvider.TagType.CODE)
 //        ap.orderInfo(User(LoginType.PersonalAccount, "1234apple", "steve.jobs@apple.com", "", ""), "2018004938")
     }

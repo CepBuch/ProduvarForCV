@@ -2,9 +2,8 @@ package produvar.interactionwithapi
 
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.FuelManager
-import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
-import produvar.interactionwithapi.model.*
+import produvar.interactionwithapi.models.*
 
 class ApiProvider {
 
@@ -13,9 +12,9 @@ class ApiProvider {
     }
 
     companion object {
-        const val token = "1234apple"
         const val BASE_URL = "https://prodapp.000webhostapp.com"
         const val AUTHENTICATION_REQUEST = "/authenticate"
+        const val LOGIN_REQUEST = "/login"
         const val SEARCH_BY_SCAN_REQUEST = "/searchbyscan"
         const val ORDERS_REQUEST = "/orders"
     }
@@ -29,20 +28,27 @@ class ApiProvider {
                 "code" to authTagContent
         )
 
-        var parsedRes: UserData? = null
+        var parsedUserData: UserData? = null
+        // Classic option
+//        Fuel.post(AUTHENTICATION_REQUEST, parameters = params)
+        // multipart/form-data
         Fuel.upload(AUTHENTICATION_REQUEST, parameters = params)
                 .dataParts { _, _ -> listOf() }
                 .responseObject(UserData.Deserializer()) { req, res, result ->
                     when (result) {
                         is Result.Success -> {
-                            parsedRes = result.get()
+                            parsedUserData = result.get()
                         }
                     }
                 }
-        return parsedRes
+        return parsedUserData
     }
 
-    fun searchByScan(tagContent: String, tagType: TagType) {
+    fun login(username: String, password: String) {
+        //TODO: wait for Olga and learn how to add values in header
+    }
+
+    fun searchByScan(tagContent: String, tagType: TagType): BasicOrderView? {
         val params = listOf(
                 if (tagType == TagType.URL) {
                     "url" to tagContent
@@ -60,9 +66,10 @@ class ApiProvider {
                         }
                     }
                 }
+        return parsedBasicOrderView
     }
 
-    fun orderInfo(user: User, orderCode: String) {
+    fun orderInfo(user: User, orderCode: String): Order? {
         val params = listOf(
                 "code" to orderCode,
                 "skip" to 0,
@@ -79,5 +86,6 @@ class ApiProvider {
                         }
                     }
                 }
+        return parsedOrder
     }
 }
