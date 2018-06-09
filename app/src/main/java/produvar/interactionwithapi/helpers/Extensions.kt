@@ -35,16 +35,16 @@ fun Activity.getStatusBarHeight(): Int {
 
 
 
-fun Fragment.setUpStatusBar(view: View, color: Int) {
-    val currentActivity = activity
-    if (currentActivity is MainActivity) {
-        view.layoutParams.height = activity?.getStatusBarHeight() ?: 0
-        view.setBackgroundColor(color)
-        if (view.layoutParams.height > 0 && view.visibility != View.VISIBLE) {
-            view.visibility = android.view.View.VISIBLE
-        }
-    }
-}
+//fun Fragment.setUpStatusBar(view: View, color: Int) {
+//    val currentActivity = activity
+//    if (currentActivity is MainActivity) {
+//        view.layoutParams.height = activity?.getStatusBarHeight() ?: 0
+//        view.setBackgroundColor(color)
+//        if (view.layoutParams.height > 0 && view.visibility != View.VISIBLE) {
+//            view.visibility = android.view.View.VISIBLE
+//        }
+//    }
+//}
 
 fun Int.dpToPx(context: Context): Int {
     val r = context.resources

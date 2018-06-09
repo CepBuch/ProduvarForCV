@@ -15,7 +15,6 @@ import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.helpers.Constants
-import produvar.interactionwithapi.helpers.setUpStatusBar
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
@@ -51,9 +50,9 @@ class ProfilePageFragment : Fragment(),
 
         button_logout.setOnClickListener { logOut() }
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            setUpStatusBar(status_bar, Color.TRANSPARENT)
-        }
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+//            setUpStatusBar(status_bar, Color.TRANSPARENT)
+//        }
         setUpTabLayout()
         setUpContent()
         super.onViewCreated(view, savedInstanceState)
@@ -208,8 +207,8 @@ class ProfilePageFragment : Fragment(),
     }
 
     private fun topViewsColor(color: Int) {
-        status_bar.setBackgroundColor(color)
-        toolbar.setBackgroundColor(color)
+//        status_bar.setBackgroundColor(color)
+        toolbar_profile.setBackgroundColor(color)
         auth_tab_layout.setBackgroundColor(color)
     }
 
@@ -228,5 +227,5 @@ class ProfilePageFragment : Fragment(),
         }
     }
 
-    private fun countTopViewHeight() = status_bar.height + toolbar.height + auth_tab_layout.height
+    private fun countTopViewHeight() = /*status_bar.height +*/ toolbar_profile.height + auth_tab_layout.height
 }

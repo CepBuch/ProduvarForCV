@@ -12,12 +12,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/status_bar"
-            layout="@layout/status_bar_main" />
+        <!--<include-->
+            <!--android:id="@+id/status_bar"-->
+            <!--layout="@layout/status_bar_main" />-->
 
         <include
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_profile"
             layout="@layout/toolbar_profile" />
     </LinearLayout>
 

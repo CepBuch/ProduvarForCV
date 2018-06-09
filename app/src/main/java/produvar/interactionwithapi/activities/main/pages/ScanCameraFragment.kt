@@ -26,8 +26,10 @@ class ScanCameraFragment : Fragment() {
         mainActivity = activity as? MainActivity ?: throw Exception("Fragment is strongly " +
                 "coupled with MainActivity. You can create it in only in MainActivity.")
 
-        button_back.setOnClickListener { mainActivity.swipeFragment() }
+        button_back.setOnClickListener { activity?.onBackPressed() }
+
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
+            scanner.release()
             val intent = Intent(activity, TagInfoActivity::class.java)
             intent.putExtra("barcode", it)
             mainActivity.startActivity(intent)

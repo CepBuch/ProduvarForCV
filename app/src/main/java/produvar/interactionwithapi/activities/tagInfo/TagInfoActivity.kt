@@ -105,8 +105,8 @@ class TagInfoActivity : AppCompatActivity() {
 
             // If we got order code in return and got authorization token (TODO)
             // Trying to get more authorized information
-            if (!basicOrderInfo.orderCode.isNullOrBlank()) {
-                val orderInfo = getOrderInfo(basicOrderInfo.orderCode!!) ?: return
+            if (!basicOrderInfo.ordercode.isNullOrBlank()) {
+                val orderInfo = getOrderInfo(basicOrderInfo.ordercode!!) ?: return
                 showOrderInfo(orderInfo)
             }
         } else showScanError()

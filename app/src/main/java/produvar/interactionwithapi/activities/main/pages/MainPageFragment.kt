@@ -16,13 +16,8 @@ import kotlinx.android.synthetic.main.toolbar_main_page.*
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.activities.help.HelpActivity
 import produvar.interactionwithapi.activities.main.MainActivity
-import produvar.interactionwithapi.helpers.setUpStatusBar
 
 class MainPageFragment : Fragment() {
-    companion object {
-        fun newInstance() = MainPageFragment()
-    }
-
     private lateinit var mainActivity: MainActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,9 +39,9 @@ class MainPageFragment : Fragment() {
 
         button_info.setOnClickListener { openHelpActivity() }
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            setUpStatusBar(status_bar, ContextCompat.getColor(mainActivity, R.color.statusbarMain))
-        }
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+//            setUpStatusBar(status_bar, ContextCompat.getColor(mainActivity, R.color.statusbarMain))
+//        }
 
         super.onViewCreated(view, savedInstanceState)
     }

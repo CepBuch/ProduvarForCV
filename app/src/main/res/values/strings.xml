@@ -39,6 +39,7 @@
     <string name="taginfo_status_flow_header">Status flow</string>
     <string name="location_scanner_camera_info">Point the camera at QR code or a Barcode describing location</string>
     <string name="taginfo_update_status_header">Update status</string>
+    <string name="prompt_location">Location (not required)</string>
 
 
     <string name="permissions_info">For correct work the application needs the following permission(s):</string>
@@ -68,5 +69,6 @@
     <string name="description_permissions_internet">Internet connection</string>
     <string name="description_permissions_camera">Camera</string>
     <string name="description_permissions_nfc">NFC</string>
+    <string name="description_location_camera">Open camera to scan location barcode</string>
 
 </resources>

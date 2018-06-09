@@ -32,9 +32,10 @@ dependencies {
     implementation "com.google.android.gms:play-services-vision:$play_services_version"
     implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
     implementation "org.jetbrains.anko:anko-common:$anko_version"
-    implementation "com.android.support.constraint:constraint-layout:$cl_version"
     implementation "com.google.code.gson:gson:$gson_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+
+    implementation "com.github.kittinunf.fuel:fuel:$fuel_version"
+    implementation "com.github.kittinunf.fuel:fuel-android:$fuel_version"
 }
 kotlin {
     experimental {

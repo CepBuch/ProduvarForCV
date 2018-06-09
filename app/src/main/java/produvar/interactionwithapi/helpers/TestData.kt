@@ -15,17 +15,17 @@ class TestData {
                 "2018-05-23 2:37 if it has date it will be highlighted", "otherwise, just shown as a string",
                 "i'm also thinking of making every card expandable/collapsable",
                 "2018-05-23 2:46 When opened, probably show ''expanded'' only Manufacturer and Order info and collapse others")
-                .map { OrderProcess(it) }
+                .map { OrderProcess(it, "", "") }
 
         private val workFlowSteps = listOf<String>("1st previous step", "2nd step", "these", "are", "steps", "of execution",
-                "transportation", "Current step").map { WorkFlowStep(it) }
+                "transportation", "Current step").map { WorkFlowStep(it, true, true) }
 
         val futureSteps = listOf<String>("futureStep1", "futureStep2", "futureStep3", "These steps", "should also",
-                "be displayed", "in statusFlowProcess", "if we can distinguish", "previous current and future").map{WorkFlowStep(it)}
+                "be displayed", "in statusFlowProcess", "if we can distinguish", "previous current and future").map{WorkFlowStep(it,true, true)}
 
         val basicOrderView = BasicOrderView("2018004938", manufacturer)
 
-        val order = Order(basicOrderView.orderCode, "Worktop X34 for Johnson family",
+        val order = Order(basicOrderView.ordercode, "Worktop X34 for Johnson family",
                 "2018-07-29T09:12:33.001Z", orderItems, messages, workFlowSteps)
     }
 }

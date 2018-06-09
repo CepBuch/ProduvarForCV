@@ -17,7 +17,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
@@ -45,9 +45,9 @@
                 android:id="@+id/card_status_flow"
                 layout="@layout/card_statusflow_view"
                 android:visibility="gone" />
+
             <include android:id="@+id/card_update_status"
-                layout="@layout/card_update_status_view"
-                android:visibility="gone"/>
+                layout="@layout/card_update_status_view" />
 
             <include
                 android:id="@+id/card_process"

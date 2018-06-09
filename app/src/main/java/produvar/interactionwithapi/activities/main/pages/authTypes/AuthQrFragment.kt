@@ -91,7 +91,7 @@ class AuthQrFragment : Fragment() {
             val authorizedUser = bg {
                 // API CALL SIMULATION
                 Thread.sleep(1000)
-                if (barcode == "http://produvar.nl") User("mb.M8m_^GIol@YT|") else null
+                if (barcode == "https://produvar.nl") User("mb.M8m_^GIol@YT|") else null
             }.await()
 
             if (authorizedUser != null) {
