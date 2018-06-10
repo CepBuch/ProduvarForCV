@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
-    <TextView
-        android:id="@+id/textview_process_content"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textAlignment="center"
-        android:textColor="@color/processItemPrevius"
-        android:background="@drawable/process_item_shape_previous"
-        android:textIsSelectable="true"/>
     <View
         android:id="@+id/connecting_line"
-        android:layout_width="3dp"
+        android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@color/processItemPrevius" />
-
-
+        android:background="@drawable/process_line_previous" />
+    <TextView
+        android:id="@+id/textview_process_content"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:textColor="@color/processItemPrevious"
+        android:background="@drawable/process_item_shape_previous"
+        android:textIsSelectable="true"/>
 </LinearLayout>
+

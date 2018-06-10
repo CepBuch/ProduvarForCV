@@ -2,81 +2,78 @@ package produvar.interactionwithapi.models
 
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.Gson
-import java.text.SimpleDateFormat
-import java.util.*
 
 
-data class UserData(val bearer: String, val username: String?, val name: String?, val role: String?){
-    class Deserializer : ResponseDeserializable<UserData>{
-        override fun deserialize(content: String): UserData? = Gson().fromJson(content, UserData::class.java)
+data class UserDTO(val bearer: String, val username: String?, val name: String?, val role: String?) {
+    class Deserializer : ResponseDeserializable<UserDTO> {
+        override fun deserialize(content: String): UserDTO? = Gson().fromJson(content, UserDTO::class.java)
+    }
+
+    fun convertToModel(loginType: LoginType): User {
+        return User(loginType, bearer, username, name, role)
     }
 }
 
 
-data class BasicOrderView(val ordercode: String?, val manufacturer: BasicManufacturerView?) {
-    class Deserializer : ResponseDeserializable<BasicOrderView> {
-        override fun deserialize(content: String): BasicOrderView? = Gson().fromJson(content, BasicOrderView::class.java)
+data class BasicOrderViewDTO(val ordercode: String?, val manufacturer: BasicManufacturerViewDTO?) {
+    class Deserializer : ResponseDeserializable<BasicOrderViewDTO> {
+        override fun deserialize(content: String): BasicOrderViewDTO? = Gson().fromJson(content, BasicOrderViewDTO::class.java)
+    }
+
+    fun convertToModel(): Pair<String?, Manufacturer?> {
+        return Pair(ordercode,
+                if (manufacturer != null) {
+                    Manufacturer(manufacturer.name, manufacturer.website, manufacturer.phoneNumber, manufacturer.email)
+                } else null)
     }
 }
 
-data class BasicManufacturerView(val name: String?, val website: String?,
-                                 val phoneNumber: String?, val email: String?) {
-    fun containsUsefulData(): Boolean {
-        return !name.isNullOrBlank() || !website.isNullOrBlank() ||
-                !phoneNumber.isNullOrBlank() || !email.isNullOrBlank()
-    }
-}
+data class BasicManufacturerViewDTO(val name: String?, val website: String?,
+                                    val phoneNumber: String?, val email: String?)
 
-data class Order(val code: String?, val label: String?, val dueDate: String?,
-                 val items: List<OrderItem?>?, val process: List<OrderProcess?>?,
-                 val statusFlow: List<WorkFlowStep?>?
+data class OrderDTO(val code: String?, val label: String?, val dueDate: String?,
+                    val items: List<OrderItemDTO?>?, val process: List<OrderProcessDTO?>?,
+                    val statusFlow: List<WorkFlowStepDTO?>?
 ) {
 
-    class Deserializer : ResponseDeserializable<Order> {
-        override fun deserialize(content: String): Order? {
-            val arrayOfOrders = Gson().fromJson(content, Array<Order>::class.java)
+    class Deserializer : ResponseDeserializable<OrderDTO> {
+        override fun deserialize(content: String): OrderDTO? {
+            val arrayOfOrders = Gson().fromJson(content, Array<OrderDTO>::class.java)
             return if (arrayOfOrders.isNotEmpty()) {
                 arrayOfOrders.first()
             } else null
         }
     }
 
-    fun tryGetParsedDate(): Date? {
-        val format = SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
-        format.timeZone = TimeZone.getTimeZone("UTC")
-
-        try {
-            return format.parse(dueDate)
-        } catch (ex: Exception) {
-            return null
-        }
+    fun convertToModel(): Order {
+        return Order(code, label, dueDate, filterOrderItems(), filterOrderProcesses(), filterStatusFlow())
     }
 
-    fun containsUsefulData(): Boolean {
-        return !label.isNullOrBlank() || !dueDate.isNullOrBlank()
-    }
-
-    fun filterOrderItems(): List<OrderItem> {
-        return items?.filterNotNull()?.filterNot { it.label.isNullOrBlank() }
+    private fun filterOrderItems(): List<Item> {
+        return items?.filterNotNull()?.filterNot { it.label.isNullOrBlank() }?.map { Item(it.label!!) }
                 ?: emptyList()
     }
 
-    fun filterOrderProcesses(): List<OrderProcess> {
-        return process?.filterNotNull()?.filterNot { it.label.isNullOrBlank() }
+    private fun filterStatusFlow(): List<WorkflowStep> {
+        return statusFlow?.filterNotNull()?.filterNot {
+            it.status.isNullOrBlank() ||
+                    it.iscurrent == null || it.isfinished == null
+        }?.map { WorkflowStep(it.status!!, it.iscurrent!!, it.isfinished!!) }
                 ?: emptyList()
     }
 
-    fun filterStatusFlow(): List<WorkFlowStep> {
-        return statusFlow?.filterNotNull()?.filterNot { it.status.isNullOrBlank() }
-                ?: emptyList()
+    private fun filterOrderProcesses(): List<ProcessStep> {
+        return process?.filterNotNull()?.filterNot {
+            it.label.isNullOrBlank() &&
+                    it.`when`.isNullOrBlank() && it.description.isNullOrBlank()
+        }?.map { ProcessStep(it.label, it.`when`, it.description) } ?: emptyList()
     }
 }
 
-data class OrderItem(val label: String?)
+data class OrderItemDTO(val label: String?)
 
-data class WorkFlowStep(val status: String?, val iscurrent: Boolean?, val isfinished: Boolean?)
+data class WorkFlowStepDTO(val status: String?, val iscurrent: Boolean?, val isfinished: Boolean?)
 
-data class OrderProcess(val label: String?, val `when`: String?, val description: String?)
+data class OrderProcessDTO(val label: String?, val `when`: String?, val description: String?)
 
 

@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:text="adasdasdasdsadsadsadasdasdsadsadas"
         android:textStyle="italic"
         android:textIsSelectable="true"/>
     <TextView
@@ -16,6 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:text = "pRivaskdljsadlsadasjdklasjdlasdjsalkdsajdklasdjsalkdjsaldasj"
         android:textIsSelectable="true"/>
 
     <View

@@ -29,10 +29,10 @@ class ScanCameraFragment : Fragment() {
         button_back.setOnClickListener { activity?.onBackPressed() }
 
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
-            scanner.release()
             val intent = Intent(activity, TagInfoActivity::class.java)
             intent.putExtra("barcode", it)
             mainActivity.startActivity(intent)
+
         })
 
         super.onViewCreated(view, savedInstanceState)
@@ -44,13 +44,13 @@ class ScanCameraFragment : Fragment() {
         if (view != null) {
             if (isVisibleToUser) {
                 scanner.setUpAsync()
-            } else scanner.releaseAsync()
+            } else scanner.release()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        scanner.releaseAsync()
+        scanner.release()
     }
 
 

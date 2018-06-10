@@ -20,12 +20,11 @@ import kotlinx.android.synthetic.main.card_process_view.*
 import kotlinx.android.synthetic.main.card_statusflow_view.*
 import kotlinx.android.synthetic.main.card_update_status_view.*
 import kotlinx.android.synthetic.main.toolbar_taginfo.*
+import org.jetbrains.anko.coroutines.experimental.bg
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import produvar.interactionwithapi.R
-import produvar.interactionwithapi.helpers.Constants
-import produvar.interactionwithapi.helpers.TagChecker
-import produvar.interactionwithapi.helpers.TestData
-import produvar.interactionwithapi.helpers.changeStatusBarColor
+import produvar.interactionwithapi.helpers.*
 import produvar.interactionwithapi.models.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,8 +39,8 @@ class TagInfoActivity : AppCompatActivity() {
 
         changeStatusBarColor(R.color.statusbarMain, true)
 
-        // First, try to process a tag as it came from NFC reader
-        // Then, ty to get tag from previous activity (if the tag was scanned by camera, tag content
+        // First, try to process a tag as it may came from NFC reader
+        // Then, try to get tag from previous activity (if the tag was scanned by camera, tag content
         // was sent to this activity via extras)
         val extras = intent.extras
         if (!tryProcessNfcTag() && extras != null) {
@@ -89,28 +88,31 @@ class TagInfoActivity : AppCompatActivity() {
 
     private fun processTag(tagContent: String) {
         // http://... or https://.. or 12425...
+        var flag = false
         if (TagChecker.isOrderTagValid(tagContent)) {
             // Getting basic info about an order (for both authorized and anonymous users)
-            val basicOrderInfo = getBasicOrderInfo(tagContent)
-            if (basicOrderInfo == null) {
-                showScanError()
-                return
+            val orderDTO = getBasicOrderInfo(tagContent)
+            if (orderDTO != null) {
+                val (code, manufacturer) = orderDTO.convertToModel()
+                if (manufacturer != null) {
+                    showManufacturerInfo(manufacturer)
+                    flag = true
+                    // If we got order code in return and got authorization token (TODO)
+                    // Trying to get more authorized information
+                    if (!code.isNullOrBlank()) {
+                        val orderInfo = getOrderInfo(code!!)?.convertToModel() ?: return
+                        showOrderInfo(orderInfo)
+                    }
+                }
             }
-
-            if (basicOrderInfo.manufacturer != null) {
-                showManufacturerInfo(basicOrderInfo.manufacturer)
-            }
-
-            // If we got order code in return and got authorization token (TODO)
-            // Trying to get more authorized information
-            if (!basicOrderInfo.ordercode.isNullOrBlank()) {
-                val orderInfo = getOrderInfo(basicOrderInfo.ordercode!!) ?: return
-                showOrderInfo(orderInfo)
-            }
-        } else showScanError()
+        }
+        if (!flag) {
+            showScanError()
+            return
+        }
     }
 
-    private fun showManufacturerInfo(manufacturer: BasicManufacturerView) {
+    private fun showManufacturerInfo(manufacturer: Manufacturer) {
         card_manufacturer.visibility = if (manufacturer.containsUsefulData()) {
             View.VISIBLE
         } else {
@@ -161,92 +163,111 @@ class TagInfoActivity : AppCompatActivity() {
         } else View.GONE
 
 
-        showOrderItems(order.filterOrderItems())
-        showStatusFlowItems(order.filterStatusFlow())
-        showProcessItems(order.filterOrderProcesses())
+        showOrderItems(order.items)
+        showStatusFlowItems(order.statusFlow)
+        showProcessItems(order.process)
     }
 
 
-    private fun showOrderItems(items: List<OrderItem>) {
+    private fun showOrderItems(items: List<Item>) {
         card_items.visibility = if (items.isEmpty()) {
             View.GONE
             return
-        } else View.VISIBLE
-        for (item in items) {
-            displayOrderItem(item.label!!)
+        } else {
+            items.forEach { displayOrderItem(it) }
+            View.VISIBLE
         }
     }
 
-    private fun displayOrderItem(itemName: String) {
+    private fun displayOrderItem(item: Item) {
         val textView = layoutInflater.inflate(R.layout.item_order,
                 order_items_container, false) as TextView
-        textView.text = itemName
+        textView.text = item.label
         order_items_container.addView(textView)
     }
 
 
-    private fun showStatusFlowItems(items: List<WorkFlowStep>) {
+    private fun showStatusFlowItems(items: List<WorkflowStep>) {
         card_status_flow.visibility = if (items.isEmpty()) {
             View.GONE
             return
-        } else View.VISIBLE
+        } else {
+            val listSize = items.size
+            displayStatusFlowItem(items[0], true)
+            items.drop(1).forEach { displayStatusFlowItem(it) }
 
-        val listSize = items.size
-        for ((index, value) in items.withIndex()) {
-            displayStatusFlowItem(value.status!!, index == listSize - 2, index == listSize - 1)
+
+            val currentStep = items.find { it.isCurrent }
+            val futureSteps = items.filter { it.isCurrent == false && it.isFinished == false }
+            showStatusUpdateCard(currentStep, futureSteps)
+            View.VISIBLE
         }
 
-        val currentStep = items.last()
-        val futureSteps = TestData.futureSteps
-        showStatusUpdateCard(currentStep, futureSteps)
+
     }
 
-    private fun displayStatusFlowItem(processName: String, isPenultimate: Boolean, isLast: Boolean) {
+    private fun displayStatusFlowItem(item: WorkflowStep, isFirst: Boolean = false) {
         val layout = layoutInflater.inflate(R.layout.item_status_flow,
                 statusflow_items_container, false) as LinearLayout
         val textView = layout.findViewById<TextView>(R.id.textview_process_content)
         val connectingLine = layout.findViewById<View>(R.id.connecting_line)
 
-        textView.text = processName
-        if (isPenultimate) {
-            connectingLine.setBackgroundColor(ContextCompat.getColor(this@TagInfoActivity, R.color.produvarOrange))
-        } else if (isLast) {
-            with(textView) {
-                setBackgroundResource(R.drawable.process_item_shape_current)
-                setTextColor(ContextCompat.getColor(this@TagInfoActivity, R.color.produvarOrange))
-                typeface = Typeface.DEFAULT_BOLD
-            }
-            connectingLine.visibility = View.GONE
+        textView.text = item.status
+
+        connectingLine.visibility = if (isFirst) {
+            View.GONE
+        } else {
+            connectingLine.setBackgroundResource(when {
+                item.isFinished -> R.drawable.process_line_previous
+                item.isCurrent -> R.drawable.process_line_current
+                else -> R.drawable.process_line_future
+            })
+            View.VISIBLE
         }
+
+        textView.setBackgroundResource(when {
+            item.isFinished -> R.drawable.process_item_shape_previous
+            item.isCurrent -> {
+                textView.setTextColor(ContextCompat.getColor(this@TagInfoActivity, R.color.produvarOrange))
+                textView.typeface = Typeface.DEFAULT_BOLD
+                R.drawable.process_item_shape_current
+            }
+            else -> {
+                textView.setTextColor(ContextCompat.getColor(this@TagInfoActivity, R.color.produvarOrangeTransparent))
+                R.drawable.process_item_shape_future
+            }
+        })
+
+
         statusflow_items_container.addView(layout)
     }
 
-    private fun showStatusUpdateCard(currentStep: WorkFlowStep, futureSteps: List<WorkFlowStep>) {
-        card_update_status.visibility = if (futureSteps.isNotEmpty()) {
+    private fun showStatusUpdateCard(currentStep: WorkflowStep?, futureSteps: List<WorkflowStep>) {
+        card_update_status.visibility = if (futureSteps.isNotEmpty() && currentStep != null) {
+            val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
+                    futureSteps.map { it.status })
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            update_spinner_future_steps.adapter = adapter
+
+            update_camera_button.setOnClickListener {
+                // Open scan barcode activity if tag hasn't been scanned yet
+                if (update_location.text.isBlank()) {
+                    val intent = Intent(this, ScanLocationActivity::class.java)
+                    startActivityForResult(intent, Constants.SCAN_LOCATION)
+                } else {
+                    // Clearing the field first if a update_location already has scanned tag
+                    update_location.setText("")
+                    update_camera_button.setImageResource(R.drawable.ic_taginfo_camera_black)
+                }
+            }
+            button_update_status.setOnClickListener {
+                toast("Current step: ${currentStep.status}\n" +
+                        "New step: ${update_spinner_future_steps.selectedItem.toString()}\n" +
+                        "Location: ${update_location.text}")
+            }
+
             View.VISIBLE
         } else View.GONE
-
-        val spinnerArray = futureSteps.map { it.status!! }
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        update_spinner_future_steps.adapter = adapter
-
-        update_camera_button.setOnClickListener {
-            // Open scan barcode activity if tag hasn't been scanned yet
-            if (update_location.text.isBlank()) {
-                val intent = Intent(this, ScanLocationActivity::class.java)
-                startActivityForResult(intent, Constants.SCAN_LOCATION)
-            } else {
-                // Clearing the field first if a update_location already has scanned tag
-                update_location.setText("")
-                update_camera_button.setImageResource(R.drawable.ic_taginfo_camera_black)
-            }
-        }
-        button_update_status.setOnClickListener {
-            toast("Current step: ${currentStep.status}\n" +
-                    "New step: ${update_spinner_future_steps.selectedItem.toString()}\n" +
-                    "Location: ${update_location.text}")
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -261,39 +282,18 @@ class TagInfoActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun showProcessItems(items: List<OrderProcess>) {
+    private fun showProcessItems(items: List<ProcessStep>) {
         card_process.visibility = if (items.isEmpty()) {
             View.GONE
             return
-        } else View.VISIBLE
-
-        val listSize = items.size
-        for ((index, value) in items.withIndex()) {
-            displayProcessItem(value.label!!, index == listSize - 1)
+        } else {
+            items.dropLast(1).forEach { displayProcessItem(it) }
+            displayProcessItem(items.last(), true)
+            View.VISIBLE
         }
     }
 
-    private fun displayProcessItem(itemProcess: String, isLast: Boolean) {
-        val splitted = itemProcess.split(" ")
-
-        // checking whether process is in "yyyy-MM-dd HH:mm MESSAGE" format or not
-        // if it is, displaying date in separate italic textview
-        var time: String? = null
-        lateinit var message: String
-        if (splitted.size > 2) {
-            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH)
-            val potentiallyStrDate = splitted.take(2).joinToString(" ")
-            time = try {
-                sdf.parse(potentiallyStrDate)
-                message = splitted.drop(2).joinToString(" ")
-                potentiallyStrDate
-            } catch (e: Exception) {
-                message = itemProcess
-                null
-            }
-        } else {
-            message = itemProcess
-        }
+    private fun displayProcessItem(item: ProcessStep, isLast: Boolean = false) {
 
         val layout = layoutInflater.inflate(R.layout.item_process,
                 process_items_container, false) as LinearLayout
@@ -302,27 +302,27 @@ class TagInfoActivity : AppCompatActivity() {
         val messageTextView = layout.findViewById<TextView>(R.id.process_message)
         val line = layout.findViewById<View>(R.id.process_horizontal_line)
 
-
-        timeTextView.visibility = if (time != null) {
-            timeTextView.text = time
+        timeTextView.visibility = if (!item.time.isNullOrBlank()) {
+            timeTextView.text = item.time
             View.VISIBLE
         } else View.GONE
 
-        messageTextView.text = message
-
-        if (isLast) {
-            line.visibility = View.GONE
+        messageTextView.text = if (!item.time.isNullOrBlank() && !item.description.isNullOrBlank()) {
+            item.description
+        } else {
+            item.label
         }
+        line.visibility = if (isLast) View.GONE else View.VISIBLE
 
         process_items_container.addView(layout)
     }
 
 
-    private fun getBasicOrderInfo(tagContent: String): BasicOrderView? {
+    private fun getBasicOrderInfo(tagContent: String): BasicOrderViewDTO? {
         return TestData.basicOrderView
     }
 
-    private fun getOrderInfo(orderCode: String): Order? {
+    private fun getOrderInfo(orderCode: String): OrderDTO? {
         return TestData.order
     }
 

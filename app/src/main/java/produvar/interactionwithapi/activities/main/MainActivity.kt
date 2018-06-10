@@ -38,9 +38,12 @@ class MainActivity : AppCompatActivity() {
         setUpViewPager()
         view_pager.currentItem = 1
         val ap = ApiProvider()
-        ap.authenticate("4fn34rqfrefk")
+//        ap.login("steve.jobs@apple.com", "apple")
+//        ap.authenticate("12341234")
 //        ap.searchByScan("4fn34rqfrefk", ApiProvider.TagType.CODE)
 //        ap.orderInfo(User(LoginType.PersonalAccount, "1234apple", "steve.jobs@apple.com", "", ""), "2018004938")
+        ap.orderStatusUpdate(User(LoginType.PersonalAccount, "1234apple", "steve.jobs@apple.com", "", ""),
+                "2018004938", "product.cncready", "product.finished")
     }
 
     private fun setUpViewPager() {
@@ -56,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun getCount() = 3
         }
-        view_pager.addOnPageChangeListener(
+//        view_pager.addOnPageChangeListener(
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 //                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -73,20 +76,20 @@ class MainActivity : AppCompatActivity() {
 //                        }
 //                    }
 //                } else {
-                object : ViewPager.SimpleOnPageChangeListener() {
-                    override fun onPageSelected(position: Int) {
-                        val decorView = window.decorView
-                        val uiOptions = if (position == 0) {
-                            View.SYSTEM_UI_FLAG_FULLSCREEN
-                        } else {
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        }
-                        decorView.systemUiVisibility = uiOptions
-                        super.onPageSelected(position)
-                    }
-                }
+//                object : ViewPager.SimpleOnPageChangeListener() {
+//                    override fun onPageSelected(position: Int) {
+//                        val decorView = window.decorView
+//                        val uiOptions = if (position == 0) {
+//                            View.SYSTEM_UI_FLAG_FULLSCREEN
+//                        } else {
+//                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        }
+//                        decorView.systemUiVisibility = uiOptions
+//                        super.onPageSelected(position)
+//                    }
 //                }
-        )
+//                }
+//        )
 
 
     }

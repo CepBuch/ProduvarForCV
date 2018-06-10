@@ -17,6 +17,6 @@
     <!--For main activity status bar-->
     <color name="statusbarMain">#cbcbcb</color>
     <color name="lightGray">#e7e7e7</color>
-    <color name="processItemPrevius">#bdbdbd</color>
+    <color name="processItemPrevious">#bdbdbd</color>
 
 </resources>
