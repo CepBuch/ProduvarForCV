@@ -1,5 +1,6 @@
 package produvar.interactionwithapi
 
+import android.content.res.Resources
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.Method
 import com.github.kittinunf.fuel.httpGet
@@ -7,6 +8,7 @@ import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpUpload
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
+import produvar.interactionwithapi.enums.ErrorType
 import produvar.interactionwithapi.enums.TagType
 import produvar.interactionwithapi.interfaces.ApiProvider
 import produvar.interactionwithapi.models.*
@@ -27,24 +29,28 @@ class TestAPIProvider : ApiProvider {
         FuelManager.instance.basePath = BASE_URL
     }
 
-    override fun authenticate(authenticationTag: String, handler: (UserDTO?) -> Unit) {
+    override fun authenticate(authenticationTag: String,
+                              success: (UserDTO) -> Unit, failure: (ErrorType) -> Unit) {
         val params = listOf(
                 "code" to authenticationTag
         )
 
         AUTHENTICATE_REQUEST.httpUpload(Method.POST, params)
                 .dataParts { _, _ -> listOf() }
-                .responseObject(UserDTO.Deserializer()) { _, _, result ->
-                    handler(when (result) {
-                        is Result.Success -> {
-                            result.get()
-                        }
-                        else -> null
-                    })
+                .responseObject(UserDTO.Deserializer()) { _, _, either ->
+                    either.fold(
+                            success = { success(it) },
+                            failure = {
+                                failure(when (it.response.statusCode) {
+                                    403 -> ErrorType.NOT_FOUND
+                                    else -> ErrorType.UNDEFINED
+                                })
+                            })
                 }
     }
 
-    override fun login(username: String, password: String, handler: (UserDTO?) -> Unit) {
+    override fun login(username: String, password: String,
+                       success: (UserDTO) -> Unit, failure: (ErrorType) -> Unit) {
         val params = listOf(
                 "username" to username,
                 "password" to password)
@@ -52,25 +58,25 @@ class TestAPIProvider : ApiProvider {
         LOGIN_REQUEST.httpUpload(Method.POST, params)
                 .dataParts { _, _ -> listOf() }
                 .responseObject(UserDTO.Deserializer()) { _, _, result ->
-                    handler(when (result) {
+                    when (result) {
                         is Result.Success -> {
-                            result.get()
+                            success(result.get())
                         }
-                        else -> null
-                    })
+//                        else -> null
+                    }
                 }
     }
 
-    override fun logout(user: User, handler: (Boolean) -> Unit) {
+    override fun logout(user: User, success: (Boolean) -> Unit, failure: (ErrorType) -> Unit) {
         LOGOUT_REQUEST.httpPost()
-                //TODO !!
                 .header("Authorization" to "Bearer ${user.bearer}")
                 .response { _, response, _ ->
-                    handler(response.statusCode == 200)
+                    success(response.statusCode == 200)
                 }
     }
 
-    override fun searchByScan(tagContent: String, tagType: TagType, handler: (BasicOrderViewDTO?) -> Unit) {
+    override fun searchByScan(tagContent: String, tagType: TagType,
+                              success: (BasicOrderViewDTO) -> Unit, failure: (ErrorType) -> Unit) {
         val params = listOf(
                 if (tagType == TagType.URL) {
                     "url" to tagContent
@@ -81,16 +87,16 @@ class TestAPIProvider : ApiProvider {
 
         SEARCH_BY_SCAN_REQUEST.httpGet(params)
                 .responseObject(BasicOrderViewDTO.Deserializer()) { _, _, result ->
-                    handler(when (result) {
+                    when (result) {
                         is Result.Success -> {
-                            result.get()
+                            success(result.get())
                         }
-                        else -> null
-                    })
+//                        else -> null
+                    }
                 }
     }
 
-    override fun orderInfo(user: User, orderCode: String, handler: (OrderDTO?) -> Unit) {
+    override fun orderInfo(user: User, orderCode: String, success: (OrderDTO) -> Unit, failure: (ErrorType) -> Unit) {
         val params = listOf(
                 "code" to orderCode,
                 "skip" to 0,
@@ -100,17 +106,17 @@ class TestAPIProvider : ApiProvider {
         ORDERS_REQUEST.httpGet(params)
                 .header("Authorization" to "Bearer ${user.bearer}")
                 .responseObject(OrderDTO.Deserializer()) { req, res, result ->
-                    handler(when (result) {
+                    when (result) {
                         is Result.Success -> {
-                            result.get()
+                            success(result.get())
                         }
-                        else -> null
-                    })
+                    }
                 }
     }
 
-    override fun orderStatusUpdate(user: User, orderCode: String,
-                                   currentStatus: String, newStatus: String, handler: (Boolean) -> Unit) {
+    override fun orderStatusUpdate(user: User, orderCode: String, currentStatus: String,
+                                   newStatus: String, success: (Boolean) -> Unit,
+                                   failure: (ErrorType) -> Unit) {
         val params = mapOf(
                 "who" to user.bearer,
                 "code" to orderCode,
@@ -126,7 +132,7 @@ class TestAPIProvider : ApiProvider {
                         "Content-Type" to "application/json")
                 .body(Gson().toJson(params))
                 .responseString { request, response, _ ->
-                    handler(when (response.statusCode) {
+                    success(when (response.statusCode) {
                         201 -> true
                     // TODO() exception
                         409 -> throw IllegalArgumentException("The fromStatus does not match the current order status")

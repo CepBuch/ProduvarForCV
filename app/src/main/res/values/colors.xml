@@ -14,6 +14,7 @@
     <!--Same, but transparent-->
     <color name="produvarOrangeTransparent">#f6f9a825</color>
     <color name="produvarDarkTransparent">#d73c3c3e</color>
+    <color name="produvarLightTransparent">#f6F7F7F7</color>
     <!--For main activity status bar-->
     <color name="statusbarMain">#cbcbcb</color>
     <color name="lightGray">#e7e7e7</color>

@@ -36,12 +36,12 @@ class MainActivity : AppCompatActivity(), MainPageFragment.OnMenuButtonClicked {
         // setting up viewpager
         setUpViewPager()
 
-        val provider = Factory.getApiProvider()
+//        val provider = Factory.getApiProvider()
 //        provider.login("steve.jobs@apple.com", "apple") {}
 //        provider.authenticate("12341234") {}
 //        provider.searchByScan("4fn34rqfrefk", TagType.CODE) {}
-        provider.orderInfo(User(LoginType.PersonalAccount, "1234apple",
-                "steve.jobs@apple.com", "", ""), "2018004938") {}
+//        provider.orderInfo(User(LoginType.PersonalAccount, "1234apple",
+//                "steve.jobs@apple.com", "", ""), "2018004938") {}
 //        provider.orderStatusUpdate(User(LoginType.PersonalAccount, "1234apple", "steve.jobs@apple.com", "", ""),
 //                "2018004938", "product.cncready", "product.finished") {}
 //        provider.logout(User(LoginType.PersonalAccount, "123apple", "steve.jobs@apple.com", "", "")) {}

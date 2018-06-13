@@ -1,7 +1,9 @@
 package produvar.interactionwithapi.activities.main.pages.authTypes
 
+
 import android.content.Context
-import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -11,17 +13,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_auth_qr.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.coroutines.experimental.bg
-import org.jetbrains.anko.okButton
 import produvar.interactionwithapi.BarcodeScanner
 import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
+import produvar.interactionwithapi.activities.CustomDialog
 import produvar.interactionwithapi.activities.main.MainActivity
+import produvar.interactionwithapi.enums.ErrorType
 import produvar.interactionwithapi.enums.LoginType
 import produvar.interactionwithapi.helpers.Constants
-import produvar.interactionwithapi.helpers.TagChecker
-import produvar.interactionwithapi.helpers.changeStatusBarColor
 import produvar.interactionwithapi.helpers.isConnected
 import produvar.interactionwithapi.models.User
 
@@ -32,10 +31,10 @@ class AuthQrFragment : Fragment() {
         fun onQRAuthComplete(authorizedUser: User)
     }
 
-    lateinit var callback: OnQrAuthorizationListener
+    private lateinit var callback: OnQrAuthorizationListener
     private lateinit var scanner: BarcodeScanner
     private lateinit var mainActivity: MainActivity
-    private var dialog: DialogInterface? = null
+    private var customDialog: CustomDialog? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -71,61 +70,58 @@ class AuthQrFragment : Fragment() {
 
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
             async(UI) {
+                showProgress(true)
+                scanner.release()
                 attemptLogin(it)
             }
+
         })
         scanner.setUpAsync()
 
         super.onViewCreated(view, savedInstanceState)
     }
 
-
-//    override fun onDetach() {
-//        super.onDetach()
-//        callback = null
-//    }
-
     private fun attemptLogin(barcode: String) {
-        showProgress(true)
-        scanner.release()
-
-        if (!TagChecker.isAuthorizationTagValid(barcode)) {
-            showLoginError(getString(R.string.login_qr_wrong_format_title),
-                    getString(R.string.login_qr_wrong_format_message))
-            return
-        }
-
-//        if (activity?.isConnected() == true) {
+        if (activity?.isConnected() == true) {
             val provider = Factory.getApiProvider()
-            provider.authenticate(barcode) {
-                val authorizedUser = it?.convertToModel(LoginType.QR)
-                if (authorizedUser != null) {
-                    callback.onQRAuthComplete(authorizedUser)
-                } else {
-                    showLoginError(getString(R.string.login_qr_not_found_title),
-                            getString(R.string.login_qr_not_found_message))
-                }
-            }
-//        }
+            provider.authenticate(barcode,
+                    {
+                        val authorizedUser = it.convertToModel(LoginType.QR)
+                        if (authorizedUser != null) {
+                            callback.onQRAuthComplete(authorizedUser)
+                        } else {
+                            showLoginError(ErrorType.UNDEFINED)
+                        }
+                    },
+                    {
+                        showLoginError(it)
+                    })
+        } else {
+            showLoginError(ErrorType.NOT_CONNECTED)
+        }
 
     }
 
 
-    private fun showLoginError(title: String, message: String) {
-        dialog = activity!!.alert(message, title) {
-            okButton {
-                scanner.setUpAsync()
-                showProgress(false)
-            }
-        }.show()
+    private fun showLoginError(errorType: ErrorType) {
+        val message = when (errorType) {
+            ErrorType.NOT_FOUND -> getString(R.string.login_qr_not_found_message)
+            ErrorType.NOT_CONNECTED -> getString(R.string.error_internet_connection)
+            else -> getString(R.string.error_unknown)
+        }
+        customDialog = CustomDialog(mainActivity, message) {
+            scanner.setUpAsync()
+            showProgress(false)
+            customDialog = null
+        }
+        customDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        customDialog?.show()
     }
 
     override fun onPause() {
         super.onPause()
-        if (dialog != null) {
-            val a = dialog?.dismiss()
-            showProgress(false)
-        }
+        showProgress(false)
+        customDialog?.hide()
         scanner.releaseAsync()
     }
 

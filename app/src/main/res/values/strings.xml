@@ -56,6 +56,9 @@
     <string name="help_produvar_url">https://www.produvar.com/contact/</string>
 
 
+    <string name="error_internet_connection">Internet is needed to perform this request. Please, connect to the internet and try again.</string>
+    <string name="error_unknown">Service is unavailable or there are problems with your internet connection</string>
+
     <string name="description_taginfo_error_logo">Error logo</string>
     <string name="description_main_logo">Logo of Produvar company</string>
     <string name="description_main_back">Return to main page</string>
