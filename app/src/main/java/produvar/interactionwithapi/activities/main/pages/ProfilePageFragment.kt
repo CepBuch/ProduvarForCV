@@ -21,7 +21,8 @@ import com.google.gson.Gson
 import org.jetbrains.anko.longToast
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthLoginFragment
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthQrFragment
-import produvar.interactionwithapi.models.LoginType
+import produvar.interactionwithapi.enums.LoginType
+import produvar.interactionwithapi.helpers.changeStatusBarColor
 import produvar.interactionwithapi.models.User
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -81,13 +82,9 @@ class ProfilePageFragment : Fragment(),
     }
 
 
-    override fun authWithQRComplete(authorizedUser: User) {
-        logIn(authorizedUser)
-    }
+    override fun onQRAuthComplete(authorizedUser: User) = logIn(authorizedUser)
 
-    override fun authWithPersonalAccountComplete(authorizedUser: User) {
-        logIn(authorizedUser)
-    }
+    override fun authWithPersonalAccountComplete(authorizedUser: User) = logIn(authorizedUser)
 
     private fun logIn(user: User) {
         saveUserInfoToPrefs(user)
@@ -102,7 +99,11 @@ class ProfilePageFragment : Fragment(),
     private fun saveUserInfoToPrefs(user: User?) {
         with(prefs.edit()) {
             val json = Gson().toJson(user)
-            putString(Constants.LOGGED_USER_INFO, json)
+            if (user != null) {
+                putString(Constants.LOGGED_USER_INFO, json)
+            } else {
+                remove(Constants.LOGGED_USER_INFO)
+            }
             apply()
         }
     }
@@ -134,15 +135,24 @@ class ProfilePageFragment : Fragment(),
         } else {
             getString(R.string.profile_login_type_qr)
         }
-        val format: DateFormat = SimpleDateFormat("MMM, dd HH:mm", Locale.ENGLISH)
-        val dateStr = format.format(user.logoutDate)
+        val dateStr = try {
+            val format: DateFormat = SimpleDateFormat("MMM, dd HH:mm", Locale.ENGLISH)
+            format.format(user.logoutDate)
+        } catch (ex: Exception) {
+            null
+        }
 
-        profile_login_info.text =
-                String.format(getString(R.string.profile_logout_info), dateStr, loginType)
 
-        selectFirstTab()
+        profile_login_info.visibility = if (dateStr != null) {
+            profile_login_info.text =
+                    String.format(getString(R.string.profile_logout_info), dateStr, loginType)
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
         content_authorization.visibility = View.GONE
         content_profile_info.visibility = View.VISIBLE
+        selectFirstTab()
 
     }
 
@@ -206,7 +216,6 @@ class ProfilePageFragment : Fragment(),
     }
 
     private fun topViewsColor(color: Int) {
-//        status_bar.setBackgroundColor(color)
         toolbar_profile.setBackgroundColor(color)
         auth_tab_layout.setBackgroundColor(color)
     }

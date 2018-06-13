@@ -1,6 +1,7 @@
 package produvar.interactionwithapi.activities.main.pages
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -18,7 +19,19 @@ import produvar.interactionwithapi.activities.help.HelpActivity
 import produvar.interactionwithapi.activities.main.MainActivity
 
 class MainPageFragment : Fragment() {
-    private lateinit var mainActivity: MainActivity
+
+    interface OnMenuButtonClicked {
+        fun onCameraClicked()
+        fun onProfileClicked()
+    }
+
+    lateinit var callback: OnMenuButtonClicked
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        callback = activity as? OnMenuButtonClicked ?: throw ClassCastException(activity.toString() +
+                "must implement OnMenuButtonClicked")
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_page_main, container, false)
@@ -26,15 +39,12 @@ class MainPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        mainActivity = activity as? MainActivity ?: throw Exception("Fragment is strongly " +
-                "coupled with MainActivity. You can create it in only in MainActivity.")
-
 
         main_menu_open_camera.setOnClickListener {
-            mainActivity.swipeFragment(false)
+            callback.onCameraClicked()
         }
         main_menu_open_profile.setOnClickListener {
-            mainActivity.swipeFragment()
+            callback.onProfileClicked()
         }
 
         button_info.setOnClickListener { openHelpActivity() }
@@ -48,11 +58,11 @@ class MainPageFragment : Fragment() {
 
 
     private fun openHelpActivity() {
-        val intent = Intent(mainActivity, HelpActivity::class.java)
+        val intent = Intent(activity, HelpActivity::class.java)
         // If we're running on Android 5.0 or higher, open activity with "enter from bottom-exit to bottom" animation
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             startActivity(intent,
-                    ActivityOptions.makeSceneTransitionAnimation(mainActivity).toBundle())
+                    ActivityOptions.makeSceneTransitionAnimation(activity).toBundle())
         } else {
             // Swap without transition
             startActivity(intent)

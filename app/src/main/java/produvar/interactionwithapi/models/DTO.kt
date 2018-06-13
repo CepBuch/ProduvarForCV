@@ -2,15 +2,18 @@ package produvar.interactionwithapi.models
 
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.Gson
+import produvar.interactionwithapi.enums.LoginType
 
 
-data class UserDTO(val bearer: String, val username: String?, val name: String?, val role: String?) {
+data class UserDTO(val bearer: String?, val username: String?, val name: String?, val role: String?) {
     class Deserializer : ResponseDeserializable<UserDTO> {
         override fun deserialize(content: String): UserDTO? = Gson().fromJson(content, UserDTO::class.java)
     }
 
-    fun convertToModel(loginType: LoginType): User {
-        return User(loginType, bearer, username, name, role)
+    fun convertToModel(loginType: LoginType): User? {
+        return if (!bearer.isNullOrBlank()) {
+            User(loginType, bearer!!, username, name, role)
+        } else null
     }
 }
 

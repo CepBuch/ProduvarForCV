@@ -14,8 +14,8 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.okButton
 import produvar.interactionwithapi.R
+import produvar.interactionwithapi.enums.LoginType
 import produvar.interactionwithapi.helpers.Constants
-import produvar.interactionwithapi.models.LoginType
 import produvar.interactionwithapi.models.User
 
 class AuthLoginFragment : Fragment() {

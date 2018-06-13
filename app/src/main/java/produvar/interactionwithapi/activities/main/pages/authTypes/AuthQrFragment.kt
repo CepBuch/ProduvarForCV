@@ -15,29 +15,47 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.okButton
 import produvar.interactionwithapi.BarcodeScanner
+import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.activities.main.MainActivity
+import produvar.interactionwithapi.enums.LoginType
 import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.TagChecker
+import produvar.interactionwithapi.helpers.changeStatusBarColor
+import produvar.interactionwithapi.helpers.isConnected
 import produvar.interactionwithapi.models.User
 
 
 class AuthQrFragment : Fragment() {
 
     interface OnQrAuthorizationListener {
-        fun authWithQRComplete(authorizedUser: User)
+        fun onQRAuthComplete(authorizedUser: User)
     }
 
-    private var listener: OnQrAuthorizationListener? = null
+    lateinit var callback: OnQrAuthorizationListener
     private lateinit var scanner: BarcodeScanner
     private lateinit var mainActivity: MainActivity
-
     private var dialog: DialogInterface? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        val parentFragmentAsCallback = parentFragment as? OnQrAuthorizationListener
+        val activityAsCallback = activity as? OnQrAuthorizationListener
+
+        callback = when {
+            parentFragmentAsCallback != null -> parentFragmentAsCallback
+            activityAsCallback != null -> activityAsCallback
+            else -> throw ClassCastException("Either activity ($activity) or parent fragment ($parentFragment)" +
+                    "  must implement OnQrAuthorizationListener")
+        }
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_auth_qr, container, false)
 
-        // centring gravity to the height of mainActivity (not the layout)
+        // centring gravity to the height of parent fragment layout (not the one of current fragment)
         val marginTop = arguments?.getInt(Constants.PARAM_TOP_VIEWS_HEIGHT)
         if (marginTop != null) {
             val params = view.layoutParams as? ViewGroup.MarginLayoutParams
@@ -56,26 +74,16 @@ class AuthQrFragment : Fragment() {
                 attemptLogin(it)
             }
         })
-
         scanner.setUpAsync()
 
         super.onViewCreated(view, savedInstanceState)
     }
 
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (parentFragment is OnQrAuthorizationListener) {
-            listener = parentFragment as OnQrAuthorizationListener
-        } else {
-            throw RuntimeException("$context must implement OnQrAuthorizationListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
+//    override fun onDetach() {
+//        super.onDetach()
+//        callback = null
+//    }
 
     private fun attemptLogin(barcode: String) {
         showProgress(true)
@@ -87,25 +95,24 @@ class AuthQrFragment : Fragment() {
             return
         }
 
-        async(UI) {
-            val authorizedUser = bg {
-                // API CALL SIMULATION
-                Thread.sleep(1000)
-                if (barcode == "https://produvar.nl") User("mb.M8m_^GIol@YT|") else null
-            }.await()
-
-            if (authorizedUser != null) {
-                listener?.authWithQRComplete(authorizedUser)
-            } else {
-                showLoginError(getString(R.string.login_qr_not_found_title),
-                        getString(R.string.login_qr_not_found_message))
+//        if (activity?.isConnected() == true) {
+            val provider = Factory.getApiProvider()
+            provider.authenticate(barcode) {
+                val authorizedUser = it?.convertToModel(LoginType.QR)
+                if (authorizedUser != null) {
+                    callback.onQRAuthComplete(authorizedUser)
+                } else {
+                    showLoginError(getString(R.string.login_qr_not_found_title),
+                            getString(R.string.login_qr_not_found_message))
+                }
             }
-        }
+//        }
+
     }
 
 
     private fun showLoginError(title: String, message: String) {
-        dialog = activity!!.alert(message,title) {
+        dialog = activity!!.alert(message, title) {
             okButton {
                 scanner.setUpAsync()
                 showProgress(false)

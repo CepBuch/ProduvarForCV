@@ -2,6 +2,8 @@ package produvar.interactionwithapi.helpers
 
 import android.app.Activity
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Build
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -33,6 +35,11 @@ fun Activity.getStatusBarHeight(): Int {
     } else 0
 }
 
+fun Context.isConnected(): Boolean {
+    val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+    return activeNetwork?.isConnectedOrConnecting == true
+}
 
 
 //fun Fragment.setUpStatusBar(view: View, color: Int) {

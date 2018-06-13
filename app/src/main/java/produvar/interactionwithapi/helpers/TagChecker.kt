@@ -1,7 +1,17 @@
 package produvar.interactionwithapi.helpers
 
+import produvar.interactionwithapi.enums.TagType
+
 class TagChecker {
     companion object {
+        fun classify(tagContent: String) {
+            when {
+                isBarcode(tagContent) -> TagType.CODE
+                isUrl(tagContent) -> TagType.URL
+                else -> TagType.UNDEFINED
+            }
+        }
+
         fun isOrderTagValid(tagContent: String): Boolean {
             // Expected to be more detailed
             return isUrl(tagContent) || isBarcode(tagContent)

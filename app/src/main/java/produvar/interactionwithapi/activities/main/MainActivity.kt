@@ -5,22 +5,21 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import produvar.interactionwithapi.*
 import produvar.interactionwithapi.activities.main.pages.ProfilePageFragment
 import produvar.interactionwithapi.activities.main.pages.MainPageFragment
 import produvar.interactionwithapi.activities.main.pages.ScanCameraFragment
 import produvar.interactionwithapi.activities.permissions.PermissionsActivity
+import produvar.interactionwithapi.enums.LoginType
+import produvar.interactionwithapi.enums.TagType
 import produvar.interactionwithapi.helpers.Constants
-import produvar.interactionwithapi.models.LoginType
 import produvar.interactionwithapi.models.User
+import produvar.interactionwithapi.models.UserDTO
 
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity(), MainPageFragment.OnMenuButtonClicked {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,17 +35,22 @@ class MainActivity : AppCompatActivity() {
 //        }
         // setting up viewpager
         setUpViewPager()
-        view_pager.currentItem = 1
-        val ap = ApiProvider()
-//        ap.login("steve.jobs@apple.com", "apple")
-//        ap.authenticate("12341234")
-//        ap.searchByScan("4fn34rqfrefk", ApiProvider.TagType.CODE)
-//        ap.orderInfo(User(LoginType.PersonalAccount, "1234apple", "steve.jobs@apple.com", "", ""), "2018004938")
-        ap.orderStatusUpdate(User(LoginType.PersonalAccount, "1234apple", "steve.jobs@apple.com", "", ""),
-                "2018004938", "product.cncready", "product.finished")
+
+        val provider = Factory.getApiProvider()
+//        provider.login("steve.jobs@apple.com", "apple") {}
+//        provider.authenticate("12341234") {}
+//        provider.searchByScan("4fn34rqfrefk", TagType.CODE) {}
+//        provider.orderInfo(User(LoginType.PersonalAccount, "1234apple",
+//                "steve.jobs@apple.com", "", ""), "2018004938") {}
+//        provider.orderStatusUpdate(User(LoginType.PersonalAccount, "1234apple", "steve.jobs@apple.com", "", ""),
+//                "2018004938", "product.cncready", "product.finished") {}
+//        provider.logout(User(LoginType.PersonalAccount, "123apple", "steve.jobs@apple.com", "", "")) {}
     }
 
+
     private fun setUpViewPager() {
+        view_pager.currentItem = 1
+        view_pager.offscreenPageLimit = 3
         view_pager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
 
             override fun getItem(position: Int) =
@@ -115,9 +119,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun swipeFragment(forward: Boolean = true) {
+    private fun swipeFragment(forward: Boolean = true) {
         view_pager.setCurrentItem(view_pager.currentItem + if (forward) 1 else -1, true)
     }
+
+    override fun onProfileClicked() = swipeFragment(true)
+
+    override fun onCameraClicked() = swipeFragment(false)
 
     private fun checkPermissions() {
         // Users with SDK < 23 granted the permission during installation

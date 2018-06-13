@@ -24,7 +24,7 @@ class ScanCameraFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         mainActivity = activity as? MainActivity ?: throw Exception("Fragment is strongly " +
-                "coupled with MainActivity. You can create it in only in MainActivity.")
+                "coupled with MainActivity and can be used only in it.")
 
         button_back.setOnClickListener { activity?.onBackPressed() }
 
