@@ -64,7 +64,7 @@ class TestAPIProvider : ApiProvider {
     override fun logout(user: User, handler: (Boolean) -> Unit) {
         LOGOUT_REQUEST.httpPost()
                 //TODO !!
-                .authenticate(user.username!!, user.bearer)
+                .header("Authorization" to "Bearer ${user.bearer}")
                 .response { _, response, _ ->
                     handler(response.statusCode == 200)
                 }
@@ -98,7 +98,7 @@ class TestAPIProvider : ApiProvider {
         )
 
         ORDERS_REQUEST.httpGet(params)
-                .authenticate(user.username!!, user.bearer)
+                .header("Authorization" to "Bearer ${user.bearer}")
                 .responseObject(OrderDTO.Deserializer()) { req, res, result ->
                     handler(when (result) {
                         is Result.Success -> {
@@ -121,7 +121,9 @@ class TestAPIProvider : ApiProvider {
         )
         UPDATE_STATUS_REQUEST.httpPost()
                 .authenticate(user.username!!, user.bearer)
-                .header("Content-Type" to "application/json")
+                .header(
+                        "Authorization" to "Bearer ${user.bearer}",
+                        "Content-Type" to "application/json")
                 .body(Gson().toJson(params))
                 .responseString { request, response, _ ->
                     handler(when (response.statusCode) {
