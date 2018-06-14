@@ -19,10 +19,13 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import org.jetbrains.anko.longToast
+import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthLoginFragment
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthQrFragment
+import produvar.interactionwithapi.enums.ErrorType
 import produvar.interactionwithapi.enums.LoginType
 import produvar.interactionwithapi.helpers.changeStatusBarColor
+import produvar.interactionwithapi.helpers.isConnected
 import produvar.interactionwithapi.models.User
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -44,15 +47,8 @@ class ProfilePageFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         prefs = activity!!.getPreferences(MODE_PRIVATE)
 
-        button_back.setOnClickListener {
-            activity?.onBackPressed()
-        }
-
+        button_back.setOnClickListener { activity?.onBackPressed() }
         button_logout.setOnClickListener { logOut() }
-
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-//            setUpStatusBar(status_bar, Color.TRANSPARENT)
-//        }
         setUpTabLayout()
         setUpContent()
         super.onViewCreated(view, savedInstanceState)
@@ -84,7 +80,7 @@ class ProfilePageFragment : Fragment(),
 
     override fun onQRAuthComplete(authorizedUser: User) = logIn(authorizedUser)
 
-    override fun authWithPersonalAccountComplete(authorizedUser: User) = logIn(authorizedUser)
+    override fun onAccountAuthComplete(authorizedUser: User) = logIn(authorizedUser)
 
     private fun logIn(user: User) {
         saveUserInfoToPrefs(user)
@@ -92,20 +88,35 @@ class ProfilePageFragment : Fragment(),
     }
 
     private fun logOut() {
-        saveUserInfoToPrefs(null)
+        deleteUserInfoFromPrefs()
         showAuthorizationForm()
     }
 
-    private fun saveUserInfoToPrefs(user: User?) {
+    private fun saveUserInfoToPrefs(user: User) {
         with(prefs.edit()) {
             val json = Gson().toJson(user)
-            if (user != null) {
-                putString(Constants.LOGGED_USER_INFO, json)
-            } else {
-                remove(Constants.LOGGED_USER_INFO)
-            }
+            putString(Constants.LOGGED_USER_INFO, json)
             apply()
         }
+    }
+
+    private fun deleteUserInfoFromPrefs() {
+        val userJson = prefs.getString(Constants.LOGGED_USER_INFO, null)
+        if (userJson != null) {
+            val parsedUser = Gson().fromJson(userJson, User::class.java)
+            if (parsedUser != null) {
+                if (activity?.isConnected() == true) {
+                    val provider = Factory.getApiProvider()
+                    provider.logout(parsedUser, {}, {})
+                }
+            }
+        }
+
+        with(prefs.edit()) {
+            remove(Constants.LOGGED_USER_INFO)
+            apply()
+        }
+
     }
 
     private fun showAuthorizationForm() {
@@ -114,7 +125,6 @@ class ProfilePageFragment : Fragment(),
     }
 
     private fun showInfoAboutUser(user: User) {
-
         profile_name.text = if (user.name != null) {
             String.format(getString(R.string.profile_welcome), user.name)
         } else String.format(getString(R.string.profile_welcome), getString(R.string.profile_welcome_qr))
@@ -153,7 +163,6 @@ class ProfilePageFragment : Fragment(),
         content_authorization.visibility = View.GONE
         content_profile_info.visibility = View.VISIBLE
         selectFirstTab()
-
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {

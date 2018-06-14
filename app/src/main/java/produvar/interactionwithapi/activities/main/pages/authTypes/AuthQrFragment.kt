@@ -69,9 +69,9 @@ class AuthQrFragment : Fragment() {
 
 
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
+            scanner.releaseAsync()
             async(UI) {
                 showProgress(true)
-                scanner.release()
                 attemptLogin(it)
             }
 
@@ -109,9 +109,9 @@ class AuthQrFragment : Fragment() {
             ErrorType.NOT_CONNECTED -> getString(R.string.error_internet_connection)
             else -> getString(R.string.error_unknown)
         }
+        showProgress(false)
         customDialog = CustomDialog(mainActivity, message) {
             scanner.setUpAsync()
-            showProgress(false)
             customDialog = null
         }
         customDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

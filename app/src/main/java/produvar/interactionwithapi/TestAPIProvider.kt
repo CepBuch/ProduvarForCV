@@ -57,13 +57,16 @@ class TestAPIProvider : ApiProvider {
 
         LOGIN_REQUEST.httpUpload(Method.POST, params)
                 .dataParts { _, _ -> listOf() }
-                .responseObject(UserDTO.Deserializer()) { _, _, result ->
-                    when (result) {
-                        is Result.Success -> {
-                            success(result.get())
-                        }
-//                        else -> null
-                    }
+                .responseObject(UserDTO.Deserializer()) { _, _, either ->
+                    either.fold(
+                            success = { success(it) },
+                            failure = {
+                                failure(when (it.response.statusCode) {
+                                    403 -> ErrorType.NOT_FOUND
+                                    else -> ErrorType.UNDEFINED
+                                })
+                            }
+                    )
                 }
     }
 
@@ -134,7 +137,6 @@ class TestAPIProvider : ApiProvider {
                 .responseString { request, response, _ ->
                     success(when (response.statusCode) {
                         201 -> true
-                    // TODO() exception
                         409 -> throw IllegalArgumentException("The fromStatus does not match the current order status")
                         else -> false
                     })
