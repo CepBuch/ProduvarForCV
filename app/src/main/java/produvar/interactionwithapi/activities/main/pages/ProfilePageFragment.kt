@@ -205,23 +205,15 @@ class ProfilePageFragment : Fragment(),
 
     private fun showQrFragment() {
         showAuthorizationTypeFragment(AuthQrFragment(), true)
-        async(UI) {
-            bg {
-                topViewsColor(ContextCompat.getColor(activity!!, R.color.produvarDarkTransparent))
-                view?.setBackgroundColor(Color.TRANSPARENT)
-            }.await()
-        }
+        topViewsColor(ContextCompat.getColor(activity!!, R.color.produvarDarkTransparent))
+        view?.setBackgroundColor(Color.TRANSPARENT)
     }
 
     private fun showLoginFragment(withAnimation: Boolean = true) {
         showAuthorizationTypeFragment(AuthLoginFragment(), false, withAnimation)
-        async(UI) {
-            bg {
-                val color = ContextCompat.getColor(activity!!, R.color.produvarOrange)
-                topViewsColor(color)
-                view?.setBackgroundColor(color)
-            }.await()
-        }
+        val color = ContextCompat.getColor(activity!!, R.color.produvarOrange)
+        topViewsColor(color)
+        view?.setBackgroundColor(color)
     }
 
     private fun topViewsColor(color: Int) {
@@ -244,5 +236,5 @@ class ProfilePageFragment : Fragment(),
         }
     }
 
-    private fun countTopViewHeight() = /*status_bar.height +*/ toolbar_profile.height + auth_tab_layout.height
+    private fun countTopViewHeight() = toolbar_profile.height + auth_tab_layout.height
 }

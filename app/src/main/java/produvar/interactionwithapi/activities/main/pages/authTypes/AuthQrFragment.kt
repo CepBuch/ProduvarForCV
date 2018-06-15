@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_auth_qr.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import produvar.interactionwithapi.BarcodeScanner
 import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
@@ -69,12 +71,11 @@ class AuthQrFragment : Fragment() {
 
 
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
-            scanner.releaseAsync()
-            async(UI) {
+            launch(UI) {
+                scanner.release()
                 showProgress(true)
-                attemptLogin(it)
+                runBlocking { attemptLogin(it) }
             }
-
         })
         scanner.setUpAsync()
 
@@ -99,7 +100,6 @@ class AuthQrFragment : Fragment() {
         } else {
             showLoginError(ErrorType.NOT_CONNECTED)
         }
-
     }
 
 
@@ -110,12 +110,14 @@ class AuthQrFragment : Fragment() {
             else -> getString(R.string.error_unknown)
         }
         showProgress(false)
-        customDialog = CustomDialog(mainActivity, message) {
-            scanner.setUpAsync()
-            customDialog = null
+        if (customDialog?.isShowing != true) {
+            customDialog = CustomDialog(mainActivity, message) {
+                scanner.setUpAsync()
+                customDialog = null
+            }
+            customDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            customDialog?.show()
         }
-        customDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        customDialog?.show()
     }
 
     override fun onPause() {
