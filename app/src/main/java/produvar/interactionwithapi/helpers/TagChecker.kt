@@ -4,8 +4,8 @@ import produvar.interactionwithapi.enums.TagType
 
 class TagChecker {
     companion object {
-        fun classify(tagContent: String) {
-            when {
+        fun classify(tagContent: String): TagType {
+            return when {
                 isBarcode(tagContent) -> TagType.CODE
                 isUrl(tagContent) -> TagType.URL
                 else -> TagType.UNDEFINED

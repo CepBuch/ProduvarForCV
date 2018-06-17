@@ -87,6 +87,7 @@ class ScanCameraFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         customDialog?.hide()
+        customDialog = null
         scanner.release()
     }
 

@@ -1,5 +1,6 @@
 package produvar.interactionwithapi.interfaces
 
+import kotlinx.coroutines.experimental.Deferred
 import produvar.interactionwithapi.enums.ErrorType
 import produvar.interactionwithapi.enums.TagType
 import produvar.interactionwithapi.models.BasicOrderViewDTO
@@ -14,11 +15,11 @@ interface ApiProvider {
 
     fun logout(user: User, success: (Boolean) -> Unit, failure: (ErrorType) -> Unit)
 
-    fun searchByScan(tagContent: String, tagType: TagType, success: (BasicOrderViewDTO) -> Unit, failure: (ErrorType) -> Unit)
+    fun searchByScan(tagContent: String, success: (BasicOrderViewDTO) -> Unit, failure: (ErrorType) -> Unit)
 
     fun orderInfo(user: User, orderCode: String, success: (OrderDTO) -> Unit, failure: (ErrorType) -> Unit)
 
-    fun orderStatusUpdate(user: User, orderCode: String, currentStatus: String,
-                          newStatus: String, success: (Boolean) -> Unit, failure: (ErrorType) -> Unit)
+    fun orderStatusUpdate(user: User, orderCode: String, currentStatus: String, newStatus: String,
+                          description: String, location: String, success: () -> Unit, failure: (ErrorType) -> Unit)
 
 }

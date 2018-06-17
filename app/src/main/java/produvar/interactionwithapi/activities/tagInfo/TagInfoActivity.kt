@@ -87,22 +87,19 @@ class TagInfoActivity : AppCompatActivity() {
 
 
     private fun processTag(tagContent: String) {
-        // http://... or https://.. or 12425...
         var flag = false
-        if (TagChecker.isOrderTagValid(tagContent)) {
-            // Getting basic info about an order (for both authorized and anonymous users)
-            val orderDTO = getBasicOrderInfo(tagContent)
-            if (orderDTO != null) {
-                val (code, manufacturer) = orderDTO.convertToModel()
-                if (manufacturer != null) {
-                    showManufacturerInfo(manufacturer)
-                    flag = true
-                    // If we got order code in return and got authorization token (TODO)
-                    // Trying to get more authorized information
-                    if (!code.isNullOrBlank()) {
-                        val orderInfo = getOrderInfo(code!!)?.convertToModel() ?: return
-                        showOrderInfo(orderInfo)
-                    }
+        // Getting basic info about an order (for both authorized and anonymous users)
+        val orderDTO = getBasicOrderInfo(tagContent)
+        if (orderDTO != null) {
+            val (code, manufacturer) = orderDTO.convertToModel()
+            if (manufacturer != null) {
+                showManufacturerInfo(manufacturer)
+                flag = true
+                // If we got order code in return and got authorization token (TODO)
+                // Trying to get more authorized information
+                if (!code.isNullOrBlank()) {
+                    val orderInfo = getOrderInfo(code!!)?.convertToModel() ?: return
+                    showOrderInfo(orderInfo)
                 }
             }
         }

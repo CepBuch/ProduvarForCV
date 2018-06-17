@@ -74,7 +74,7 @@ class AuthQrFragment : Fragment() {
             launch(UI) {
                 scanner.release()
                 showProgress(true)
-                runBlocking { attemptLogin(it) }
+                attemptLogin(it)
             }
         })
         scanner.setUpAsync()
@@ -82,24 +82,25 @@ class AuthQrFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    private fun attemptLogin(barcode: String) {
+    private suspend fun attemptLogin(barcode: String) {
         if (activity?.isConnected() == true) {
             val provider = Factory.getApiProvider()
-            provider.authenticate(barcode,
-                    {
-                        val authorizedUser = it.convertToModel(LoginType.QR)
-                        if (authorizedUser != null) {
-                            callback.onQRAuthComplete(authorizedUser)
-                        } else {
-                            showLoginError(ErrorType.UNDEFINED)
-                        }
-                    },
-                    {
-                        showLoginError(it)
-                    })
+            val (user, error) = provider.authenticate(barcode).await()
+            when {
+                user != null -> {
+                    val authorizedUser = user.convertToModel(LoginType.QR)
+                    if (authorizedUser != null) {
+                        callback.onQRAuthComplete(authorizedUser)
+                    } else {
+                        showLoginError(ErrorType.UNDEFINED)
+                    }
+                }
+                error != null -> showLoginError(error)
+            }
         } else {
             showLoginError(ErrorType.NOT_CONNECTED)
         }
+
     }
 
 
@@ -124,6 +125,7 @@ class AuthQrFragment : Fragment() {
         super.onPause()
         showProgress(false)
         customDialog?.hide()
+        customDialog = null
         scanner.releaseAsync()
     }
 

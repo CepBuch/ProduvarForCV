@@ -107,7 +107,7 @@ class ProfilePageFragment : Fragment(),
             if (parsedUser != null) {
                 if (activity?.isConnected() == true) {
                     val provider = Factory.getApiProvider()
-                    provider.logout(parsedUser, {}, {})
+                    provider.logout(parsedUser)
                 }
             }
         }

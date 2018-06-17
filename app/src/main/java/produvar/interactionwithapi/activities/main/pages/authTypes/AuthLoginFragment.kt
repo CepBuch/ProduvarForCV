@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import kotlinx.android.synthetic.main.fragment_auth_username.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.okButton
@@ -99,25 +100,25 @@ class AuthLoginFragment : Fragment() {
             return
         }
 
-        async(UI) {
+        launch(UI) {
             showProgress(true)
             if (activity?.isConnected() == true) {
                 val provider = Factory.getApiProvider()
-                provider.login(emailStr, passwordStr,
-                        {
-                            val authorizedUser = it.convertToModel(LoginType.PersonalAccount)
-                            if (authorizedUser != null) {
-                                email.setText("")
-                                password.setText("")
-                                showProgress(false)
-                                callback.onAccountAuthComplete(authorizedUser)
-                            } else {
-                                showLoginError(ErrorType.UNDEFINED)
-                            }
-                        },
-                        {
-                            showLoginError(it)
-                        })
+                val (user, error) = provider.login(emailStr, passwordStr).await()
+                when {
+                    user != null -> {
+                        val authorizedUser = user.convertToModel(LoginType.PersonalAccount)
+                        if (authorizedUser != null) {
+                            email.setText("")
+                            password.setText("")
+                            showProgress(false)
+                            callback.onAccountAuthComplete(authorizedUser)
+                        } else {
+                            showLoginError(ErrorType.UNDEFINED)
+                        }
+                    }
+                    error != null -> showLoginError(error)
+                }
             } else {
                 showLoginError(ErrorType.NOT_CONNECTED)
             }
