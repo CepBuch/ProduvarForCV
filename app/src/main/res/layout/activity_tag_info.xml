@@ -47,12 +47,25 @@
                 android:visibility="gone" />
 
             <include android:id="@+id/card_update_status"
-                layout="@layout/card_update_status_view" />
+                layout="@layout/card_update_status_view"
+                android:visibility="gone"/>
 
             <include
                 android:id="@+id/card_process"
                 layout="@layout/card_process_view"
                 android:visibility="gone" />
+            <TextView
+                android:id="@+id/additional_info_tip"
+                android:text="@string/additional_info_tip"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:textStyle="italic"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:textAlignment="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
@@ -76,11 +89,15 @@
 
         <TextView
             android:id="@+id/error_message"
-            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/taginfo_error_message"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
             android:textAlignment="center"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -26,7 +26,6 @@ class ScanCameraFragment : Fragment() {
 
     private lateinit var scanner: BarcodeScanner
     lateinit var mainActivity: MainActivity
-    private var customDialog: CustomDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_page_camera, container, false)
@@ -42,21 +41,16 @@ class ScanCameraFragment : Fragment() {
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
             launch(UI) {
                 scanner.release()
-                runBlocking { tryProcessTag(it) }
+                tryProcessTag(it)
             }
         })
-
         super.onViewCreated(view, savedInstanceState)
     }
 
     private fun tryProcessTag(tagContent: String) {
-        if (activity?.isConnected() == true) {
-            val intent = Intent(activity, TagInfoActivity::class.java)
-            intent.putExtra("barcode", tagContent)
-            mainActivity.startActivity(intent)
-        } else {
-            showError(ErrorType.NOT_CONNECTED)
-        }
+        val intent = Intent(activity, TagInfoActivity::class.java)
+        intent.putExtra("barcode", tagContent)
+        mainActivity.startActivity(intent)
     }
 
 
@@ -69,25 +63,8 @@ class ScanCameraFragment : Fragment() {
         }
     }
 
-    private fun showError(errorType: ErrorType) {
-        val message = when (errorType) {
-            ErrorType.NOT_CONNECTED -> getString(R.string.error_internet_connection)
-            else -> getString(R.string.error_unknown)
-        }
-        if (customDialog?.isShowing != true) {
-            customDialog = CustomDialog(mainActivity, message) {
-                scanner.setUpAsync()
-                customDialog = null
-            }
-            customDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            customDialog?.show()
-        }
-    }
-
     override fun onPause() {
         super.onPause()
-        customDialog?.hide()
-        customDialog = null
         scanner.release()
     }
 

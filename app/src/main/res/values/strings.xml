@@ -39,8 +39,11 @@
     <string name="taginfo_status_flow_header">Status flow</string>
     <string name="location_scanner_camera_info">Point the camera at QR code or a Barcode describing location</string>
     <string name="taginfo_update_status_header">Update status</string>
-    <string name="prompt_location">Location (not required)</string>
-
+    <!--TODO: translate-->
+    <string name="prompt_location">Location (optional)</string>
+    <string name="prompt_description">Comment (optional)</string>
+    <string name="additional_info_tip">If you are a customer or an employee, please log in to get more detailed information about an order</string>
+    <string name="taginfo_not_found">This tag was not found in our systems or there are problems with the service</string>
 
     <string name="permissions_info">For correct work the application needs the following permission(s):</string>
     <string name="permissions_internet_info">In order to transmit and receive data</string>
@@ -55,7 +58,7 @@
     <string name="help_contact_button">CONTACT US</string>
     <string name="help_produvar_url">https://www.produvar.com/contact/</string>
 
-
+    <!--TODO: translate-->
     <string name="error_internet_connection">Internet is needed to perform this request. Please, connect to the internet and try again.</string>
     <string name="error_unknown">Service is unavailable or there are problems with your internet connection</string>
 

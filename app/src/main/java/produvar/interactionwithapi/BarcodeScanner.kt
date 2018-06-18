@@ -18,6 +18,8 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.toast
 
@@ -78,8 +80,8 @@ class BarcodeScanner(private val activity: AppCompatActivity,
             barcodeDetector.release()
             cameraSource.release()
             isCameraShown = false
-            cameraPreview.holder.setFormat(PixelFormat.TRANSPARENT);
-            cameraPreview.holder.setFormat(PixelFormat.OPAQUE);
+            cameraPreview.holder.setFormat(PixelFormat.TRANSPARENT)
+            cameraPreview.holder.setFormat(PixelFormat.OPAQUE)
         }
     }
 
@@ -98,6 +100,7 @@ class BarcodeScanner(private val activity: AppCompatActivity,
 
     fun produceVibrationSignal(milliseconds: Long = 50) {
         val v = activity.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (activity.checkSelfPermission(Manifest.permission.VIBRATE) == PackageManager.PERMISSION_GRANTED) {
                 v.vibrate(VibrationEffect.createOneShot(milliseconds, VibrationEffect.DEFAULT_AMPLITUDE))

@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_tag_info.*
 import kotlinx.android.synthetic.main.card_items_view.*
 import kotlinx.android.synthetic.main.card_manufacturer_view.*
@@ -20,17 +21,20 @@ import kotlinx.android.synthetic.main.card_process_view.*
 import kotlinx.android.synthetic.main.card_statusflow_view.*
 import kotlinx.android.synthetic.main.card_update_status_view.*
 import kotlinx.android.synthetic.main.toolbar_taginfo.*
-import org.jetbrains.anko.coroutines.experimental.bg
-import org.jetbrains.anko.doAsync
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import org.jetbrains.anko.toast
+import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
+import produvar.interactionwithapi.enums.ErrorType
+import produvar.interactionwithapi.enums.LoginType
 import produvar.interactionwithapi.helpers.*
 import produvar.interactionwithapi.models.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class TagInfoActivity : AppCompatActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,68 +78,88 @@ class TagInfoActivity : AppCompatActivity() {
                         if (rawContent.startsWith("en")) {
                             flag = true
                             // dropping language
-                            // (as plain/text formats starts with language  description code and the content)
+                            // (as plain/text formats starts with language  description code and then the content)
                             processTag(rawContent.drop(2))
                         }
                     }
                 }
             }
-            if (!flag) showScanError()
+            if (!flag) showScanError(getString(R.string.taginfo_error_message))
             true
         } else false
     }
 
 
     private fun processTag(tagContent: String) {
-        var flag = false
-        // Getting basic info about an order (for both authorized and anonymous users)
-        val orderDTO = getBasicOrderInfo(tagContent)
-        if (orderDTO != null) {
-            val (code, manufacturer) = orderDTO.convertToModel()
-            if (manufacturer != null) {
-                showManufacturerInfo(manufacturer)
-                flag = true
-                // If we got order code in return and got authorization token (TODO)
-                // Trying to get more authorized information
-                if (!code.isNullOrBlank()) {
-                    val orderInfo = getOrderInfo(code!!)?.convertToModel() ?: return
-                    showOrderInfo(orderInfo)
+        if (isConnected()) {
+            // Getting basic info about an order (for both authorized and anonymous users)
+            runBlocking {
+                val provider = Factory.getApiProvider()
+                val (basicOrderView, error) = provider.searchByScan(tagContent).await()
+                when {
+                    basicOrderView != null -> {
+                        val (code, manufacturer) = basicOrderView.convertToModel()
+                        if (manufacturer != null) {
+                            showManufacturerInfo(manufacturer)
+                            tryShowOrderInfo(code)
+                        } else showScanError(getString(R.string.taginfo_error_message))
+                    }
+                    error != null -> {
+                        showScanError(when (error) {
+                            ErrorType.NOT_FOUND -> getString(R.string.taginfo_not_found)
+                            else -> getString(R.string.taginfo_error_message)
+                        })
+
+                    }
                 }
             }
-        }
-        if (!flag) {
-            showScanError()
-            return
+        } else showScanError(getString(R.string.error_internet_connection))
+    }
+
+    private suspend fun tryShowOrderInfo(orderCode: String?) {
+        val user = getCurrentUser()
+        // Trying to get more authorized information
+        if (!orderCode.isNullOrBlank() && user != null) {
+            val provider = Factory.getApiProvider()
+            val (orderDTO, _) = provider.orderInfo(user, orderCode!!).await()
+            val order = orderDTO?.convertToModel()
+            if (order != null) {
+                showOrderInfo(order)
+            }
+        } else if (user == null) {
+            additional_info_tip.visibility = View.VISIBLE
         }
     }
 
+
     private fun showManufacturerInfo(manufacturer: Manufacturer) {
         card_manufacturer.visibility = if (manufacturer.containsUsefulData()) {
+
+            manufacturer_name.visibility = if (!manufacturer.name.isNullOrBlank()) {
+                manufacturer_name.text = manufacturer.name
+                View.VISIBLE
+            } else View.GONE
+
+            manufacturer_website.visibility = if (!manufacturer.website.isNullOrBlank()) {
+                manufacturer_website.text = manufacturer.website
+                View.VISIBLE
+            } else View.GONE
+
+            manufacturer_email.visibility = if (!manufacturer.email.isNullOrBlank()) {
+                manufacturer_email.text = manufacturer.email
+                View.VISIBLE
+            } else View.GONE
+
+            manufacturer_phone.visibility = if (!manufacturer.phoneNumber.isNullOrBlank()) {
+                manufacturer_phone.text = manufacturer.phoneNumber
+                View.VISIBLE
+            } else View.GONE
+
             View.VISIBLE
         } else {
-            showScanError()
+            showScanError(getString(R.string.taginfo_error_message))
             View.GONE
         }
-
-        manufacturer_name.visibility = if (!manufacturer.name.isNullOrBlank()) {
-            manufacturer_name.text = manufacturer.name
-            View.VISIBLE
-        } else View.GONE
-
-        manufacturer_website.visibility = if (!manufacturer.website.isNullOrBlank()) {
-            manufacturer_website.text = manufacturer.website
-            View.VISIBLE
-        } else View.GONE
-
-        manufacturer_email.visibility = if (!manufacturer.email.isNullOrBlank()) {
-            manufacturer_email.text = manufacturer.email
-            View.VISIBLE
-        } else View.GONE
-
-        manufacturer_phone.visibility = if (!manufacturer.phoneNumber.isNullOrBlank()) {
-            manufacturer_phone.text = manufacturer.phoneNumber
-            View.VISIBLE
-        } else View.GONE
     }
 
 
@@ -167,13 +191,10 @@ class TagInfoActivity : AppCompatActivity() {
 
 
     private fun showOrderItems(items: List<Item>) {
-        card_items.visibility = if (items.isEmpty()) {
-            View.GONE
-            return
-        } else {
+        card_items.visibility = if (items.isNotEmpty()) {
             items.forEach { displayOrderItem(it) }
             View.VISIBLE
-        }
+        } else View.GONE
     }
 
     private fun displayOrderItem(item: Item) {
@@ -185,22 +206,18 @@ class TagInfoActivity : AppCompatActivity() {
 
 
     private fun showStatusFlowItems(items: List<WorkflowStep>) {
-        card_status_flow.visibility = if (items.isEmpty()) {
-            View.GONE
-            return
-        } else {
-            val listSize = items.size
+        card_status_flow.visibility = if (items.isNotEmpty()) {
+            // Showing the first element (it shouldn't have connection line above)
             displayStatusFlowItem(items[0], true)
+            // Showing other elements
             items.drop(1).forEach { displayStatusFlowItem(it) }
 
-
+            // If we can extract current and at least one future steps, showing status update card
             val currentStep = items.find { it.isCurrent }
             val futureSteps = items.filter { it.isCurrent == false && it.isFinished == false }
             showStatusUpdateCard(currentStep, futureSteps)
             View.VISIBLE
-        }
-
-
+        } else View.GONE
     }
 
     private fun displayStatusFlowItem(item: WorkflowStep, isFirst: Boolean = false) {
@@ -211,16 +228,14 @@ class TagInfoActivity : AppCompatActivity() {
 
         textView.text = item.status
 
-        connectingLine.visibility = if (isFirst) {
-            View.GONE
-        } else {
+        connectingLine.visibility = if (!isFirst) {
             connectingLine.setBackgroundResource(when {
                 item.isFinished -> R.drawable.process_line_previous
                 item.isCurrent -> R.drawable.process_line_current
                 else -> R.drawable.process_line_future
             })
             View.VISIBLE
-        }
+        } else View.GONE
 
         textView.setBackgroundResource(when {
             item.isFinished -> R.drawable.process_item_shape_previous
@@ -234,16 +249,16 @@ class TagInfoActivity : AppCompatActivity() {
                 R.drawable.process_item_shape_future
             }
         })
-
-
         statusflow_items_container.addView(layout)
     }
 
     private fun showStatusUpdateCard(currentStep: WorkflowStep?, futureSteps: List<WorkflowStep>) {
-        card_update_status.visibility = if (futureSteps.isNotEmpty() && currentStep != null) {
+        val currentUser = getCurrentUser()
+        card_update_status.visibility = if (futureSteps.isNotEmpty() && currentStep != null &&
+                currentUser != null && currentUser.loginType == LoginType.PersonalAccount) {
             val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
                     futureSteps.map { it.status })
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             update_spinner_future_steps.adapter = adapter
 
             update_camera_button.setOnClickListener {
@@ -257,10 +272,12 @@ class TagInfoActivity : AppCompatActivity() {
                     update_camera_button.setImageResource(R.drawable.ic_taginfo_camera_black)
                 }
             }
+
             button_update_status.setOnClickListener {
                 toast("Current step: ${currentStep.status}\n" +
-                        "New step: ${update_spinner_future_steps.selectedItem.toString()}\n" +
-                        "Location: ${update_location.text}")
+                        "New step: ${update_spinner_future_steps.selectedItem}\n" +
+                        "Location: ${update_location.text}\n" +
+                        "Description: ${update_description.text}")
             }
 
             View.VISIBLE
@@ -280,14 +297,11 @@ class TagInfoActivity : AppCompatActivity() {
     }
 
     private fun showProcessItems(items: List<ProcessStep>) {
-        card_process.visibility = if (items.isEmpty()) {
-            View.GONE
-            return
-        } else {
+        card_process.visibility = if (items.isNotEmpty()) {
             items.dropLast(1).forEach { displayProcessItem(it) }
             displayProcessItem(items.last(), true)
             View.VISIBLE
-        }
+        } else View.GONE
     }
 
     private fun displayProcessItem(item: ProcessStep, isLast: Boolean = false) {
@@ -314,17 +328,8 @@ class TagInfoActivity : AppCompatActivity() {
         process_items_container.addView(layout)
     }
 
-
-    private fun getBasicOrderInfo(tagContent: String): BasicOrderViewDTO? {
-        return TestData.basicOrderView
-    }
-
-    private fun getOrderInfo(orderCode: String): OrderDTO? {
-        return TestData.order
-    }
-
-
-    private fun showScanError() {
+    private fun showScanError(errorMessage: String) {
+        error_message.text = errorMessage
         content_view.visibility = View.GONE
         error_view.visibility = View.VISIBLE
     }

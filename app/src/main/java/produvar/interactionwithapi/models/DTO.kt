@@ -26,13 +26,13 @@ data class BasicOrderViewDTO(val ordercode: String?, val manufacturer: BasicManu
     fun convertToModel(): Pair<String?, Manufacturer?> {
         return Pair(ordercode,
                 if (manufacturer != null) {
-                    Manufacturer(manufacturer.name, manufacturer.website, manufacturer.phoneNumber, manufacturer.email)
+                    Manufacturer(manufacturer.name, manufacturer.website, manufacturer.phonenumber, manufacturer.email)
                 } else null)
     }
 }
 
 data class BasicManufacturerViewDTO(val name: String?, val website: String?,
-                                    val phoneNumber: String?, val email: String?)
+                                    val phonenumber: String?, val email: String?)
 
 data class OrderDTO(val code: String?, val label: String?, val dueDate: String?,
                     val items: List<OrderItemDTO?>?, val process: List<OrderProcessDTO?>?,

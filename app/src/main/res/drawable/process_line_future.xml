@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rotate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromDegrees="90"
-    android:toDegrees="90">
-    <shape xmlns:android="http://schemas.android.com/apk/res/android"
-        android:shape="line">
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
 
-        <stroke
-            android:width="2dp"
-            android:color="@color/produvarOrange"
-            android:dashGap="5px"
-            android:dashWidth="5px" />
-    </shape>
-</rotate>
+    <stroke
+        android:width="1dp"
+        android:color="@color/produvarOrange"/>
+
+    <size
+        android:width="10dp"
+        android:height="10dp"/>
+</shape>
+

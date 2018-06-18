@@ -1,5 +1,7 @@
 package produvar.interactionwithapi.activities.main.pages
 
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -8,23 +10,17 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_page_profile.*
 import kotlinx.android.synthetic.main.toolbar_profile.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.coroutines.experimental.bg
-import produvar.interactionwithapi.R
-import produvar.interactionwithapi.helpers.Constants
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
-import com.google.gson.Gson
 import org.jetbrains.anko.longToast
 import produvar.interactionwithapi.Factory
+import produvar.interactionwithapi.R
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthLoginFragment
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthQrFragment
-import produvar.interactionwithapi.enums.ErrorType
 import produvar.interactionwithapi.enums.LoginType
-import produvar.interactionwithapi.helpers.changeStatusBarColor
+import produvar.interactionwithapi.helpers.Constants
+import produvar.interactionwithapi.helpers.getCurrentUser
 import produvar.interactionwithapi.helpers.isConnected
 import produvar.interactionwithapi.models.User
 import java.text.DateFormat
@@ -45,7 +41,7 @@ class ProfilePageFragment : Fragment(),
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        prefs = activity!!.getPreferences(MODE_PRIVATE)
+        prefs = activity!!.getSharedPreferences(Constants.PREFS_FILE_NAME, MODE_PRIVATE)
 
         button_back.setOnClickListener { activity?.onBackPressed() }
         button_logout.setOnClickListener { logOut() }
@@ -101,14 +97,11 @@ class ProfilePageFragment : Fragment(),
     }
 
     private fun deleteUserInfoFromPrefs() {
-        val userJson = prefs.getString(Constants.LOGGED_USER_INFO, null)
-        if (userJson != null) {
-            val parsedUser = Gson().fromJson(userJson, User::class.java)
-            if (parsedUser != null) {
-                if (activity?.isConnected() == true) {
-                    val provider = Factory.getApiProvider()
-                    provider.logout(parsedUser)
-                }
+        val currentUser = activity?.getCurrentUser()
+        if (currentUser != null) {
+            if (activity?.isConnected() == true) {
+                val provider = Factory.getApiProvider()
+                provider.logout(currentUser)
             }
         }
 

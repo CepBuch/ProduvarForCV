@@ -26,10 +26,10 @@ data class Order(val code: String?, val label: String?, val dueDate: String?,
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
         format.timeZone = TimeZone.getTimeZone("UTC")
 
-        try {
-            return format.parse(dueDate)
+        return try {
+            format.parse(dueDate)
         } catch (ex: Exception) {
-            return null
+            null
         }
     }
 

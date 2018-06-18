@@ -79,7 +79,7 @@ class TestAPIProvider : AsyncApiProvider {
     override fun logout(user: User): Deferred<ErrorType?> {
         return async(CommonPool)
         {
-            val (request, response, result) = LOGOUT_REQUEST.httpPost()
+            val (_, _, result) = LOGOUT_REQUEST.httpPost()
                     .header("Authorization" to "Bearer ${user.bearer}")
                     .response()
 
@@ -138,7 +138,7 @@ class TestAPIProvider : AsyncApiProvider {
     override fun orderStatusUpdate(user: User, orderCode: String, currentStatus: String,
                                    newStatus: String, description: String, location: String): Deferred<ErrorType?> {
         val params = mapOf(
-                "who" to user.bearer,
+                "who" to user.username,
                 "code" to orderCode,
                 "description" to description,
                 "location" to location,

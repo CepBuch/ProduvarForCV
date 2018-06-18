@@ -2,6 +2,7 @@ package produvar.interactionwithapi.helpers
 
 import android.app.Activity
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
@@ -13,7 +14,9 @@ import android.view.Display
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import com.google.gson.Gson
 import produvar.interactionwithapi.activities.main.MainActivity
+import produvar.interactionwithapi.models.User
 
 
 fun Activity.changeStatusBarColor(colorResource: Int, shouldSetFlags: Boolean = false) {
@@ -39,6 +42,12 @@ fun Context.isConnected(): Boolean {
     val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
     return activeNetwork?.isConnectedOrConnecting == true
+}
+
+fun Activity.getCurrentUser(): User? {
+    val prefs = getSharedPreferences(Constants.PREFS_FILE_NAME, MODE_PRIVATE)
+    val userJson = prefs.getString(Constants.LOGGED_USER_INFO, null)
+    return if (userJson != null) Gson().fromJson(userJson, User::class.java) else null
 }
 
 

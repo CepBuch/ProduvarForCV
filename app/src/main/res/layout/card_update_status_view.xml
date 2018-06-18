@@ -29,10 +29,9 @@
             android:textColor="@color/produvarDark"
             android:textSize="18sp"
             android:textStyle="bold" />
-
         <Spinner
             android:id="@+id/update_spinner_future_steps"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
@@ -67,6 +66,16 @@
                 android:background="@null"
                 android:src="@drawable/ic_taginfo_camera_black" />
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/update_description"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="15dp"
+            android:hint="@string/prompt_description"
+            android:inputType="none"
+            android:singleLine="true"
+            android:layout_weight = "1"/>
 
         <Button
             android:id="@+id/button_update_status"
