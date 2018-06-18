@@ -61,7 +61,7 @@
     <!--TODO: translate-->
     <string name="error_internet_connection">Internet is needed to perform this request. Please, connect to the internet and try again.</string>
     <string name="error_unknown">Service is unavailable or there are problems with your internet connection</string>
-    <string name="error_refresh">You should be connected to the internet to be able to refresh</string>
+    <string name="error_refresh">Device should be connected to the internet to be able to refresh</string>
 
     <string name="description_taginfo_error_logo">Error logo</string>
     <string name="description_main_logo">Logo of Produvar company</string>

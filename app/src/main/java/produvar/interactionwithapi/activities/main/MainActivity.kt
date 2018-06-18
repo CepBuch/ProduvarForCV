@@ -15,6 +15,7 @@ import produvar.interactionwithapi.activities.permissions.PermissionsActivity
 import produvar.interactionwithapi.enums.LoginType
 import produvar.interactionwithapi.enums.TagType
 import produvar.interactionwithapi.helpers.Constants
+import produvar.interactionwithapi.helpers.tryGetCurrentUser
 import produvar.interactionwithapi.models.User
 import produvar.interactionwithapi.models.UserDTO
 
@@ -26,7 +27,6 @@ class MainActivity : AppCompatActivity(), MainPageFragment.OnMenuButtonClicked {
 
         // Checking whether permissions to use camera/internet/nfc were granted
         checkPermissions()
-
         setUpViewPager()
     }
 
@@ -91,6 +91,13 @@ class MainActivity : AppCompatActivity(), MainPageFragment.OnMenuButtonClicked {
         super.onResume()
         if (view_pager.currentItem == 0) {
             view_pager.setCurrentItem(1, false)
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == Constants.TAGINFO_ACTIVITY){
+            recreate()
         }
     }
 

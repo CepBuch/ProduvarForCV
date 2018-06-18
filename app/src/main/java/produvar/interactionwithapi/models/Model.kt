@@ -15,6 +15,11 @@ data class User(val loginType: LoginType, val bearer: String, val username: Stri
         calendar.add(Calendar.DATE, 1)
         logoutDate = calendar.time
     }
+
+    fun isTokenExpired(): Boolean {
+        val calendar = Calendar.getInstance()
+        return logoutDate < calendar.time
+    }
 }
 
 data class Order(val code: String?, val label: String?, val dueDate: String?,

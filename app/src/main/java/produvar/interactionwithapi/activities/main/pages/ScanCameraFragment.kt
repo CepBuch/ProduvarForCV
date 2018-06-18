@@ -12,6 +12,7 @@ import produvar.interactionwithapi.BarcodeScanner
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.activities.tagInfo.TagInfoActivity
+import produvar.interactionwithapi.helpers.Constants
 
 
 class ScanCameraFragment : Fragment() {
@@ -33,8 +34,7 @@ class ScanCameraFragment : Fragment() {
         scanner = BarcodeScanner(mainActivity, mainActivity.camera_preview, {
             val intent = Intent(activity, TagInfoActivity::class.java)
             intent.putExtra("barcode", it)
-            mainActivity.startActivity(intent)
-            scanner.releaseAsync()
+            mainActivity.startActivityForResult(intent, Constants.TAGINFO_ACTIVITY)
         })
         super.onViewCreated(view, savedInstanceState)
     }

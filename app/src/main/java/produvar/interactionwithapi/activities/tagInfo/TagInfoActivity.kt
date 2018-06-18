@@ -12,7 +12,6 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_tag_info.*
 import kotlinx.android.synthetic.main.card_items_view.*
 import kotlinx.android.synthetic.main.card_manufacturer_view.*
@@ -23,7 +22,6 @@ import kotlinx.android.synthetic.main.card_update_status_view.*
 import kotlinx.android.synthetic.main.toolbar_taginfo.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
 import org.jetbrains.anko.toast
 import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
@@ -61,8 +59,9 @@ class TagInfoActivity : AppCompatActivity() {
 
     private fun refresh() {
         if (isConnected()) {
-            val code = currentCode ?: return
-            processTag(code)
+            if (currentCode != null) {
+                this.recreate()
+            } else return
         } else {
             toast(getString(R.string.error_refresh))
         }
@@ -137,7 +136,7 @@ class TagInfoActivity : AppCompatActivity() {
     }
 
     private suspend fun tryShowOrderInfo(orderCode: String?) {
-        val user = getCurrentUser()
+        val user = tryGetCurrentUser()
         // Trying to get more authorized information
         if (!orderCode.isNullOrBlank() && user != null) {
             val provider = Factory.getApiProvider()
@@ -276,7 +275,7 @@ class TagInfoActivity : AppCompatActivity() {
     }
 
     private fun showStatusUpdateCard(currentStep: WorkflowStep?, futureSteps: List<WorkflowStep>) {
-        val currentUser = getCurrentUser()
+        val currentUser = tryGetCurrentUser()
         card_update_status.visibility = if (futureSteps.isNotEmpty() && currentStep != null &&
                 currentUser != null && currentUser.loginType == LoginType.PersonalAccount) {
             val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,

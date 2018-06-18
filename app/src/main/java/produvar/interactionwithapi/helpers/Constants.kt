@@ -9,6 +9,7 @@ class Constants {
         const val PERMISSIONS_TO_ASK = "PERMISSIONS_TO_ASK"
         const val SCAN_LOCATION = 1
         const val LOCATION_RESULT = "location_result"
+        const val TAGINFO_ACTIVITY = 2
         const val PREFS_FILE_NAME = "produvar_prefs"
         const val LOGGED_USER_INFO = "LOGGED_USER_INFO"
         val IMPORTANT_PERMISSIONS = arrayOf(Manifest.permission.INTERNET,

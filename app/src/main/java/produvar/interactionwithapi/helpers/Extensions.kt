@@ -15,6 +15,9 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import com.google.gson.Gson
+import org.jetbrains.anko.longToast
+import produvar.interactionwithapi.Factory
+import produvar.interactionwithapi.R
 import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.models.User
 
@@ -31,41 +34,56 @@ fun Activity.changeStatusBarColor(colorResource: Int, shouldSetFlags: Boolean = 
 }
 
 
-fun Activity.getStatusBarHeight(): Int {
-    val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-    return if (resourceId > 0) {
-        resources.getDimensionPixelSize(resourceId)
-    } else 0
-}
-
 fun Context.isConnected(): Boolean {
     val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
     return activeNetwork?.isConnectedOrConnecting == true
 }
 
-fun Activity.getCurrentUser(): User? {
+fun Activity.tryGetCurrentUser(isLoggingOut: Boolean = false): User? {
     val prefs = getSharedPreferences(Constants.PREFS_FILE_NAME, MODE_PRIVATE)
     val userJson = prefs.getString(Constants.LOGGED_USER_INFO, null)
-    return if (userJson != null) Gson().fromJson(userJson, User::class.java) else null
+    if (userJson != null) {
+        val user = Gson().fromJson(userJson, User::class.java)
+        if (user != null) {
+            if (!isLoggingOut) {
+                if (!user.isTokenExpired()) {
+                    return user
+                } else {
+                    this.longToast(getString(R.string.profile_authorization_expired))
+                    deleteUserInfoFromPrefs()
+                }
+            } else {
+                return user
+            }
+        }
+    }
+    return null
 }
 
 
-//fun Fragment.setUpStatusBar(view: View, color: Int) {
-//    val currentActivity = activity
-//    if (currentActivity is MainActivity) {
-//        view.layoutParams.height = activity?.getStatusBarHeight() ?: 0
-//        view.setBackgroundColor(color)
-//        if (view.layoutParams.height > 0 && view.visibility != View.VISIBLE) {
-//            view.visibility = android.view.View.VISIBLE
-//        }
-//    }
-//}
+fun Activity.saveUserInfoToPrefs(user: User) {
+    val prefs = getSharedPreferences(Constants.PREFS_FILE_NAME, MODE_PRIVATE)
+    with(prefs.edit()) {
+        val json = com.google.gson.Gson().toJson(user)
+        putString(produvar.interactionwithapi.helpers.Constants.LOGGED_USER_INFO, json)
+        apply()
+    }
+}
 
-fun Int.dpToPx(context: Context): Int {
-    val r = context.resources
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-            this.toFloat(), r.displayMetrics).toInt()
+fun Activity.deleteUserInfoFromPrefs() {
+    val prefs = getSharedPreferences(Constants.PREFS_FILE_NAME, MODE_PRIVATE)
+    val currentUser = tryGetCurrentUser(true)
+    if (currentUser != null) {
+        if (isConnected()) {
+            val provider = Factory.getApiProvider()
+            provider.logout(currentUser)
+        }
+    }
+    with(prefs.edit()) {
+        remove(Constants.LOGGED_USER_INFO)
+        apply()
+    }
 }
 
 

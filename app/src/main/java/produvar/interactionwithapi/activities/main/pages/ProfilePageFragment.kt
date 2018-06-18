@@ -1,8 +1,6 @@
 package produvar.interactionwithapi.activities.main.pages
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -12,18 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_page_profile.*
 import kotlinx.android.synthetic.main.toolbar_profile.*
-import org.jetbrains.anko.longToast
 import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthLoginFragment
 import produvar.interactionwithapi.activities.main.pages.authTypes.AuthQrFragment
 import produvar.interactionwithapi.enums.LoginType
-import produvar.interactionwithapi.helpers.Constants
-import produvar.interactionwithapi.helpers.getCurrentUser
-import produvar.interactionwithapi.helpers.isConnected
+import produvar.interactionwithapi.helpers.*
 import produvar.interactionwithapi.models.User
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -34,8 +28,6 @@ class ProfilePageFragment : Fragment(),
         AuthQrFragment.OnQrAuthorizationListener,
         AuthLoginFragment.OnAccountAuthorizationListener {
 
-    private lateinit var prefs: SharedPreferences
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_page_profile, container, false)
@@ -43,8 +35,6 @@ class ProfilePageFragment : Fragment(),
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        prefs = activity!!.getSharedPreferences(Constants.PREFS_FILE_NAME, MODE_PRIVATE)
-
         button_back.setOnClickListener { activity?.onBackPressed() }
         button_logout.setOnClickListener { logOut() }
         setUpTabLayout()
@@ -52,66 +42,27 @@ class ProfilePageFragment : Fragment(),
         super.onViewCreated(view, savedInstanceState)
     }
 
-
-    private fun setUpContent() {
-        var flag = false
-        val userJson = prefs.getString(Constants.LOGGED_USER_INFO, null)
-        if (userJson != null) {
-            val parsedUser = Gson().fromJson(userJson, User::class.java)
-            if (parsedUser != null) {
-                flag = true
-                val calendar = Calendar.getInstance()
-                if (parsedUser.logoutDate > calendar.time) {
-                    showInfoAboutUser(parsedUser)
-                } else {
-                    logOut()
-                    activity!!.longToast(getString(R.string.profile_authorization_expired))
-                }
-
-            }
-        }
-        if (!flag) {
-            showAuthorizationForm()
-        }
-    }
-
-
     override fun onQRAuthComplete(authorizedUser: User) = logIn(authorizedUser)
 
     override fun onAccountAuthComplete(authorizedUser: User) = logIn(authorizedUser)
 
+
+    private fun setUpContent() {
+        val currentUser = activity?.tryGetCurrentUser()
+        if (currentUser != null) {
+            showInfoAboutUser(currentUser)
+        } else showAuthorizationForm()
+    }
+
+
     private fun logIn(user: User) {
-        saveUserInfoToPrefs(user)
+        activity?.saveUserInfoToPrefs(user)
         showInfoAboutUser(user)
     }
 
     private fun logOut() {
-        deleteUserInfoFromPrefs()
+        activity?.deleteUserInfoFromPrefs()
         showAuthorizationForm()
-    }
-
-    private fun saveUserInfoToPrefs(user: User) {
-        with(prefs.edit()) {
-            val json = Gson().toJson(user)
-            putString(Constants.LOGGED_USER_INFO, json)
-            apply()
-        }
-    }
-
-    private fun deleteUserInfoFromPrefs() {
-        val currentUser = activity?.getCurrentUser()
-        if (currentUser != null) {
-            if (activity?.isConnected() == true) {
-                val provider = Factory.getApiProvider()
-                provider.logout(currentUser)
-            }
-        }
-
-        with(prefs.edit()) {
-            remove(Constants.LOGGED_USER_INFO)
-            apply()
-        }
-
     }
 
     private fun showAuthorizationForm() {
@@ -141,7 +92,7 @@ class ProfilePageFragment : Fragment(),
             getString(R.string.profile_login_type_qr)
         }
         val dateStr = try {
-            val format: DateFormat = SimpleDateFormat("MMM, dd HH:mm", Locale.ENGLISH)
+            val format: DateFormat = SimpleDateFormat("MMM, dd | HH:mm", Locale.ENGLISH)
             format.format(user.logoutDate)
         } catch (ex: Exception) {
             null
@@ -161,7 +112,7 @@ class ProfilePageFragment : Fragment(),
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        if(!isVisibleToUser){
+        if (!isVisibleToUser) {
             if (view != null /*&& content_authorization.visibility == View.VISIBLE*/) {
                 selectFirstTab()
             }
