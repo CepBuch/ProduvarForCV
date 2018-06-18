@@ -64,5 +64,9 @@
     <style name="AppTheme.WhiteAccent">
         <item name="colorAccent">@color/produvarLight</item>
     </style>
+    <style name="AppTheme.DarkAccent">
+        <item name="colorAccent">@color/produvarDark</item>
+    </style>
+
 
 </resources>

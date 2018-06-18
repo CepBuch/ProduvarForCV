@@ -44,6 +44,7 @@
     <string name="prompt_description">Comment (optional)</string>
     <string name="additional_info_tip">If you are a customer or an employee, please log in to get more detailed information about an order</string>
     <string name="taginfo_not_found">This tag was not found in our systems or there are problems with the service</string>
+    <string name="taginfo_update_info">You are going to update status of an order from %1$s to %2$s. Are you sure you want to do this?</string>
 
     <string name="permissions_info">For correct work the application needs the following permission(s):</string>
     <string name="permissions_internet_info">In order to transmit and receive data</string>

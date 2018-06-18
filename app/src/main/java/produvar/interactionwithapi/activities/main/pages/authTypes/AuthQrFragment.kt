@@ -12,13 +12,11 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_auth_qr.*
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
 import produvar.interactionwithapi.BarcodeScanner
 import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
-import produvar.interactionwithapi.activities.CustomDialog
+import produvar.interactionwithapi.dialogs.CustomOkDialog
 import produvar.interactionwithapi.activities.main.MainActivity
 import produvar.interactionwithapi.enums.ErrorType
 import produvar.interactionwithapi.enums.LoginType
@@ -36,7 +34,7 @@ class AuthQrFragment : Fragment() {
     private lateinit var callback: OnQrAuthorizationListener
     private lateinit var scanner: BarcodeScanner
     private lateinit var mainActivity: MainActivity
-    private var customDialog: CustomDialog? = null
+    private var customDialog: CustomOkDialog? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -112,7 +110,7 @@ class AuthQrFragment : Fragment() {
         }
         showProgress(false)
         if (customDialog?.isShowing != true) {
-            customDialog = CustomDialog(mainActivity, message) {
+            customDialog = CustomOkDialog(mainActivity, message) {
                 scanner.setUpAsync()
                 customDialog = null
             }

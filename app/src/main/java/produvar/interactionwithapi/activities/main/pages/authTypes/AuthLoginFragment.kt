@@ -11,14 +11,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import kotlinx.android.synthetic.main.fragment_auth_username.*
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.coroutines.experimental.bg
-import org.jetbrains.anko.okButton
 import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
-import produvar.interactionwithapi.activities.CustomDialog
+import produvar.interactionwithapi.dialogs.CustomOkDialog
 import produvar.interactionwithapi.enums.ErrorType
 import produvar.interactionwithapi.enums.LoginType
 import produvar.interactionwithapi.helpers.Constants
@@ -32,7 +28,7 @@ class AuthLoginFragment : Fragment() {
     }
 
     private lateinit var callback: OnAccountAuthorizationListener
-    private var customDialog: CustomDialog? = null
+    private var customDialog: CustomOkDialog? = null
 
 
     override fun onAttach(context: Context?) {
@@ -134,7 +130,7 @@ class AuthLoginFragment : Fragment() {
         showProgress(false)
         password.setText("")
 
-        customDialog = CustomDialog(activity!!, message) {
+        customDialog = CustomOkDialog(activity!!, message) {
             customDialog = null
         }
         customDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

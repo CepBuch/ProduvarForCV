@@ -27,6 +27,7 @@ import kotlinx.coroutines.experimental.runBlocking
 import org.jetbrains.anko.toast
 import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
+import produvar.interactionwithapi.dialogs.CustomYesNoDialog
 import produvar.interactionwithapi.enums.ErrorType
 import produvar.interactionwithapi.enums.LoginType
 import produvar.interactionwithapi.helpers.*
@@ -51,8 +52,6 @@ class TagInfoActivity : AppCompatActivity() {
             val barcode = extras.getString("barcode")
             processTag(barcode)
         }
-
-
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -93,7 +92,8 @@ class TagInfoActivity : AppCompatActivity() {
     private fun processTag(tagContent: String) {
         if (isConnected()) {
             // Getting basic info about an order (for both authorized and anonymous users)
-            runBlocking {
+            launch(UI) {
+                showProgressBar(true)
                 val provider = Factory.getApiProvider()
                 val (basicOrderView, error) = provider.searchByScan(tagContent).await()
                 when {
@@ -126,8 +126,11 @@ class TagInfoActivity : AppCompatActivity() {
             if (order != null) {
                 showOrderInfo(order)
             }
-        } else if (user == null) {
-            additional_info_tip.visibility = View.VISIBLE
+        } else {
+            showProgressBar(false)
+            if (user == null) {
+                additional_info_tip.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -183,10 +186,10 @@ class TagInfoActivity : AppCompatActivity() {
             View.VISIBLE
         } else View.GONE
 
-
         showOrderItems(order.items)
         showStatusFlowItems(order.statusFlow)
         showProcessItems(order.process)
+        showProgressBar(false)
     }
 
 
@@ -274,10 +277,14 @@ class TagInfoActivity : AppCompatActivity() {
             }
 
             button_update_status.setOnClickListener {
-                toast("Current step: ${currentStep.status}\n" +
-                        "New step: ${update_spinner_future_steps.selectedItem}\n" +
-                        "Location: ${update_location.text}\n" +
-                        "Description: ${update_description.text}")
+                val selectedStep = update_spinner_future_steps.selectedItem.toString()
+                CustomYesNoDialog(this,
+                        String.format(getString(R.string.taginfo_update_info), currentStep.status, selectedStep))
+                        {
+                            val provider = Factory.getApiProvider()
+                            TODO()
+//                            provider.orderStatusUpdate(, )
+                        }
             }
 
             View.VISIBLE
@@ -329,8 +336,14 @@ class TagInfoActivity : AppCompatActivity() {
     }
 
     private fun showScanError(errorMessage: String) {
+        showProgressBar(false)
         error_message.text = errorMessage
         content_view.visibility = View.GONE
         error_view.visibility = View.VISIBLE
+    }
+
+    private fun showProgressBar(show: Boolean) {
+        content_view.visibility = if (show) View.GONE else View.VISIBLE
+        progress.visibility = if (show) View.VISIBLE else View.GONE
     }
 }
