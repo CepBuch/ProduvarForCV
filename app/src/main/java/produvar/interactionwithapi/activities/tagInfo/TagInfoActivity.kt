@@ -37,10 +37,15 @@ import java.util.*
 
 class TagInfoActivity : AppCompatActivity() {
 
+    private var currentCode: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tag_info)
         button_back.setOnClickListener { onBackPressed() }
+        button_refresh.setOnClickListener {
+            refresh()
+            button_refresh.animate().rotation(button_refresh.rotation + 360).start()
+        }
 
         changeStatusBarColor(R.color.statusbarMain, true)
 
@@ -52,6 +57,16 @@ class TagInfoActivity : AppCompatActivity() {
             val barcode = extras.getString("barcode")
             processTag(barcode)
         }
+    }
+
+    private fun refresh() {
+        if (isConnected()) {
+            val code = currentCode ?: return
+            processTag(code)
+        } else {
+            toast(getString(R.string.error_refresh))
+        }
+
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -83,13 +98,18 @@ class TagInfoActivity : AppCompatActivity() {
                     }
                 }
             }
-            if (!flag) showScanError(getString(R.string.taginfo_error_message))
+            if (!flag) {
+                showScanError(getString(R.string.taginfo_error_message))
+                button_refresh.visibility = View.GONE
+            }
             true
         } else false
     }
 
 
     private fun processTag(tagContent: String) {
+        hideScanError()
+        currentCode = tagContent
         if (isConnected()) {
             // Getting basic info about an order (for both authorized and anonymous users)
             launch(UI) {
@@ -280,11 +300,11 @@ class TagInfoActivity : AppCompatActivity() {
                 val selectedStep = update_spinner_future_steps.selectedItem.toString()
                 CustomYesNoDialog(this,
                         String.format(getString(R.string.taginfo_update_info), currentStep.status, selectedStep))
-                        {
-                            val provider = Factory.getApiProvider()
-                            TODO()
+                {
+                    val provider = Factory.getApiProvider()
+                    TODO()
 //                            provider.orderStatusUpdate(, )
-                        }
+                }
             }
 
             View.VISIBLE
@@ -342,7 +362,13 @@ class TagInfoActivity : AppCompatActivity() {
         error_view.visibility = View.VISIBLE
     }
 
+    private fun hideScanError() {
+        content_view.visibility = View.VISIBLE
+        error_view.visibility = View.GONE
+    }
+
     private fun showProgressBar(show: Boolean) {
+
         content_view.visibility = if (show) View.GONE else View.VISIBLE
         progress.visibility = if (show) View.VISIBLE else View.GONE
     }

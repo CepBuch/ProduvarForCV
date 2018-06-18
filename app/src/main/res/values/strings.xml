@@ -39,7 +39,6 @@
     <string name="taginfo_status_flow_header">Status flow</string>
     <string name="location_scanner_camera_info">Point the camera at QR code or a Barcode describing location</string>
     <string name="taginfo_update_status_header">Update status</string>
-    <!--TODO: translate-->
     <string name="prompt_location">Location (optional)</string>
     <string name="prompt_description">Comment (optional)</string>
     <string name="additional_info_tip">If you are a customer or an employee, please log in to get more detailed information about an order</string>
@@ -62,6 +61,7 @@
     <!--TODO: translate-->
     <string name="error_internet_connection">Internet is needed to perform this request. Please, connect to the internet and try again.</string>
     <string name="error_unknown">Service is unavailable or there are problems with your internet connection</string>
+    <string name="error_refresh">You should be connected to the internet to be able to refresh</string>
 
     <string name="description_taginfo_error_logo">Error logo</string>
     <string name="description_main_logo">Logo of Produvar company</string>
@@ -77,5 +77,6 @@
     <string name="description_permissions_camera">Camera</string>
     <string name="description_permissions_nfc">NFC</string>
     <string name="description_location_camera">Open camera to scan location barcode</string>
+    <string name="description_main_refresh">Refresh button</string>
 
 </resources>

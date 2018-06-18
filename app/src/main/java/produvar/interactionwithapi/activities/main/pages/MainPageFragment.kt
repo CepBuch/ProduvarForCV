@@ -48,11 +48,6 @@ class MainPageFragment : Fragment() {
         }
 
         button_info.setOnClickListener { openHelpActivity() }
-
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-//            setUpStatusBar(status_bar, ContextCompat.getColor(mainActivity, R.color.statusbarMain))
-//        }
-
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -64,7 +59,7 @@ class MainPageFragment : Fragment() {
             startActivity(intent,
                     ActivityOptions.makeSceneTransitionAnimation(activity).toBundle())
         } else {
-            // Swap without transition
+            // Swap without transition animation
             startActivity(intent)
         }
     }

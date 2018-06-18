@@ -48,8 +48,6 @@
             android:screenOrientation="portrait"
             android:name=".activities.permissions.PermissionsActivity" />
         <activity
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
             android:name=".activities.help.HelpActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
 

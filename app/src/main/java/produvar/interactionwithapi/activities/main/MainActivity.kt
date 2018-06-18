@@ -27,24 +27,7 @@ class MainActivity : AppCompatActivity(), MainPageFragment.OnMenuButtonClicked {
         // Checking whether permissions to use camera/internet/nfc were granted
         checkPermissions()
 
-        // Making status bar transparent on newer devices
-        // (it will be given a color in MainPageFragment and ProfilePageFragment onCreate))
-        // this enables to remove statusbar on camera fragment
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            window?.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-//        }
-        // setting up viewpager
         setUpViewPager()
-
-//        val provider = Factory.getApiProvider()
-//        provider.login("steve.jobs@apple.com", "apple") {}
-//        provider.authenticate("12341234") {}
-//        provider.searchByScan("4fn34rqfrefk", TagType.CODE) {}
-//        provider.orderInfo(User(LoginType.PersonalAccount, "1234apple",
-//                "steve.jobs@apple.com", "", ""), "2018004938") {}
-//        provider.orderStatusUpdate(User(LoginType.PersonalAccount, "1234apple", "steve.jobs@apple.com", "", ""),
-//                "2018004938", "product.cncready", "product.finished") {}
-//        provider.logout(User(LoginType.PersonalAccount, "123apple", "steve.jobs@apple.com", "", "")) {}
     }
 
 

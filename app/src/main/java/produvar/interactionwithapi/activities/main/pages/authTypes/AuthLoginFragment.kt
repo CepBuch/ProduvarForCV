@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.fragment_auth_username.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -52,7 +53,7 @@ class AuthLoginFragment : Fragment() {
         val marginTop = arguments?.getInt(Constants.PARAM_TOP_VIEWS_HEIGHT)
         if (marginTop != null) {
             val params = view.layoutParams as? ViewGroup.MarginLayoutParams
-            params?.setMargins(0, -1 * marginTop, 0, 0)
+            params?.setMargins(0, -1 * marginTop + 10, 0, 0)
         }
         return view
     }

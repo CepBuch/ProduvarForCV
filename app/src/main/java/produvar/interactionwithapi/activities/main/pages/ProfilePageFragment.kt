@@ -1,5 +1,6 @@
 package produvar.interactionwithapi.activities.main.pages
 
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -10,6 +11,7 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_page_profile.*
 import kotlinx.android.synthetic.main.toolbar_profile.*
@@ -159,8 +161,16 @@ class ProfilePageFragment : Fragment(),
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        if (view != null && content_authorization.visibility == View.VISIBLE) {
-            selectFirstTab()
+        if(!isVisibleToUser){
+            if (view != null /*&& content_authorization.visibility == View.VISIBLE*/) {
+                selectFirstTab()
+            }
+            // Hide soft keyboard if it's shown
+            val view = activity?.currentFocus
+            if (view != null) {
+                val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
         }
         super.setUserVisibleHint(isVisibleToUser)
     }

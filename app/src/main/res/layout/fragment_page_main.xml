@@ -5,15 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/produvarLight">
 
-
-    <!--<LinearLayout-->
-        <!---->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="vertical">-->
-
-        <!--<include layout="@layout/status_bar_main" />-->
-
         <include
             android:id="@+id/main_toolbar"
             layout="@layout/toolbar_main_page" />
@@ -61,7 +52,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Spinner
+    <ImageButton
         android:id="@+id/button_settings"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -69,6 +60,8 @@
         android:background="@null"
         android:contentDescription="@string/description_main_options"
         android:padding="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_main_settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
