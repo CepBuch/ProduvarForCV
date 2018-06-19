@@ -17,8 +17,6 @@ class UpdateYesNoDialog(activity: Activity, val fromStatus: String, val toStatus
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_yes_no)
-        from_header.paintFlags = from_header.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
-        to_header.paintFlags = to_header.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
         from_status.text = fromStatus
         to_status.text = toStatus
         yes_button.setOnClickListener {

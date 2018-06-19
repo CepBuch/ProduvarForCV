@@ -1,105 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_gravity="center_horizontal"
-    android:gravity="center_horizontal"
-    android:background="@drawable/custom_alert_shape"
+    android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="15dp">
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/custom_alert_shape"
+    android:gravity="center_horizontal"
+    android:padding="20dp">
+
     <ImageView
         android:id="@+id/company_logo"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:contentDescription="@string/description_main_logo"
         android:scaleType="fitCenter"
-        android:src="@drawable/produvar_logo"/>
+        android:src="@drawable/produvar_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
+        android:id="@+id/confirmation_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textSize="18sp"
         android:text="@string/taginfo_update_confirmation_header"
         android:textAlignment="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/company_logo" />
 
     <TextView
         android:id="@+id/from_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_marginTop="20dp"
-        android:textSize="18sp"
         android:text="@string/taginfo_update_confirmation_from"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/confirmation_header" />
+
     <TextView
         android:id="@+id/from_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
         android:textSize="18sp"
-        android:layout_marginStart="10dp"
         android:textStyle="italic"
-        android:layout_marginEnd="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        app:layout_constraintStart_toEndOf="@id/from_header"
+        app:layout_constraintBottom_toBottomOf="@id/from_header" />
 
     <TextView
         android:id="@+id/to_header"
-        android:layout_marginTop="20dp"
-        android:textSize="18sp"
-        android:text="@string/taginfo_update_confirmation_to"
-        android:layout_marginStart="10dp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/taginfo_update_confirmation_to"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/from_header" />
+
+
     <TextView
         android:id="@+id/to_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
         android:textSize="18sp"
-        android:layout_marginStart="10dp"
         android:textStyle="italic"
-        android:layout_marginEnd="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        app:layout_constraintStart_toEndOf="@id/from_header"
+        app:layout_constraintBottom_toBottomOf="@id/to_header" />
 
     <TextView
-        android:layout_marginTop="20dp"
-        android:textSize="18sp"
-        android:text="@string/taginfo_update_confirmation"
-        android:textStyle="bold"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_marginTop="20dp"
+        android:id="@+id/confirmation_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style= "?android:attr/buttonBarStyle">
-        <Button
-            android:id="@+id/yes_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:textSize="18sp"
-            android:text="@android:string/ok"
-            android:textColor="@color/produvarOrange"
-            app:layout_constraintEnd_toEndOf="parent"/>
-        <Button
-            android:id="@+id/no_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="100dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_height="40dp"
-            android:textSize="18sp"
-            android:text="@android:string/cancel"
-            android:textColor="@color/produvarOrange" />
-
-    </android.support.constraint.ConstraintLayout>
+        android:layout_marginTop="20dp"
+        android:text="@string/taginfo_update_confirmation"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/to_header"/>
 
 
-</LinearLayout>
+    <Button
+        android:id="@+id/no_button"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:text="@android:string/cancel"
+        android:textColor="@color/produvarOrange"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/confirmation_message"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/yes_button"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="@android:string/ok"
+        android:textColor="@color/produvarOrange"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="@id/no_button"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+</android.support.constraint.ConstraintLayout>
