@@ -48,14 +48,15 @@
                 android:visibility="gone" />
 
             <include
+                android:id="@+id/card_process"
+                layout="@layout/card_process_view"
+                android:visibility="gone" />
+
+            <include
                 android:id="@+id/card_update_status"
                 layout="@layout/card_update_status_view"
                 android:visibility="gone" />
 
-            <include
-                android:id="@+id/card_process"
-                layout="@layout/card_process_view"
-                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/additional_info_tip"

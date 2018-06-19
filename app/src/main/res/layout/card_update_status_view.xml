@@ -97,5 +97,13 @@
             android:text="@string/taginfo_status_update"
             android:textColor="@color/produvarDark" />
 
+        <ProgressBar
+            android:id="@+id/update_progress"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="-50dp"
+            android:theme="@style/AppTheme.DarkAccent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
+
     </LinearLayout>
 </android.support.v7.widget.CardView>

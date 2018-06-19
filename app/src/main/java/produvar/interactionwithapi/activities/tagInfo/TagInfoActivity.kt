@@ -2,7 +2,9 @@ package produvar.interactionwithapi.activities.tagInfo
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.os.Bundle
@@ -22,10 +24,12 @@ import kotlinx.android.synthetic.main.card_update_status_view.*
 import kotlinx.android.synthetic.main.toolbar_taginfo.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import org.jetbrains.anko.toast
 import produvar.interactionwithapi.Factory
 import produvar.interactionwithapi.R
-import produvar.interactionwithapi.dialogs.CustomYesNoDialog
+import produvar.interactionwithapi.dialogs.CustomOkDialog
+import produvar.interactionwithapi.dialogs.UpdateYesNoDialog
 import produvar.interactionwithapi.enums.ErrorType
 import produvar.interactionwithapi.enums.LoginType
 import produvar.interactionwithapi.helpers.*
@@ -36,13 +40,14 @@ import java.util.*
 class TagInfoActivity : AppCompatActivity() {
 
     private var currentCode: String? = null
+    private var customDialog: CustomOkDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tag_info)
         button_back.setOnClickListener { onBackPressed() }
         button_refresh.setOnClickListener {
             refresh()
-            button_refresh.animate().rotation(button_refresh.rotation + 360).start()
         }
 
         changeStatusBarColor(R.color.statusbarMain, true)
@@ -57,15 +62,18 @@ class TagInfoActivity : AppCompatActivity() {
         }
     }
 
-    private fun refresh() {
-        if (isConnected()) {
-            if (currentCode != null) {
-                this.recreate()
-            } else return
+    private fun refresh(force: Boolean = false) {
+        if (!force) {
+            if (isConnected()) {
+                if (currentCode != null) {
+                    this.recreate()
+                } else return
+            } else {
+                toast(getString(R.string.error_refresh))
+            }
         } else {
-            toast(getString(R.string.error_refresh))
+            this.recreate()
         }
-
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -105,9 +113,7 @@ class TagInfoActivity : AppCompatActivity() {
         } else false
     }
 
-
     private fun processTag(tagContent: String) {
-        hideScanError()
         currentCode = tagContent
         if (isConnected()) {
             // Getting basic info about an order (for both authorized and anonymous users)
@@ -145,12 +151,10 @@ class TagInfoActivity : AppCompatActivity() {
             if (order != null) {
                 showOrderInfo(order)
             }
-        } else {
-            showProgressBar(false)
-            if (user == null) {
-                additional_info_tip.visibility = View.VISIBLE
-            }
+        } else if (user == null) {
+            additional_info_tip.visibility = View.VISIBLE
         }
+        showProgressBar(false)
     }
 
 
@@ -184,7 +188,6 @@ class TagInfoActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showOrderInfo(order: Order) {
         card_order.visibility = if (order.containsUsefulData()) {
             order_dueDate.visibility = if (!order.dueDate.isNullOrBlank()) {
@@ -208,9 +211,7 @@ class TagInfoActivity : AppCompatActivity() {
         showOrderItems(order.items)
         showStatusFlowItems(order.statusFlow)
         showProcessItems(order.process)
-        showProgressBar(false)
     }
-
 
     private fun showOrderItems(items: List<Item>) {
         card_items.visibility = if (items.isNotEmpty()) {
@@ -225,7 +226,6 @@ class TagInfoActivity : AppCompatActivity() {
         textView.text = item.label
         order_items_container.addView(textView)
     }
-
 
     private fun showStatusFlowItems(items: List<WorkflowStep>) {
         card_status_flow.visibility = if (items.isNotEmpty()) {
@@ -296,18 +296,40 @@ class TagInfoActivity : AppCompatActivity() {
             }
 
             button_update_status.setOnClickListener {
-                val selectedStep = update_spinner_future_steps.selectedItem.toString()
-                CustomYesNoDialog(this,
-                        String.format(getString(R.string.taginfo_update_info), currentStep.status, selectedStep))
-                {
-                    val provider = Factory.getApiProvider()
-                    TODO()
-//                            provider.orderStatusUpdate(, )
-                }
+                updateStatus(currentStep.status, update_spinner_future_steps.selectedItem.toString())
             }
 
             View.VISIBLE
         } else View.GONE
+    }
+
+    private fun updateStatus(currentStatus: String, newStatus: String) {
+        val user = tryGetCurrentUser()
+        val code = currentCode ?: return
+        val description = update_description.text.toString()
+        val location = update_location.text.toString()
+        if (user != null) {
+            val dialog = UpdateYesNoDialog(this, currentStatus, newStatus)
+            {
+                if (isConnected()) {
+                    launch(UI) {
+                        button_update_status.visibility = View.INVISIBLE
+                        update_progress.visibility = View.VISIBLE
+                        val provider = Factory.getApiProvider()
+                        val res = provider.orderStatusUpdate(user, code, currentStatus, newStatus, description, location).await()
+                        button_update_status.visibility = View.VISIBLE
+                        update_progress.visibility = View.INVISIBLE
+                        showPopUpInfo(res)
+                    }
+
+                } else showPopUpInfo(ErrorType.NOT_CONNECTED)
+            }
+
+            with(dialog) {
+                show()
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -361,14 +383,30 @@ class TagInfoActivity : AppCompatActivity() {
         error_view.visibility = View.VISIBLE
     }
 
-    private fun hideScanError() {
-        content_view.visibility = View.VISIBLE
-        error_view.visibility = View.GONE
+    private fun showPopUpInfo(errorType: ErrorType?) {
+        val message = when (errorType) {
+            null -> getString(R.string.taginfo_update_success)
+            ErrorType.NOT_FOUND -> getString(R.string.taginfo_error_status)
+            ErrorType.NOT_CONNECTED -> getString(R.string.error_internet_connection)
+            else -> getString(R.string.taginfo_error_unknown)
+        }
+        customDialog = CustomOkDialog(this, message) {
+            customDialog = null
+            if (errorType == null) {
+                refresh(true)
+            }
+        }
+        customDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        customDialog?.show()
     }
 
     private fun showProgressBar(show: Boolean) {
-
         content_view.visibility = if (show) View.GONE else View.VISIBLE
         progress.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
+    override fun onPause() {
+        customDialog?.hide()
+        super.onPause()
     }
 }
