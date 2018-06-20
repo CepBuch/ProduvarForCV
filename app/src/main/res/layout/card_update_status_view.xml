@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/CardViewStyle"
     android:layout_width="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:minWidth="300dp"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
     android:layout_marginBottom="10dp"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="10dp"
+    android:minWidth="300dp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,88 +23,113 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:maxWidth="300dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
+            android:maxWidth="300dp"
             android:text="@string/taginfo_update_status_header"
             android:textAlignment="center"
             android:textColor="@color/produvarDark"
             android:textSize="18sp"
             android:textStyle="bold" />
-        <Spinner
-            android:id="@+id/update_spinner_future_steps"
-            android:layout_width="match_parent"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:dropDownVerticalOffset="35dp"
-            android:spinnerMode="dropdown" />
 
         <LinearLayout
+            android:id="@+id/update_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_height="match_parent">
+
+            <Spinner
+                android:id="@+id/update_spinner_future_steps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:dropDownVerticalOffset="35dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:spinnerMode="dropdown" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/update_location"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/prompt_location"
+                    android:inputType="none"
+                    android:singleLine="true" />
+
+                <ImageButton
+                    android:id="@+id/update_camera_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@null"
+                    android:contentDescription="@string/description_location_camera"
+                    android:src="@drawable/ic_taginfo_camera_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="0px"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                tools:ignore="UselessLeaf" />
 
             <EditText
-                android:id="@+id/update_location"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:hint="@string/prompt_location"
-                android:inputType="none"
-                android:singleLine="true"
-                android:layout_weight = "1"/>
+                android:id="@+id/update_description"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1"
+                android:hint="@string/prompt_description"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:nextFocusLeft="@id/update_description"
+                android:nextFocusUp="@id/update_description"
+                android:singleLine="true" />
 
-            <ImageButton
-                android:id="@+id/update_camera_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:contentDescription="@string/description_location_camera"
-                android:background="@null"
-                android:src="@drawable/ic_taginfo_camera_black" />
+            <Button
+                android:id="@+id/button_update_status"
+                android:layout_width="200dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/button_stroke_dark"
+                android:text="@string/taginfo_status_update"
+                android:textColor="@color/produvarDark" />
+
+            <ProgressBar
+                android:id="@+id/update_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-50dp"
+                android:theme="@style/AppTheme.DarkAccent"
+                android:visibility="invisible" />
         </LinearLayout>
 
-        <LinearLayout
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:layout_width="0px"
-            android:layout_height="0px"
-            tools:ignore="UselessLeaf" />
-
-        <EditText
-            android:id="@+id/update_description"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="15dp"
-            android:hint="@string/prompt_description"
-            android:inputType="text"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            android:nextFocusUp="@id/update_description"
-            android:nextFocusLeft="@id/update_description"
-            android:layout_weight = "1"/>
-
-        <Button
-            android:id="@+id/button_update_status"
-            android:layout_width="200dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/button_stroke_dark"
-            android:text="@string/taginfo_status_update"
-            android:textColor="@color/produvarDark" />
-
-        <ProgressBar
-            android:id="@+id/update_progress"
+        <TextView
+            android:id="@+id/update_done"
             android:layout_width="wrap_content"
-            android:layout_marginTop="-50dp"
-            android:theme="@style/AppTheme.DarkAccent"
             android:layout_height="wrap_content"
-            android:visibility="invisible"/>
+            android:layout_gravity="center"
+            android:paddingBottom="25dp"
+            android:paddingEnd="25dp"
+            android:paddingStart="25dp"
+            android:paddingTop="15dp"
+            android:text="@string/taginfo_update_refresh"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:visibility="gone" />
 
     </LinearLayout>
+
+
 </android.support.v7.widget.CardView>

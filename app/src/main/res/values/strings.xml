@@ -49,7 +49,8 @@
     <string name="taginfo_update_confirmation">Pressing OK you confirm the action.</string>
     <string name="taginfo_error_status">Sent current status does not match the current order status.\n\nProbably someone has already changed the status of this order or there are problems with the server.\n\nClick refresh and try again.</string>
     <string name="taginfo_error_unknown">The status was not updated. You are not allowed to update the status or there are problems with the service.</string>
-    <string name="taginfo_update_success">The status was successfully updated. Information on the screen will be updated after this dialog will be closed</string>
+    <string name="taginfo_update_success">The status was successfully updated. Press refresh to view updated information</string>
+    <string name="taginfo_update_refresh">Press refresh to view updated information</string>
 
 
     <string name="permissions_info">For correct work the application needs the following permission(s):</string>

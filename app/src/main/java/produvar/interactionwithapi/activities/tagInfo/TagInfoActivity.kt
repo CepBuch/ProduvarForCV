@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.card_process_view.*
 import kotlinx.android.synthetic.main.card_statusflow_view.*
 import kotlinx.android.synthetic.main.card_update_status_view.*
 import kotlinx.android.synthetic.main.toolbar_taginfo.*
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
@@ -36,19 +37,18 @@ import produvar.interactionwithapi.helpers.*
 import produvar.interactionwithapi.models.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.experimental.coroutineContext
 
 class TagInfoActivity : AppCompatActivity() {
 
     private var currentCode: String? = null
     private var customDialog: CustomOkDialog? = null
-
+    private var currentJob: Job? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tag_info)
         button_back.setOnClickListener { onBackPressed() }
-        button_refresh.setOnClickListener {
-            refresh()
-        }
+        button_refresh.setOnClickListener { refresh() }
 
         changeStatusBarColor(R.color.statusbarMain, true)
 
@@ -66,6 +66,7 @@ class TagInfoActivity : AppCompatActivity() {
         if (!force) {
             if (isConnected()) {
                 if (currentCode != null) {
+                    currentJob?.cancel()
                     this.recreate()
                 } else return
             } else {
@@ -117,7 +118,7 @@ class TagInfoActivity : AppCompatActivity() {
         currentCode = tagContent
         if (isConnected()) {
             // Getting basic info about an order (for both authorized and anonymous users)
-            launch(UI) {
+            currentJob = launch(UI) {
                 showProgressBar(true)
                 val provider = Factory.getApiProvider()
                 val (basicOrderView, error) = provider.searchByScan(tagContent).await()
@@ -298,6 +299,8 @@ class TagInfoActivity : AppCompatActivity() {
             button_update_status.setOnClickListener {
                 updateStatus(currentStep.status, update_spinner_future_steps.selectedItem.toString())
             }
+            update_done.visibility = View.GONE
+            update_content.visibility = View.VISIBLE
 
             View.VISIBLE
         } else View.GONE
@@ -316,10 +319,23 @@ class TagInfoActivity : AppCompatActivity() {
                         button_update_status.visibility = View.INVISIBLE
                         update_progress.visibility = View.VISIBLE
                         val provider = Factory.getApiProvider()
-                        val res = provider.orderStatusUpdate(user, code, currentStatus, newStatus, description, location).await()
+                        val error = provider.orderStatusUpdate(user, code, currentStatus, newStatus, description, location).await()
                         button_update_status.visibility = View.VISIBLE
                         update_progress.visibility = View.INVISIBLE
-                        showPopUpInfo(res)
+
+                        if (error == null) {
+                            update_content.visibility = View.GONE
+                            update_done.visibility = View.VISIBLE
+                        }
+
+                        // Clearing fields
+                        if (update_location.text.isNotBlank()) {
+                            update_location.setText("")
+                            update_camera_button.setImageResource(R.drawable.ic_taginfo_camera_black)
+                        }
+                        update_description.setText("")
+
+                        showPopUpInfo(error)
                     }
 
                 } else showPopUpInfo(ErrorType.NOT_CONNECTED)
@@ -392,9 +408,6 @@ class TagInfoActivity : AppCompatActivity() {
         }
         customDialog = CustomOkDialog(this, message) {
             customDialog = null
-            if (errorType == null) {
-                refresh(true)
-            }
         }
         customDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         customDialog?.show()

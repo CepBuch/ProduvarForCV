@@ -50,7 +50,8 @@
     <string name="taginfo_update_confirmation">Door op OK te drukken bevestigt u de actie</string>
     <string name="taginfo_error_status">De huidige verzonden status komt niet overeen met de huidige order status.\n\nWaarschijnlijk is de status van deze order al veranderd of er zijn problemen met de server.\n\nKlik om te verversen en probeer opnieuw.</string>
     <string name="taginfo_error_unknown">De status was niet geüpdatet. Informatie op het scherm wordt geupdate nadat dit scherm wordt gesloten.</string>
-    <string name="taginfo_update_success">De status was succesvol geüpdatet. Informatie op het scherm wordt geupdate nadat dit scherm wordt gesloten.</string>
+    <string name="taginfo_update_success">De status was succesvol geüpdatet. Druk op Vernieuwen om bijgewerkte informatie te bekijken.</string>
+    <string name="taginfo_update_refresh">Druk op Vernieuwen om bijgewerkte informatie te bekijken.</string>
 
 
     <string name="permissions_info">Om de applicatie juist te laten werken, zijn de volgende toestemmingen nodig:</string>
