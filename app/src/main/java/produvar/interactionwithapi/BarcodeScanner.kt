@@ -11,7 +11,9 @@ import android.os.Vibrator
 import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.SparseArray
+import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.view.View
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
@@ -29,9 +31,10 @@ class BarcodeScanner(private val activity: AppCompatActivity,
                      private val previewWidth: Int = 640,
                      private val previewHeight: Int = 480) {
 
-    lateinit var cameraSource: CameraSource
-    lateinit var barcodeDetector: BarcodeDetector
-    var isCameraShown = false
+    private lateinit var cameraSource: CameraSource
+    private lateinit var barcodeDetector: BarcodeDetector
+    private var isCameraShown = false
+
 
     init {
         setPreviewSize()
@@ -54,9 +57,20 @@ class BarcodeScanner(private val activity: AppCompatActivity,
         barcodeDetector = BarcodeDetector.Builder(this.activity).build()
         cameraSource = CameraSource.Builder(this.activity, barcodeDetector)
                 .setAutoFocusEnabled(true)
+                .setRequestedFps(20f)
                 .setRequestedPreviewSize(previewWidth, previewHeight)
                 .build()
 
+        cameraPreview.holder.addCallback(object: SurfaceHolder.Callback {
+            override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {}
+
+            override fun surfaceDestroyed(holder: SurfaceHolder?) {}
+
+            override fun surfaceCreated(holder: SurfaceHolder?) {
+                setPreviewSize()
+            }
+
+        })
 
 
         barcodeDetector.setProcessor(
@@ -127,8 +141,10 @@ class BarcodeScanner(private val activity: AppCompatActivity,
         matrix.setRectToRect(rectDisplay, rectPreview, Matrix.ScaleToFit.START)
         matrix.invert(matrix)
         matrix.mapRect(rectPreview)
+
         cameraPreview.layoutParams.height = rectPreview.bottom.toInt()
         cameraPreview.layoutParams.width = rectPreview.right.toInt()
+
     }
 
 }

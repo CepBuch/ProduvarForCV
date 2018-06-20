@@ -36,6 +36,7 @@ class ScanCameraFragment : Fragment() {
             intent.putExtra("barcode", it)
             mainActivity.startActivityForResult(intent, Constants.TAGINFO_ACTIVITY)
         })
+
         super.onViewCreated(view, savedInstanceState)
     }
 

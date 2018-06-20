@@ -18,6 +18,9 @@ import produvar.interactionwithapi.helpers.Constants
 import produvar.interactionwithapi.helpers.tryGetCurrentUser
 import produvar.interactionwithapi.models.User
 import produvar.interactionwithapi.models.UserDTO
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.ViewTreeObserver
+import org.jetbrains.anko.toast
 
 
 class MainActivity : AppCompatActivity(), MainPageFragment.OnMenuButtonClicked {
@@ -96,7 +99,7 @@ class MainActivity : AppCompatActivity(), MainPageFragment.OnMenuButtonClicked {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == Constants.TAGINFO_ACTIVITY){
+        if (requestCode == Constants.TAGINFO_ACTIVITY) {
             recreate()
         }
     }
