@@ -42,15 +42,15 @@
     <string name="prompt_location">Locatie (facultatief)</string>
     <string name="prompt_description">Commentaar (facultatief)</string>
     <!--TODO: translate-->
-    <string name="additional_info_tip">If you are a customer or an employee, please log in to get more detailed information about an order</string>
-    <string name="taginfo_not_found">This tag was not found in our systems or there are problems with the service</string>
-    <string name="taginfo_update_confirmation_header">You are going to update status of an order</string>
-    <string name="taginfo_update_confirmation_from">From: </string>
-    <string name="taginfo_update_confirmation_to">To: </string>
-    <string name="taginfo_update_confirmation">Pressing \'OK\' you confirm the action.</string>
-    <string name="taginfo_error_status">Sent current status does not match the current order status.\n\nProbably someone has already changed the status of this order or there are problems with the server.\n\nClick refresh and try again.</string>
-    <string name="taginfo_error_unknown">The status was not updated. You are not allowed to update the status or there are problems with the service.</string>
-    <string name="taginfo_update_success">The status was successfully updated. Information on the screen will be updated after this dialog will be closed</string>
+    <string name="additional_info_tip">Als u een klant of medewerkers bent, log dan alstublieft in om meer informatie te verkrijgen van een order</string>
+    <string name="taginfo_not_found">Deze tag is niet gevonden in onze systemen of er zijn problemen met de service</string>
+    <string name="taginfo_update_confirmation_header">U gaat de status updaten van een order</string>
+    <string name="taginfo_update_confirmation_from">Van: </string>
+    <string name="taginfo_update_confirmation_to">Naar: </string>
+    <string name="taginfo_update_confirmation">Door op OK te drukken bevestigt u de actie</string>
+    <string name="taginfo_error_status">De huidige verzonden status komt niet overeen met de huidige order status.\n\nWaarschijnlijk is de status van deze order al veranderd of er zijn problemen met de server.\n\nKlik om te verversen en probeer opnieuw.</string>
+    <string name="taginfo_error_unknown">De status was niet geüpdatet. Informatie op het scherm wordt geupdate nadat dit scherm wordt gesloten.</string>
+    <string name="taginfo_update_success">De status was succesvol geüpdatet. Informatie op het scherm wordt geupdate nadat dit scherm wordt gesloten.</string>
 
 
     <string name="permissions_info">Om de applicatie juist te laten werken, zijn de volgende toestemmingen nodig:</string>
@@ -67,9 +67,9 @@
     <string name="help_produvar_url">https://www.produvar.com/contact/</string>
 
     <!--TODO: translate-->
-    <string name="error_internet_connection">Internet is needed to perform this request. Please, connect to the internet and try again.</string>
-    <string name="error_unknown">Service is unavailable or there are problems with your internet connection</string>
-    <string name="error_refresh">You should be connected to the internet to be able to refresh</string>
+    <string name="error_internet_connection"> Internet is benodigd om dit te kunnen doen. Verbind met het internet en probeer opnieuw</string>
+    <string name="error_unknown">De service is niet beschikbaar of er zijn problemen met de internetverbinding.</string>
+    <string name="error_refresh">Apparaat moet verbonden zijn met het internet om te verversen</string>
 
     <string name="description_taginfo_error_logo">Error logo</string>
     <string name="description_main_logo">Logo van Produvar B.V.</string>
