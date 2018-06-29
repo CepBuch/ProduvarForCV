@@ -1,7 +1,19 @@
+### Produvar B.V. mobile interaction with API
+
 [Project description](https://drive.google.com/open?id=1lBALN3c6MkNOsLQxZylIek8Uls5ZK_up)
 
 *If you want to quickly look at the application, please, go to the last line of this note.*
 
+**Company description:**   
+Produvar B.V. is a company located in the vicinity of Groningen, The Netherlands. It it recognised as a software company that tracks orders for different companies. 
+The company's existence lies with the need to create a flexible system aimed at small to medium- sized production companies. The focus of the company lies in the delivery of software to the targeted market. After all, Produvar B.V finds software an important factor in all companies, as most people in the company get to deal with software. That is the reason why Produvar B.V. wants to create more
+than just a database with an interface. Key for the customer is, that the software is 'friendly' to use, while having a staggering interface that looks good to the eye.
+Another important factor for Produvar B.V. to focus on, lies in automatizing most of the unnecessary administrative actions and thus creating more efficiency.
+
+**Task:**  
+Create a mobile application that interacts with Produvar B.V. APIs. The application should be linked to Produvar online systems for the costumers of Produvar B.V. and their customers. Moreover, the application should provide some functions for authorized employees of customers companies. For instance, the activation of a workflow in Produvar B.V. system by scanning a barcode with mobile device.
+
+**From me:**  
 Russian (development) and Dutch (coordination and analytics) students worked on this project for Dutch company called Produvar. My role was to lead developers team, create design and create Android application(Kotlin). We've also developed iOS app, test API (according to provided documentation) and back-end.
 
 This is a copy of original repository with Android application that was sent to the client.
