@@ -2,7 +2,7 @@
 
 *If you want to quickly look at the application, please, go to the last line of this note.*
 
-Russian (development) and Dutch (coordination and analytics) students worked on this project for Dutch company called Produvar. My role was to lead developers team, create design and create Android application. We've also developed iOS app, test API (according to provided documentation) and back-end.
+Russian (development) and Dutch (coordination and analytics) students worked on this project for Dutch company called Produvar. My role was to lead developers team, create design and create Android application(Kotlin). We've also developed iOS app, test API (according to provided documentation) and back-end.
 
 This is a copy of original repository with Android application that was sent to the client.
 
