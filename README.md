@@ -1,6 +1,8 @@
-[Project description](https://drive.google.com/open?id=1qHblmwvAgmG7d9NuqgHyuvBtzD6Ue0jv)
+[Project description](https://drive.google.com/open?id=1lBALN3c6MkNOsLQxZylIek8Uls5ZK_up)
 
-Russian (development) and Dutch (coordination and analytics) students worked on this project for Dutch company called Produvar. My role was to lead developers team and create Android application. We've also developed iOS app, test API (according to provided documentation) and back-end.
+*If you want to quickly look at the application, please, go to the last line of this note.*
+
+Russian (development) and Dutch (coordination and analytics) students worked on this project for Dutch company called Produvar. My role was to lead developers team, create design and create Android application. We've also developed iOS app, test API (according to provided documentation) and back-end.
 
 This is a copy of original repository with Android application that was sent to the client.
 
@@ -14,8 +16,10 @@ If you want application to use test API , you can try to change getApiProvider()
 
 Note: "status update" function does not work for offline test data  - it is not updated because it's supposed to update on the server side. You can see how it works in the video or try to use "test api" version.
 
-APK with offline imitation of API [is here](https://drive.google.com/open?id=1SB-yVzDZkOT1EHwEG4mVniDkrJBrisC-)
+- APK with offline imitation of API [is here](https://drive.google.com/open?id=1SB-yVzDZkOT1EHwEG4mVniDkrJBrisC-)
 
-APK with test API [is here](https://drive.google.com/open?id=1DQfO15Dbzd4_CTIme5ZPvmkaeiwE8Ct-)
+- APK with test API [is here](https://drive.google.com/open?id=1DQfO15Dbzd4_CTIme5ZPvmkaeiwE8Ct-)
 
-Instructions about testing the applications (info about users and their permissions) [is here](https://drive.google.com/open?id=1sJqOvSoiijg9G1X--rxQ0YHJeuiNExWeiPlLryhuSeQ)
+- Instructions about testing the applications (info about users and their permissions) [is here](https://drive.google.com/open?id=1sJqOvSoiijg9G1X--rxQ0YHJeuiNExWeiPlLryhuSeQ)
+
+- Video demonstration of basic functionality of the app [is here](https://drive.google.com/open?id=1fXv3fuU-otj_v9-a7_1KcOagiCE7S4li)
