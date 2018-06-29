@@ -4,5 +4,6 @@ import produvar.interactionwithapi.interfaces.ApiProvider
 import produvar.interactionwithapi.interfaces.AsyncApiProvider
 
 object Factory {
-    fun getApiProvider(): AsyncApiProvider = TestAPIProvider()
+    fun getApiProvider(): AsyncApiProvider = OfflineAPIProvider()
+//    fun getApiProvider(): AsyncApiProvider = TestAPIProvider()
 }
