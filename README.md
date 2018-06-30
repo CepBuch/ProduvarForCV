@@ -2,6 +2,8 @@
 
 [Project description](https://drive.google.com/open?id=1lBALN3c6MkNOsLQxZylIek8Uls5ZK_up)
 
+[Certificate](will be added soon)
+
 *If you want to quickly look at the application, please, go to the last line of this note.*
 
 **Company description:**   
