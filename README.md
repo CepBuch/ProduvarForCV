@@ -2,7 +2,7 @@
 
 [Project description](https://drive.google.com/open?id=1lBALN3c6MkNOsLQxZylIek8Uls5ZK_up)
 
-[Certificate](will be added soon)
+[Certificate](https://drive.google.com/open?id=1nmlFUlpozSVlI6JmRusH3Njr9_bfI2eu)
 
 *If you want to quickly look at the application, please, go to the last line of this note.*
 
